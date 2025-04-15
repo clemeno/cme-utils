@@ -1,7 +1,15 @@
 {
   "name": "cme-utils",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
+  "license": "MIT",
+  "description": "A collection of utility functions for TypaScript/JavaScript",
+  "author": "CME",
+  "keywords": ["util", "utils", "typescript", "javascript"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/clemeno/cme-utils"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "build:cjs": "tsc -p tsconfig.cjs.json",
