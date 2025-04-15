@@ -1,0 +1,27 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./ts",
+    "outDir": "./cjs",
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": true,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": false,
+    "moduleResolution": "node16",
+    "importHelpers": true,
+    "skipLibCheck": true,
+    "target": "ES2020",
+    "module": "CommonJS",
+    "lib": [
+      "ES2020",
+      "dom"
+    ],
+    "useDefineForClassFields": false
+  }
+}
