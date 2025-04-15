@@ -1,3 +1,5 @@
+import { TO_STRING } from 'convert/to-string.util'
+
 const n2hh: string[] = []
 
 for (let n = 0; n < 256; n += 1) {
@@ -16,6 +18,14 @@ export const BYTE_ARRAY_TO_UUID = (uint8Array: Uint8Array) => {
   const ah = Array.from(uint8Array).map(n => n2hh[n])
   const partList = [ah.slice(0, 4), ah.slice(4, 6), ah.slice(6, 8), ah.slice(8, 10), ah.slice(10, 16)]
   return partList.map(p => p.join('')).join('-').toLowerCase()
+}
+
+/** defaults to the string '00000000-0000-0000-0000-000000000000' (= the NIL UUID) */
+export const FROM_BUFFER_TO_UUID_ALWAYS = (b: any): string => {
+  let hex = ''
+  try { hex = TO_STRING(b?.toString('hex')).padStart(32, '0') } catch { }
+
+  return [hex.slice(0, 8), hex.slice(8, 12), hex.slice(12, 16), hex.slice(16, 20), hex.slice(20)].join('-')
 }
 
 /**

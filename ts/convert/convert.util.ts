@@ -1,11 +1,16 @@
+import dotenv from 'dotenv'
+import { type AppOption } from '../app-option.js'
+import { IS_AN_ARRAY, IS_A_NUMBER, IS_A_STRING, IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC } from '../check/check.util.js'
 import { IS_A_FUNCTION } from '../check/is-a-function.util.js'
 import { IS_EMPTY } from '../check/is-empty.util.js'
 import { IS_SET } from '../check/is-set.util.js'
-import { type AppOption } from '../app-option.js'
-import { IS_AN_ARRAY, IS_A_NUMBER, IS_A_STRING, IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC } from '../check/check.util.js'
 import { SYMBOLS, SYMBOLS_BASE_256, SYMBOLS_LENGTH } from '../constant.util.js'
 import { type numeric } from '../numeric.js'
 import { TO_STRING } from './to-string.util.js'
+
+dotenv.config()
+
+const ENV: Record<string, any> = process.env
 
 export const TO_CANONICAL_STRING = (_: any): string => {
   return TO_STRING(_).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
@@ -197,34 +202,35 @@ export const FROM_BASE_16_TO_CARD_SERIAL = (_: string): string => {
 
 export const FROM_BASE_10_TO_CARD_SERIAL = (_: numeric): string => FROM_BASE_16_TO_CARD_SERIAL(FROM_BASE_10_TO_16(_))
 
-// export const FROM_BASE_16_TO_CSN_DISPLAY = (_: numeric): string => {
-//   let res = TO_STRING(_)
+export const ENV_APP_CSN_DISPLAY = TO_STRING(ENV.APP_CSN_DISPLAY)
+export const ENV_CSN_DEC_NUMBER = ENV_APP_CSN_DISPLAY.toLowerCase() === 'dec_number'
+export const ENV_CSN_HEX_NUMBER = ENV_APP_CSN_DISPLAY.toLowerCase() === 'hex_number'
+export const ENV_CSN_HEX_CARD = ENV_APP_CSN_DISPLAY.toLowerCase() === 'hex_card'
 
-//   // if (ENV_CSN_HEX_CARD) {
-//   //   res = FROM_BASE_16_TO_CARD_SERIAL(res)
-//   // } else if (ENV_CSN_DEC_NUMBER) {
-//   //   res = FROM_BASE_16_TO_10(res)
-//   // }
+export const FROM_BASE_16_TO_CSN_DISPLAY = (_: numeric): string => {
+  let res = TO_STRING(_)
 
-//   res = FROM_BASE_16_TO_10(res)
+  if (ENV_CSN_HEX_CARD) {
+    res = FROM_BASE_16_TO_CARD_SERIAL(res)
+  } else if (ENV_CSN_DEC_NUMBER) {
+    res = FROM_BASE_16_TO_10(res)
+  }
 
-//   return res
-// }
+  return res
+}
 
-// export const FROM_BASE_10_TO_CSN_DISPLAY = (_: numeric): string => {
-//   let res = TO_STRING(_)
+export const FROM_BASE_10_TO_CSN_DISPLAY = (_: numeric): string => {
+  let res = TO_STRING(_)
 
-//   // if (ENV_CSN_HEX_NUMBER || ENV_CSN_HEX_CARD) {
-//   //   res = FROM_BASE_10_TO_16(_)
-//   //   if (ENV_CSN_HEX_CARD) {
-//   //     res = FROM_BASE_16_TO_CARD_SERIAL(res)
-//   //   }
-//   // }
+  if (ENV_CSN_HEX_NUMBER || ENV_CSN_HEX_CARD) {
+    res = FROM_BASE_10_TO_16(_)
+    if (ENV_CSN_HEX_CARD) {
+      res = FROM_BASE_16_TO_CARD_SERIAL(res)
+    }
+  }
 
-//   res = FROM_BASE_10_TO_16(_)
-
-//   return res
-// }
+  return res
+}
 
 export const OPTIONS_TO_VALUE_LABEL_RECORD = (optionList: AppOption[]): Record<string, string> => {
   const res: Record<string, string> = {}
@@ -477,4 +483,36 @@ export const TO_CSV_VALUE = (v: any): string => {
   }
 
   return res
+}
+
+export const FROM_BASE_64_TO_UINT8_LIST = (base64: string): number[] => {
+  let res = new Uint8Array(0)
+
+  let bErr = false
+
+  // * try server-side
+  try { res = new Uint8Array(Buffer.from(base64, 'base64')) } catch { bErr = true }
+
+  if (bErr) {
+    // * try client-side
+    try {
+      const raw = atob(base64)
+
+      const resList: number[] = []
+
+      for (let charPos = 0; charPos < raw.length; charPos += 1) {
+        resList.push(raw.charCodeAt(charPos))
+      }
+
+      res = new Uint8Array(resList)
+    } catch {
+      bErr = true
+    }
+  }
+
+  return Array.from(res)
+}
+
+export const SANITIZE_STRING_FOR_EXCEL = (s: string): string => {
+  return s.normalize('NFKD').replace(/[^\w\s-,_!?[\](){};'"<>.@|\\/]+/gi, '').replace(/[\n\t\s]+/gi, ' ')
 }

@@ -1,8 +1,12 @@
 import { TO_NUMBER } from 'convert/convert.util.js'
+import dotenv from 'dotenv'
 import { DateTime, Settings } from 'luxon'
-// import { env } from '../../../env/env'
 
-// export const INITIAL_TZ: string = env.timezone
+dotenv.config()
+
+const ENV: Record<string, any> = process.env
+
+export const INITIAL_TZ: string = ENV.APP_TZ ?? 'UTC'
 
 /** set the global timezone to `Luxon` `Settings` */
 export const SET_TZ = (tz: string): void => {
@@ -78,3 +82,11 @@ export const WAIT_MS = async (ms: any): Promise<true> => {
  * @returns the promise is resolved
  */
 export const DELAY_MS = async (ms: number): Promise<any> => await new Promise(resolve => setTimeout(resolve, ms))
+
+export const LUXON_IS_SAME_Y = (_: { ma: DateTime, mb: DateTime }): boolean => _.ma.year === _.mb.year
+export const LUXON_IS_SAME_YM = (_: { ma: DateTime, mb: DateTime }): boolean => _.ma.month === _.mb.month && LUXON_IS_SAME_Y(_)
+export const LUXON_IS_SAME_YMD = (_: { ma: DateTime, mb: DateTime }): boolean => _.ma.day === _.mb.day && LUXON_IS_SAME_YM(_)
+export const LUXON_IS_SAME_YMDH = (_: { ma: DateTime, mb: DateTime }): boolean => _.ma.hour === _.mb.hour && LUXON_IS_SAME_YMD(_)
+export const LUXON_IS_SAME_YMDHM = (_: { ma: DateTime, mb: DateTime }): boolean => _.ma.minute === _.mb.minute && LUXON_IS_SAME_YMDHM(_)
+export const LUXON_IS_SAME_YMDHMS = (_: { ma: DateTime, mb: DateTime }): boolean => _.ma.toUnixInteger() === _.mb.toUnixInteger()
+export const LUXON_IS_SAME = (_: { ma: DateTime, mb: DateTime }): boolean => +_.ma === +_.mb
