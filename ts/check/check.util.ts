@@ -1,3 +1,4 @@
+import { type bool } from 'bool.js'
 import { TO_STRING } from 'convert/to-string.util.js'
 import { SYMBOLS } from '../constant.util.js'
 import { type numeric } from '../numeric.js'
@@ -240,3 +241,29 @@ export const SAME_DATE = SAME_MOMENT
 
 /** CHECK (datetime a === datetime b), with datetime = numeric (timestamp) | Date | DateTime ... */
 export const SAME_DATETIME = SAME_MOMENT
+
+export const IS_BOOL = (v: any): v is bool => {
+  let res = IS_A_BOOLEAN(v)
+
+  if (IS_NUMERIC(v)) {
+    res = (+v === 0) || (+v === 1)
+  } else if (IS_A_STRING(v)) {
+    const vl = v.toLowerCase()
+    res = (
+      (vl === '1') ||
+      (vl === '0') ||
+      (vl === 'true') ||
+      (vl === 'false') ||
+      (vl === 'yes') ||
+      (vl === 'no') ||
+      (vl === 'on') ||
+      (vl === 'off') ||
+      (vl === 'y') ||
+      (vl === 'n') ||
+      (vl === 'ok') ||
+      (vl === 'ko')
+    )
+  }
+
+  return res
+}

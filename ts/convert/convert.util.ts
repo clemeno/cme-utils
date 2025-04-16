@@ -1,6 +1,6 @@
 // import dotenv from 'dotenv'
 import { type AppOption } from '../app-option.js'
-import { IS_AN_ARRAY, IS_A_NUMBER, IS_A_STRING, IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC } from '../check/check.util.js'
+import { IS_AN_ARRAY, IS_A_BOOLEAN, IS_A_NUMBER, IS_A_STRING, IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC } from '../check/check.util.js'
 import { IS_A_FUNCTION } from '../check/is-a-function.util.js'
 import { IS_EMPTY } from '../check/is-empty.util.js'
 import { IS_SET } from '../check/is-set.util.js'
@@ -517,4 +517,21 @@ export const FROM_BASE_64_TO_UINT8_LIST = (base64: string): number[] => {
 
 export const SANITIZE_STRING_FOR_EXCEL = (s: string): string => {
   return s.normalize('NFKD').replace(/[^\w\s-,_!?[\](){};'"<>.@|\\/]+/gi, '').replace(/[\n\t\s]+/gi, ' ')
+}
+
+export const PARSE_BOOL = (v: any): boolean => {
+  let res = false
+
+  if (IS_SET(v)) {
+    if (IS_A_BOOLEAN(v)) {
+      res = v
+    } else if (IS_A_NUMBER(v)) {
+      res = +v === 1
+    } else if (IS_A_STRING(v)) {
+      const vl = v.toLowerCase()
+      res = (vl === 'true') || (vl === '1') || (vl === 'yes') || (vl === 'on') || (vl === 'y') || (vl === 'ok')
+    }
+  }
+
+  return res
 }
