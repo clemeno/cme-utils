@@ -1,12 +1,12 @@
 import { TO_NUMBER } from 'convert/convert.util.js'
-import dotenv from 'dotenv'
+// import dotenv from 'dotenv'
 import { DateTime, Settings } from 'luxon'
 
-dotenv.config()
+// dotenv.config()
 
-const ENV: Record<string, any> = process.env
+// const ENV: Record<string, any> = process.env
 
-export const INITIAL_TZ: string = ENV.APP_TZ ?? 'UTC'
+// export const INITIAL_TZ: string = ENV.APP_TZ ?? 'UTC'
 
 /** set the global timezone to `Luxon` `Settings` */
 export const SET_TZ = (tz: string): void => {

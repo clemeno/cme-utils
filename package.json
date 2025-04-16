@@ -1,11 +1,16 @@
 {
   "name": "cme-utils",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "license": "MIT",
   "description": "A collection of utility functions for TypaScript/JavaScript",
   "author": "CME",
-  "keywords": ["util", "utils", "typescript", "javascript"],
+  "keywords": [
+    "util",
+    "utils",
+    "typescript",
+    "javascript"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/clemeno/cme-utils"
@@ -19,7 +24,6 @@
   "dependencies": {
     "axios": "^1.8.4",
     "bcryptjs": "^3.0.2",
-    "dotenv": "^16.5.0",
     "luxon": "^3.6.1",
     "objection": "^3.1.5"
   },

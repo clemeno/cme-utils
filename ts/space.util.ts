@@ -1,15 +1,15 @@
 // import { env } from 'env/env'
 import { IS_A_STRING_AND_NOT_EMPTY } from 'check/check.util'
-import dotenv from 'dotenv'
+// import dotenv from 'dotenv'
 import { Settings } from 'luxon'
 // import { Locale } from 'date-fns'
 // import { enGB } from 'date-fns/locale'
 
-dotenv.config()
+// dotenv.config()
 
-const ENV: Record<string, any> = process.env
+// const ENV: Record<string, any> = process.env
 
-export const INITIAL_LOCALE: string = ENV.APP_LOCALE ?? 'en-gb'
+// export const INITIAL_LOCALE: string = ENV.APP_LOCALE ?? 'en-gb'
 
 /** set the global locale to `Luxon` `Settings` */
 export const SET_LOCALE = (locale: string): void => {

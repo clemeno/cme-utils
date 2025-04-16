@@ -1,4 +1,4 @@
-import dotenv from 'dotenv'
+// import dotenv from 'dotenv'
 import { type AppOption } from '../app-option.js'
 import { IS_AN_ARRAY, IS_A_NUMBER, IS_A_STRING, IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC } from '../check/check.util.js'
 import { IS_A_FUNCTION } from '../check/is-a-function.util.js'
@@ -8,9 +8,9 @@ import { SYMBOLS, SYMBOLS_BASE_256, SYMBOLS_LENGTH } from '../constant.util.js'
 import { type numeric } from '../numeric.js'
 import { TO_STRING } from './to-string.util.js'
 
-dotenv.config()
+// dotenv.config()
 
-const ENV: Record<string, any> = process.env
+// const ENV: Record<string, any> = process.env
 
 export const TO_CANONICAL_STRING = (_: any): string => {
   return TO_STRING(_).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
@@ -194,6 +194,7 @@ export const FROM_BASE_16_TO_CARD_SERIAL = (_: string): string => {
 
   if (IS_A_STRING_AND_NOT_EMPTY(_)) {
     const s = `${_}`.padStart(16, '0')
+
     res = `${s.slice(-16, -8)} ${s.slice(-8)}`
   }
 
@@ -202,29 +203,30 @@ export const FROM_BASE_16_TO_CARD_SERIAL = (_: string): string => {
 
 export const FROM_BASE_10_TO_CARD_SERIAL = (_: numeric): string => FROM_BASE_16_TO_CARD_SERIAL(FROM_BASE_10_TO_16(_))
 
-export const ENV_APP_CSN_DISPLAY = TO_STRING(ENV.APP_CSN_DISPLAY)
-export const ENV_CSN_DEC_NUMBER = ENV_APP_CSN_DISPLAY.toLowerCase() === 'dec_number'
-export const ENV_CSN_HEX_NUMBER = ENV_APP_CSN_DISPLAY.toLowerCase() === 'hex_number'
-export const ENV_CSN_HEX_CARD = ENV_APP_CSN_DISPLAY.toLowerCase() === 'hex_card'
+// export const ENV_APP_CSN_DISPLAY = TO_STRING(ENV.APP_CSN_DISPLAY)
+// export const ENV_CSN_DEC_NUMBER = ENV_APP_CSN_DISPLAY.toLowerCase() === 'dec_number'
+// export const ENV_CSN_HEX_NUMBER = ENV_APP_CSN_DISPLAY.toLowerCase() === 'hex_number'
+// export const ENV_CSN_HEX_CARD = ENV_APP_CSN_DISPLAY.toLowerCase() === 'hex_card'
 
-export const FROM_BASE_16_TO_CSN_DISPLAY = (_: numeric): string => {
-  let res = TO_STRING(_)
+export const FROM_BASE_16_TO_CSN_DISPLAY = (_: { from: numeric, bCsnHexCard: boolean, csnDecNumber: boolean }): string => {
+  let res = TO_STRING(_.from)
 
-  if (ENV_CSN_HEX_CARD) {
+  if (_.bCsnHexCard) {
     res = FROM_BASE_16_TO_CARD_SERIAL(res)
-  } else if (ENV_CSN_DEC_NUMBER) {
+  } else if (_.csnDecNumber) {
     res = FROM_BASE_16_TO_10(res)
   }
 
   return res
 }
 
-export const FROM_BASE_10_TO_CSN_DISPLAY = (_: numeric): string => {
-  let res = TO_STRING(_)
+export const FROM_BASE_10_TO_CSN_DISPLAY = (_: { from: numeric, bCsnHexNumber: boolean, bCsnHexCard: boolean }): string => {
+  let res = TO_STRING(_.from)
 
-  if (ENV_CSN_HEX_NUMBER || ENV_CSN_HEX_CARD) {
-    res = FROM_BASE_10_TO_16(_)
-    if (ENV_CSN_HEX_CARD) {
+  if (_.bCsnHexNumber || _.bCsnHexCard) {
+    res = FROM_BASE_10_TO_16(res)
+
+    if (_.bCsnHexCard) {
       res = FROM_BASE_16_TO_CARD_SERIAL(res)
     }
   }

@@ -1,13 +1,13 @@
 import { IS_A_STRING_AND_NOT_EMPTY, IS_AN_ARRAY_AND_NOT_EMPTY } from 'check/check.util'
 import { IS_SET } from 'check/is-set.util'
 import { TO_STRING } from 'convert/to-string.util.js'
-import dotenv from 'dotenv'
+// import dotenv from 'dotenv'
 import { basename } from 'node:path'
 import { IS_UUID_STRING } from 'uuid.util'
 
-dotenv.config()
+// dotenv.config()
 
-const ENV: Record<string, any> = process.env
+// const ENV: Record<string, any> = process.env
 
 /** `string` to lowercase for the first character */
 export const STRING_LCF = (input: string): string => `${TO_STRING(input[0]).toLowerCase()}${input.slice(1)}`
@@ -78,100 +78,100 @@ export const GET_DARK_PNG_NAME_FROM_UUID = (uuid: string): string => {
 // * uploaded file path
 
 /** @returns {string} ./uploads/`filename` */
-export const GET_UPLOADED_FILE_PATH = (filename: string): string => {
-  const envFolder = ENV.APP_FILE_UPLOAD_FOLDER
+export const GET_UPLOADED_FILE_PATH = (_: { filename: string, fileUploadFolder: string }): string => {
+  const envFolder = _.fileUploadFolder
   const folder = (envFolder[envFolder.length - 1] === '/') ? envFolder : `${envFolder}/`
-  return `${folder}${filename}`
+  return `${folder}${_.filename}`
 }
 
 /** @returns {string} ./uploads/`uuid`.png */
-export const GET_UPLOADED_LIGHT_PNG_FROM_UUID = (uuid: string): string => {
-  const filename = GET_LIGHT_PNG_NAME_FROM_UUID(uuid)
-  const envFolder = ENV.APP_FILE_UPLOAD_FOLDER
+export const GET_UPLOADED_LIGHT_PNG_FROM_UUID = (_: { uuid: string, fileUploadFolder: string }): string => {
+  const filename = GET_LIGHT_PNG_NAME_FROM_UUID(_.uuid)
+  const envFolder = _.fileUploadFolder
   const folder = (envFolder[envFolder.length - 1] === '/') ? envFolder : `${envFolder}/`
   return `${folder}${filename}`
 }
 
 /** @returns {string} ./uploads/`uuid`_dark.png */
-export const GET_UPLOADED_DARK_PNG_FROM_UUID = (uuid: string): string => {
-  const filename = GET_DARK_PNG_NAME_FROM_UUID(uuid)
-  const envFolder = ENV.APP_FILE_UPLOAD_FOLDER
+export const GET_UPLOADED_DARK_PNG_FROM_UUID = (_: { uuid: string, fileUploadFolder: string }): string => {
+  const filename = GET_DARK_PNG_NAME_FROM_UUID(_.uuid)
+  const envFolder = _.fileUploadFolder
   const folder = (envFolder[envFolder.length - 1] === '/') ? envFolder : `${envFolder}/`
   return `${folder}${filename}`
 }
 
 // * uploaded file symlink path
 
-/** @returns {string} /opt/spirtech/svd/www/svd/public_html/static/`filename` */
-export const GET_CLOUDFRONT_LINK_PATH = (filename: string): string => {
-  const envFolder = ENV.APP_PUBLIC_STATIC_IMAGE_FOLDER
+/** @returns {string} /opt/cme/svd/www/svd/public_html/static/`filename` */
+export const GET_CLOUDFRONT_LINK_PATH = (_: { filename: string, publicStaticImageFolder: string }): string => {
+  const envFolder = _.publicStaticImageFolder
+  const folder = (envFolder[envFolder.length - 1] === '/') ? envFolder : `${envFolder}/`
+  return `${folder}${_.filename}`
+}
+
+/** @returns {string} /opt/cme/svd/www/svd/public_html/static/`uuid`.png */
+export const GET_CLOUDFRONT_LIGHT_LINK_FROM_UUID = (_: { uuid: string, publicStaticImageFolder: string }): string => {
+  const filename = GET_LIGHT_PNG_NAME_FROM_UUID(_.uuid)
+  const envFolder = _.publicStaticImageFolder
   const folder = (envFolder[envFolder.length - 1] === '/') ? envFolder : `${envFolder}/`
   return `${folder}${filename}`
 }
 
-/** @returns {string} /opt/spirtech/svd/www/svd/public_html/static/`uuid`.png */
-export const GET_CLOUDFRONT_LIGHT_LINK_FROM_UUID = (uuid: string): string => {
-  const filename = GET_LIGHT_PNG_NAME_FROM_UUID(uuid)
-  const envFolder = ENV.APP_PUBLIC_STATIC_IMAGE_FOLDER
-  const folder = (envFolder[envFolder.length - 1] === '/') ? envFolder : `${envFolder}/`
-  return `${folder}${filename}`
-}
-
-/** @returns {string} /opt/spirtech/svd/www/svd/public_html/static/`uuid`_dark.png */
-export const GET_CLOUDFRONT_DARK_LINK_FROM_UUID = (uuid: string): string => {
-  const filename = GET_DARK_PNG_NAME_FROM_UUID(uuid)
-  const envFolder = ENV.APP_PUBLIC_STATIC_IMAGE_FOLDER
+/** @returns {string} /opt/cme/svd/www/svd/public_html/static/`uuid`_dark.png */
+export const GET_CLOUDFRONT_DARK_LINK_FROM_UUID = (_: { uuid: string, publicStaticImageFolder: string }): string => {
+  const filename = GET_DARK_PNG_NAME_FROM_UUID(_.uuid)
+  const envFolder = _.publicStaticImageFolder
   const folder = (envFolder[envFolder.length - 1] === '/') ? envFolder : `${envFolder}/`
   return `${folder}${filename}`
 }
 
 // * public api file url
 
-/** @returns {string} https:\//dev.opus.svd.spiws.net/borlapi/public_img/`filename` */
-export const GET_PUBLIC_API_URL_FILE = (filename: string): string => {
-  const envEndpoint = ENV.APP_ROOT_URL_PUBLIC_IMG
+/** @returns {string} https:\//subdomain.domain.com/api/public_img/`filename` */
+export const GET_PUBLIC_API_URL_FILE = (_: { filename: string, rootUrlPublicImg: string }): string => {
+  const envEndpoint = _.rootUrlPublicImg
+  const endpointSlash = (envEndpoint[envEndpoint.length - 1] === '/') ? envEndpoint : `${envEndpoint}/`
+  return `${endpointSlash}${_.filename}`
+}
+
+/** @returns {string} https:\//subdomain.domain.com/api/public_img/`uuid`.png */
+export const GET_PUBLIC_API_URL_LIGHT_PNG_FROM_UUID = (_: { uuid: string, rootUrlPublicImg: string }): string => {
+  const filename = GET_LIGHT_PNG_NAME_FROM_UUID(_.uuid)
+  const envEndpoint = _.rootUrlPublicImg
   const endpointSlash = (envEndpoint[envEndpoint.length - 1] === '/') ? envEndpoint : `${envEndpoint}/`
   return `${endpointSlash}${filename}`
 }
 
-/** @returns {string} https:\//dev.opus.svd.spiws.net/borlapi/public_img/`uuid`.png */
-export const GET_PUBLIC_API_URL_LIGHT_PNG_FROM_UUID = (uuid: string): string => {
-  const filename = GET_LIGHT_PNG_NAME_FROM_UUID(uuid)
-  const envEndpoint = ENV.APP_ROOT_URL_PUBLIC_IMG
-  const endpointSlash = (envEndpoint[envEndpoint.length - 1] === '/') ? envEndpoint : `${envEndpoint}/`
-  return `${endpointSlash}${filename}`
-}
-
-/** @returns {string} https:\//dev.opus.svd.spiws.net/borlapi/public_img/`uuid`_dark.png */
-export const GET_PUBLIC_API_URL_DARK_PNG_FROM_UUID = (uuid: string): string => {
-  const filename = GET_DARK_PNG_NAME_FROM_UUID(uuid)
-  const envEndpoint = ENV.APP_ROOT_URL_PUBLIC_IMG
+/** @returns {string} https:\//subdomain.domain.com/api/public_img/`uuid`_dark.png */
+export const GET_PUBLIC_API_URL_DARK_PNG_FROM_UUID = (_: { uuid: string, rootUrlPublicImg: string }): string => {
+  const filename = GET_DARK_PNG_NAME_FROM_UUID(_.uuid)
+  const envEndpoint = _.rootUrlPublicImg
   const endpointSlash = (envEndpoint[envEndpoint.length - 1] === '/') ? envEndpoint : `${envEndpoint}/`
   return `${endpointSlash}${filename}`
 }
 
 // * cloudfront static file url
 
-/** @returns {string} https:\//d244upthqj9aru.cloudfront.net/`filename` */
-export const GET_CLOUDFRONT_URL_FILE = (filename: string): string => {
-  const envEndpoint = ENV.APP_CLOUDFRONT_URI
+/** @returns {string} https:\//subdomain.cloudfront.com/`filename` */
+export const GET_CLOUDFRONT_URL_FILE = (_: { filename: string, cloudfrontUri: string }): string => {
+  const envEndpoint = _.cloudfrontUri
   const endpoint = (envEndpoint[envEndpoint.length - 1] === '/') ? envEndpoint : `${envEndpoint}/`
-  return `${endpoint}${filename}`
-  // return `${ENV.APP_CLOUDFRONT_URI}/${filename}`
+  return `${endpoint}${_.filename}`
+  // return `${ENV.cloudfrontUri}/${filename}`
 }
 
-/** @returns {string} https:\//d244upthqj9aru.cloudfront.net/`uuid`.png */
-export const GET_CLOUDFRONT_URL_PNG_LIGHT_FROM_UUID = (uuid: string): string => {
-  const filename = GET_LIGHT_PNG_NAME_FROM_UUID(uuid)
-  const envEndpoint = ENV.APP_CLOUDFRONT_URI
+/** @returns {string} https:\//subdomain.cloudfront.com/`uuid`.png */
+export const GET_CLOUDFRONT_URL_PNG_LIGHT_FROM_UUID = (_: { uuid: string, cloudfrontUri: string }): string => {
+  const filename = GET_LIGHT_PNG_NAME_FROM_UUID(_.uuid)
+  const envEndpoint = _.cloudfrontUri
   const endpointSlash = (envEndpoint[envEndpoint.length - 1] === '/') ? envEndpoint : `${envEndpoint}/`
   return `${endpointSlash}${filename}`
 }
 
-/** @returns {string} https:\//d244upthqj9aru.cloudfront.net/`uuid`_dark.png */
-export const GET_CLOUDFRONT_URL_PNG_DARK_FROM_UUID = (uuid: string): string => {
-  const filename = GET_DARK_PNG_NAME_FROM_UUID(uuid)
-  const envEndpoint = ENV.APP_CLOUDFRONT_URI
+/** @returns {string} https:\//subdomain.cloudfront.com/`uuid`_dark.png */
+export const GET_CLOUDFRONT_URL_PNG_DARK_FROM_UUID = (_: { uuid: string, cloudfrontUri: string }): string => {
+  const filename = GET_DARK_PNG_NAME_FROM_UUID(_.uuid)
+  const envEndpoint = _.cloudfrontUri
   const endpointSlash = (envEndpoint[envEndpoint.length - 1] === '/') ? envEndpoint : `${envEndpoint}/`
   return `${endpointSlash}${filename}`
 }
@@ -188,85 +188,130 @@ export const GET_LIGHT_FROM_DARK_PNG_FILE = (darkPngPath: string): string => {
   return darkPngPath.replace(/_dark\.png$/i, '.png')
 }
 
-/** @returns {string} ./uploads/`filename` -> /opt/spirtech/svd/www/svd/public_html/static/`filename` */
-export const GET_SYMLINK_PATH_FROM_FILE_PATH = (filePath: string): string => {
-  return filePath.replace(ENV.APP_FILE_UPLOAD_FOLDER, ENV.APP_PUBLIC_STATIC_IMAGE_FOLDER)
+/** @returns {string} ./uploads/`filename` -> /opt/cme/svd/www/svd/public_html/static/`filename` */
+export const GET_SYMLINK_PATH_FROM_FILE_PATH = (_: {
+  filePath: string
+  fileUploadFolder: string
+  publicStaticImageFolder: string
+}): string => {
+  return _.filePath.replace(_.fileUploadFolder, _.publicStaticImageFolder)
 }
 
-/** @returns {string} /opt/spirtech/svd/www/svd/public_html/static/`filename` -> ./uploads/`filename` */
-export const GET_FILE_PATH_FROM_SYMLINK_PATH = (symlinkPath: string): string => {
-  return symlinkPath.replace(ENV.APP_PUBLIC_STATIC_IMAGE_FOLDER, ENV.APP_FILE_UPLOAD_FOLDER)
+/** @returns {string} /opt/cme/svd/www/svd/public_html/static/`filename` -> ./uploads/`filename` */
+export const GET_FILE_PATH_FROM_SYMLINK_PATH = (_: {
+  symlinkPath: string
+  publicStaticImageFolder: string
+  fileUploadFolder: string
+}): string => {
+  return _.symlinkPath.replace(_.publicStaticImageFolder, _.fileUploadFolder)
 }
 
-/** @returns {string} https:\//d244upthqj9aru.cloudfront.net/`filename` -> https:\//dev.opus.svd.spiws.net/borlapi/public_img/`filename` */
-export const GET_PUBLIC_API_URL_FROM_CLOUDFRONT_URL = (cloudfrontUrl: string): string => {
-  return cloudfrontUrl.replace(ENV.APP_CLOUDFRONT_URI, ENV.APP_ROOT_URL_PUBLIC_IMG)
+/** @returns {string} https:\//subdomain.cloudfront.com/`filename` -> https:\//subdomain.domain.com/api/public_img/`filename` */
+export const GET_PUBLIC_API_URL_FROM_CLOUDFRONT_URL = (_: {
+  cloudfrontUrl: string
+  cloudfrontUri: string
+  rootUrlPublicImg: string
+}): string => {
+  return _.cloudfrontUrl.replace(_.cloudfrontUri, _.rootUrlPublicImg)
 }
 
-/** @returns {string} https:\//dev.opus.svd.spiws.net/borlapi/public_img/`filename` -> https:\//d244upthqj9aru.cloudfront.net/`filename` */
-export const GET_CLOUDFRONT_URL_FROM_PUBLIC_API_URL = (publicImgUrl: string): string => {
-  return publicImgUrl.replace(ENV.APP_ROOT_URL_PUBLIC_IMG, ENV.APP_CLOUDFRONT_URI)
+/** @returns {string} https:\//subdomain.domain.com/api/public_img/`filename` -> https:\//subdomain.cloudfront.com/`filename` */
+export const GET_CLOUDFRONT_URL_FROM_PUBLIC_API_URL = (_: {
+  publicImgUrl: string
+  rootUrlPublicImg: string
+  cloudfrontUri: string
+}): string => {
+  return _.publicImgUrl.replace(_.rootUrlPublicImg, _.cloudfrontUri)
 }
 
 /** @returns {string} (path|url)?`filename` -> ./uploads/`filename` */
-export const GET_UPLOADED_FILE_FROM_ANY_STRING = (s: string): string => {
+export const GET_UPLOADED_FILE_FROM_ANY_STRING = (_: {
+  s: string
+  fileUploadFolder: string
+  publicStaticImageFolder: string
+}): string => {
+  const s = _.s
+
   const uuid = EXTRACT_UUID_FROM_STRING(s)
 
+  const fileUploadFolder = _.fileUploadFolder
+  const publicStaticImageFolder = _.publicStaticImageFolder
+
   const strategyList = [
-    { if: () => IS_A_STRING_AND_NOT_EMPTY(uuid), then: () => GET_UPLOADED_LIGHT_PNG_FROM_UUID(uuid) },
-    { if: () => s.includes(ENV.APP_FILE_UPLOAD_FOLDER), then: () => s },
-    { if: () => s.includes(ENV.APP_PUBLIC_STATIC_IMAGE_FOLDER), then: () => GET_UPLOADED_FILE_PATH(basename(s)) },
+    { if: () => IS_A_STRING_AND_NOT_EMPTY(uuid), then: () => GET_UPLOADED_LIGHT_PNG_FROM_UUID({ uuid, fileUploadFolder }) },
+    { if: () => s.includes(fileUploadFolder), then: () => s },
+    { if: () => s.includes(publicStaticImageFolder), then: () => GET_UPLOADED_FILE_PATH({ filename: basename(s), fileUploadFolder }) },
     {
       if: () => IS_A_URL(s),
       then: () => {
         const pathList = (new URL(s)).pathname.split('/')
         const filename = pathList[pathList.length - 1]
-        return IS_SET(filename) ? GET_UPLOADED_FILE_PATH(filename) : ''
+        return IS_SET(filename) ? GET_UPLOADED_FILE_PATH({ filename, fileUploadFolder }) : ''
       },
     },
   ]
 
-  return strategyList.find(_s => _s.if())?.then() ?? GET_UPLOADED_FILE_PATH(s)
+  return strategyList.find(_s => _s.if())?.then() ?? GET_UPLOADED_FILE_PATH({ filename: s, fileUploadFolder })
 }
 
-/** @returns {string} (path|url)?`filename` -> /opt/spirtech/svd/www/svd/public_html/static/`filename` */
-export const GET_UPLOADED_FILE_LINK_FROM_ANY_STRING = (s: string): string => {
+/** @returns {string} (path|url)?`filename` -> /opt/cme/svd/www/svd/public_html/static/`filename` */
+export const GET_UPLOADED_FILE_LINK_FROM_ANY_STRING = (_: {
+  s: string
+  fileUploadFolder: string
+  publicStaticImageFolder: string
+}): string => {
+  const s = _.s
+
   const uuid = EXTRACT_UUID_FROM_STRING(s)
 
+  const fileUploadFolder = _.fileUploadFolder
+  const publicStaticImageFolder = _.publicStaticImageFolder
+
   const strategyList = [
-    { if: () => IS_A_STRING_AND_NOT_EMPTY(uuid), then: () => GET_CLOUDFRONT_LIGHT_LINK_FROM_UUID(uuid) },
-    { if: () => s.includes(ENV.APP_FILE_UPLOAD_FOLDER), then: () => GET_CLOUDFRONT_LINK_PATH(basename(s)) },
-    { if: () => s.includes(ENV.APP_PUBLIC_STATIC_IMAGE_FOLDER), then: () => s },
+    { if: () => IS_A_STRING_AND_NOT_EMPTY(uuid), then: () => GET_CLOUDFRONT_LIGHT_LINK_FROM_UUID({ uuid, publicStaticImageFolder }) },
+    { if: () => s.includes(fileUploadFolder), then: () => GET_CLOUDFRONT_LINK_PATH({ filename: basename(s), publicStaticImageFolder }) },
+    { if: () => s.includes(publicStaticImageFolder), then: () => s },
     {
       if: () => IS_A_URL(s),
       then: () => {
         const pathList = (new URL(s)).pathname.split('/')
         const filename = pathList[pathList.length - 1]
-        return IS_SET(filename) ? GET_CLOUDFRONT_LINK_PATH(filename) : ''
+        return IS_SET(filename) ? GET_CLOUDFRONT_LINK_PATH({ filename, publicStaticImageFolder }) : ''
       },
     },
   ]
 
-  return strategyList.find(_s => _s.if())?.then() ?? GET_CLOUDFRONT_LINK_PATH(s)
+  return strategyList.find(_s => _s.if())?.then() ?? GET_CLOUDFRONT_LINK_PATH({ filename: s, publicStaticImageFolder })
 }
 
-/** @returns {string} (path|url)?`filename` -> https:\//d244upthqj9aru.cloudfront.net/`filename` */
-export const GET_CLOUDFRONT_URL_FROM_ANY_STRING = (s: string): string => {
+/** @returns {string} (path|url)?`filename` -> https:\//subdomain.cloudfront.com/`filename` */
+export const GET_CLOUDFRONT_URL_FROM_ANY_STRING = (_: {
+  s: string
+  cloudfrontUri: string
+  fileUploadFolder: string
+  publicStaticImageFolder: string
+}): string => {
+  const s = _.s
+
   const uuid = EXTRACT_UUID_FROM_STRING(s)
 
+  const cloudfrontUri = _.cloudfrontUri
+  const fileUploadFolder = _.fileUploadFolder
+  const publicStaticImageFolder = _.publicStaticImageFolder
+
   const strategyList = [
-    { if: () => IS_A_STRING_AND_NOT_EMPTY(uuid), then: () => GET_CLOUDFRONT_URL_PNG_LIGHT_FROM_UUID(uuid) },
-    { if: () => s.includes(ENV.APP_FILE_UPLOAD_FOLDER), then: () => GET_CLOUDFRONT_URL_FILE(basename(s)) },
-    { if: () => s.includes(ENV.APP_PUBLIC_STATIC_IMAGE_FOLDER), then: () => GET_CLOUDFRONT_URL_FILE(basename(s)) },
+    { if: () => IS_A_STRING_AND_NOT_EMPTY(uuid), then: () => GET_CLOUDFRONT_URL_PNG_LIGHT_FROM_UUID({ uuid, cloudfrontUri }) },
+    { if: () => s.includes(fileUploadFolder), then: () => GET_CLOUDFRONT_URL_FILE({ filename: basename(s), cloudfrontUri }) },
+    { if: () => s.includes(publicStaticImageFolder), then: () => GET_CLOUDFRONT_URL_FILE({ filename: basename(s), cloudfrontUri }) },
     {
       if: () => IS_A_URL(s),
       then: () => {
         const pathList = (new URL(s)).pathname.split('/')
         const filename = pathList[pathList.length - 1]
-        return IS_SET(filename) ? GET_CLOUDFRONT_URL_FILE(filename) : ''
+        return IS_SET(filename) ? GET_CLOUDFRONT_URL_FILE({ filename, cloudfrontUri }) : ''
       },
     },
   ]
 
-  return strategyList.find(_s => _s.if())?.then() ?? GET_CLOUDFRONT_URL_FILE(s)
+  return strategyList.find(_s => _s.if())?.then() ?? GET_CLOUDFRONT_URL_FILE({ filename: s, cloudfrontUri })
 }

@@ -1,23 +1,22 @@
-import { TO_STRING } from 'convert/to-string.util'
-import dotenv from 'dotenv'
+// import dotenv from 'dotenv'
 import { GET_FILE_FULL_TEXT_CONTENT } from 'file.util'
 import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto'
 
-dotenv.config()
+// dotenv.config()
 
-const ENV: Record<string, any> = process.env
+// const ENV: Record<string, any> = process.env
 
-const ENV_APP_AES_128_GCM_KEY_FILE = TO_STRING(ENV.APP_AES_128_GCM_KEY_FILE)
+// const ENV_APP_AES_128_GCM_KEY_FILE = TO_STRING(ENV.APP_AES_128_GCM_KEY_FILE)
 
-export const GET_AES_GCM_KEY_BUFFER = async (): Promise<Buffer> => Buffer.from(
-  await GET_FILE_FULL_TEXT_CONTENT(ENV_APP_AES_128_GCM_KEY_FILE),
+export const GET_AES_GCM_KEY_BUFFER = async (aes128GcmKeyFile: string): Promise<Buffer> => Buffer.from(
+  await GET_FILE_FULL_TEXT_CONTENT(aes128GcmKeyFile),
   'base64'
 )
 
-const ENV_APP_AES_128_GCM_KEY_SFTP_FILE = TO_STRING(ENV.APP_AES_128_GCM_KEY_SFTP_FILE)
+// const ENV_APP_AES_128_GCM_KEY_SFTP_FILE = TO_STRING(ENV.APP_AES_128_GCM_KEY_SFTP_FILE)
 
-export const GET_AES_GCM_KEY_SFTP_BUFFER = async (): Promise<Buffer> => Buffer.from(
-  await GET_FILE_FULL_TEXT_CONTENT(ENV_APP_AES_128_GCM_KEY_SFTP_FILE),
+export const GET_AES_GCM_KEY_SFTP_BUFFER = async (aes128GcmKeySftpFile: string): Promise<Buffer> => Buffer.from(
+  await GET_FILE_FULL_TEXT_CONTENT(aes128GcmKeySftpFile),
   'base64'
 )
 
