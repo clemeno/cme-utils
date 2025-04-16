@@ -1,20 +1,18 @@
 Installing pnpm@10.8.1 in the project...
 
 Progress: resolved 1, reused 0, downloaded 0, added 0
-Progress: resolved 70, reused 70, downloaded 0, added 0
-Progress: resolved 264, reused 245, downloaded 0, added 0
-Packages: +302
+Progress: resolved 88, reused 87, downloaded 0, added 0
+Packages: +301
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Progress: resolved 322, reused 307, downloaded 0, added 0
-Progress: resolved 322, reused 307, downloaded 0, added 84
-Progress: resolved 322, reused 307, downloaded 0, added 257
-Progress: resolved 322, reused 307, downloaded 0, added 300
-Progress: resolved 322, reused 307, downloaded 0, added 302, done
+Progress: resolved 321, reused 306, downloaded 0, added 8
+Progress: resolved 321, reused 306, downloaded 0, added 127
+Progress: resolved 321, reused 306, downloaded 0, added 276
+Progress: resolved 321, reused 306, downloaded 0, added 299
+Progress: resolved 321, reused 306, downloaded 0, added 301, done
 
 dependencies:
 + axios 1.8.4
 + bcryptjs 3.0.2
-+ dotenv 16.5.0
 + luxon 3.6.1
 + objection 3.1.5
 
@@ -28,4 +26,4 @@ devDependencies:
 + neostandard 0.12.1
 + typescript 5.8.3
 
-Done in 6.8s using pnpm v10.8.1
+Done in 5.9s using pnpm v10.8.1
