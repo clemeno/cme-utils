@@ -382,13 +382,13 @@ export const TO_UNIQUE_ARRAY = (_: { from: any[], on?: (element: any) => any }):
 export const PERIOD_EXPORT = (_: { min: any, max: any, label: string }): string => {
   return `${TO_STRING(_.min?.toISOString())}_§§_${TO_STRING(_.max?.toISOString())}_§§_${_.label}`
 }
-export const PERIOD_IMPORT = (_: { input: string }): { mMin: any, mMax: any, label: string } => {
+export const PERIOD_IMPORT = (_: { input: string }): { min: any, max: any, label: string } => {
   const [minIso, maxIso, label] = _.input.split('_§§_')
 
   const mMin = DateTime.fromISO(minIso)
   const mMax = DateTime.fromISO(maxIso)
 
-  return { mMin, mMax, label }
+  return { min: mMin.isValid ? mMin : minIso, max: mMax.isValid ? mMax : maxIso, label }
 }
 
 export const DISPLAY_NS = (ns: any): numeric => (
