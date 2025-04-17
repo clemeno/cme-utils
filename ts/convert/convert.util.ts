@@ -1,5 +1,5 @@
 // import dotenv from 'dotenv'
-import { type AppOption } from '../app-option.js'
+import { DateTime } from 'luxon'
 import { IS_AN_ARRAY, IS_A_BOOLEAN, IS_A_NUMBER, IS_A_STRING, IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC } from '../check/check.util.js'
 import { IS_A_FUNCTION } from '../check/is-a-function.util.js'
 import { IS_EMPTY } from '../check/is-empty.util.js'
@@ -234,7 +234,13 @@ export const FROM_BASE_10_TO_CSN_DISPLAY = (_: { from: numeric, bCsnHexNumber: b
   return res
 }
 
-export const OPTIONS_TO_VALUE_LABEL_RECORD = (optionList: AppOption[]): Record<string, string> => {
+/**
+ * Convert a list of options to a mapping of each `{ [value]: label }` in a single object
+ * @param optionList list of objects matching `{ value, label }`
+ * @returns a `Record` where the keys are the stringified values and the values are the stringified labels
+ * @example `[{ value: 1, label: 'One' }, { value: 2, label: 'Two' }]` -> `{ '1': 'One', '2': 'Two' }`
+ */
+export const OPTIONS_TO_VALUE_LABEL_RECORD = (optionList: any[] | readonly any[]): Record<string, string> => {
   const res: Record<string, string> = {}
 
   for (const { value, label } of optionList) {
@@ -265,25 +271,28 @@ export const TRIM_DATA = (_: { object: any, depth?: number }): any => {
   const depth = _.depth ?? Number.MAX_SAFE_INTEGER
 
   let res: any
+
   if (IS_SET(o)) {
     if (Array.isArray(o)) {
       res = o.map((row: any) => TRIM_DATA({ object: row, depth: depth - 1 }))
-    } else if (typeof o === 'object') {
+    } else if ((o !== null) && (typeof o === 'object')) {
       for (const k in o) {
-        if (IS_SET(o[k])) {
+        const kOfO = k as keyof typeof o
+
+        if (IS_SET(o[kOfO])) {
           if (!IS_SET(res)) {
             res = {}
           }
 
-          res[k] = o[k]
+          res[k] = o[kOfO]
 
-          if (Array.isArray(o[k])) {
-            res[k] = o[k].map((row: any) => TRIM_DATA({ object: row, depth: depth - 1 }))
-          } else if (typeof o[k] === 'object') {
-            if (o[k] instanceof Date) {
-              res[k] = o[k].toISOString()
+          if (Array.isArray(res[k])) {
+            res[k] = res[k].map((row: any) => TRIM_DATA({ object: row, depth: depth - 1 }))
+          } else if (typeof res[k] === 'object') {
+            if (res[k] instanceof Date) {
+              res[k] = res[k].toISOString()
             } else {
-              res[k] = TRIM_DATA({ object: o[k], depth: depth - 1 })
+              res[k] = TRIM_DATA({ object: res[k], depth: depth - 1 })
             }
           }
         }
@@ -292,6 +301,7 @@ export const TRIM_DATA = (_: { object: any, depth?: number }): any => {
       res = o
     }
   }
+
   return res
 }
 
@@ -372,13 +382,13 @@ export const TO_UNIQUE_ARRAY = (_: { from: any[], on?: (element: any) => any }):
 export const PERIOD_EXPORT = (_: { min: any, max: any, label: string }): string => {
   return `${TO_STRING(_.min?.toISOString())}_§§_${TO_STRING(_.max?.toISOString())}_§§_${_.label}`
 }
-export const PERIOD_IMPORT = (_: { input: string, momentService: any }): { min: any, max: any, label: string } => {
+export const PERIOD_IMPORT = (_: { input: string }): { mMin: any, mMax: any, label: string } => {
   const [minIso, maxIso, label] = _.input.split('_§§_')
-  return {
-    min: IS_SET(_.momentService) ? _.momentService.from({ input: minIso }) : minIso,
-    max: IS_SET(_.momentService) ? _.momentService.from({ input: maxIso }) : maxIso,
-    label,
-  }
+
+  const mMin = DateTime.fromISO(minIso)
+  const mMax = DateTime.fromISO(maxIso)
+
+  return { mMin, mMax, label }
 }
 
 export const DISPLAY_NS = (ns: any): numeric => (
@@ -477,7 +487,7 @@ export const TO_CSV_VALUE = (v: any): string => {
       res = v.toString()
     } else if (IS_A_STRING(v)) {
       res = JSON.stringify(v)
-    } else if (IS_A_FUNCTION(v?.toString)) {
+    } else if (IS_A_FUNCTION(v.toString)) {
       res = JSON.stringify(v.toString())
     } else {
       res = v
