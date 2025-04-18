@@ -3,7 +3,6 @@ import { TO_NUMBER } from 'convert/convert.util.js'
 import { TO_STRING } from 'convert/to-string.util'
 // import dotenv from 'dotenv'
 import { DateTime, Settings } from 'luxon'
-import { GET_LOCALE } from 'space.util'
 
 // dotenv.config()
 
@@ -130,16 +129,6 @@ export const FROM_ISO_TO_LOCAL_D = (iso: any): string => FROM_ISO_TO_LOCAL_FORMA
 export const FROM_ISO_TO_LOCAL_T = (iso: any): string => FROM_ISO_TO_LOCAL_FORMAT({ iso, format: LUXON_FORMAT_LOCAL_HM })
 
 export const FROM_ISO_TO_LOCAL_TT = (iso: any): string => FROM_ISO_TO_LOCAL_FORMAT({ iso, format: LUXON_FORMAT_LOCAL_HMS })
-
-export const TO_LOCAL_NUMBER = (x: any): string => IS_NUMERIC(x) ? TO_NUMBER(x).toLocaleString(GET_LOCALE()) : ''
-
-export const TO_LOCAL_NUMBER_WITH_2_F_DIGITS = (x: any): string => {
-  return IS_NUMERIC(x) ? TO_NUMBER(x).toLocaleString(GET_LOCALE(), { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
-}
-
-export const TO_LOCAL_NUMBER_WITH_1_F_DIGIT = (x: any): string => {
-  return IS_NUMERIC(x) ? TO_NUMBER(x).toLocaleString(GET_LOCALE(), { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : ''
-}
 
 export const FROM_UNIX_TO_LOCAL_FORMAT = (_: { unix: any, format?: string }): string => {
   const m = IS_NUMERIC(_.unix) ? DateTime.fromSeconds(TO_NUMBER(_.unix)) : DateTime.invalid('unix')
