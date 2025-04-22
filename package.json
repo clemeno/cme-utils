@@ -1,6 +1,6 @@
 {
   "name": "cme-utils",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "type": "module",
   "license": "MIT",
   "description": "A collection of utility functions for TypaScript/JavaScript",
@@ -21,14 +21,8 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix"
   },
-  "dependencies": {
-    "axios": "^1.8.4",
-    "bcryptjs": "^3.0.2",
-    "luxon": "^3.6.1",
-    "objection": "^3.1.5"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@types/luxon": "^3.6.2",
     "@types/node": "^22.14.1",
     "@typescript-eslint/eslint-plugin": "^8.31.0",
     "@typescript-eslint/parser": "^8.31.0",

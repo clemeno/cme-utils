@@ -1,8 +1,8 @@
-import { IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC } from 'check/check.util'
+import { IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC, IS_ON } from 'check/check.util'
+import { IS_SET } from 'check/is-set.util'
 import { TO_NUMBER } from 'convert/convert.util.js'
 import { TO_STRING } from 'convert/to-string.util'
 // import dotenv from 'dotenv'
-import { DateTime, Settings } from 'luxon'
 
 // dotenv.config()
 
@@ -11,14 +11,23 @@ import { DateTime, Settings } from 'luxon'
 // export const INITIAL_TZ: string = ENV.APP_TZ ?? 'UTC'
 
 /** set the global timezone to `Luxon` `Settings` */
-export const SET_TZ = (tz: string): void => {
-  Settings.defaultZone = tz
+export const SET_TZ = (_: {
+  tz: string
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): void => {
+  const tz = IS_A_STRING_AND_NOT_EMPTY(_.tz) ? _.tz : 'UTC'
+
+  _.Settings.defaultZone = tz
 
   try { document.documentElement.setAttribute('tz', tz) } catch {}
 }
 
 /** get the global timezone from `Luxon` `Settings` */
-export const GET_TZ = (): string => Settings.defaultZone.name
+export const GET_TZ = (
+  /** @type {Luxon.Settings} */
+  Settings: any
+): string => Settings.defaultZone.name
 
 // * Luxon DateTime format constants
 export const LUXON_FORMAT_H = 'HH'
@@ -59,13 +68,24 @@ export const LUXON_FORMAT_LOCAL_LONG_MONTH = 'MMMM'
 export const LUXON_FORMAT_LOCAL_LONG_MONTH_Y = 'MMMM y'
 
 /** `Luxon` `DateTime` `UTC` */
-export const NOW_UTC = (): DateTime => DateTime.utc()
+export const NOW_UTC = <T = any> (
+  /** @type {Luxon.DateTime} */
+  DateTime: T
+): T => (DateTime as any).utc()
 
 /** `Luxon` `DateTime` `local` */
-export const NOW = (): DateTime => DateTime.local()
+export const NOW = <T = any> (
+  /** @type {Luxon.DateTime} */
+  DateTime: T
+): T => (DateTime as any).local()
 
 /** `Luxon` `DateTime` set to the global timezone */
-export const NOW_APP = (): DateTime => NOW().setZone(GET_TZ() ?? 'UTC')
+export const NOW_APP = <T = any> (_: {
+  /** @type {Luxon.DateTime} */
+  DateTime: T
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): T => (NOW(_.DateTime) as any).setZone(GET_TZ(_.Settings) ?? 'UTC')
 
 /** current timestamp in milliseconds */
 export const NOW_MS = (): number => +(new Date())
@@ -74,19 +94,46 @@ export const NOW_MS = (): number => +(new Date())
 export const NOW_UNIX = (): number => Math.trunc(+(new Date()) / 1e3)
 
 /** current SQL `datetime` `UTC` - **without** timzeone display - using `Luxon` `DateTime` */
-export const MYSQL_DATETIME_NOW_UTC = (): string => NOW_UTC().toFormat(LUXON_FORMAT_YMD_HMS)
+export const MYSQL_DATETIME_NOW_UTC = <T = any> (
+  /** @type {Luxon.DateTime} */
+  DateTime: T
+): T => (NOW_UTC(DateTime) as any).toFormat(LUXON_FORMAT_YMD_HMS)
 
 /** `Luxon` `DateTime` 7 days before a moment (defaults to `now`) at midnight */
-export const GET_7_DAYS_BEFORE_START = (m?: DateTime): DateTime => (m ?? NOW_APP()).minus({ day: 7 }).startOf('day')
+export const GET_7_DAYS_BEFORE_START = <T = any> (_: {
+  /** @type {Luxon.DateTime} */
+  m?: T
+  /** @type {Luxon.DateTime} */
+  DateTime: T
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): T => ((_.m ?? NOW_APP(_)) as any).minus({ day: 7 }).startOf('day')
 
 /** `Luxon` `DateTime` 7 days before today at midnight */
-export const GET_7_DAYS_AGO_START = (): DateTime => GET_7_DAYS_BEFORE_START(NOW_APP())
+export const GET_7_DAYS_AGO_START = <T = any> (_: {
+  /** @type {Luxon.DateTime} */
+  DateTime: T
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): T => GET_7_DAYS_BEFORE_START({ m: NOW_APP(_), ..._ })
 
 /** `Luxon` `DateTime` a moment (defaults to `now`) at the end of the day */
-export const GET_DAY_STOP = (m?: DateTime): DateTime => (m ?? NOW_APP()).endOf('day')
+export const GET_DAY_STOP = <T = any> (_: {
+  /** @type {Luxon.DateTime} */
+  m?: T
+  /** @type {Luxon.DateTime} */
+  DateTime: T
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): T => ((_.m ?? NOW_APP(_)) as any).endOf('day')
 
 /** `Luxon` `DateTime` today at the end of the day */
-export const GET_TODAY_STOP = (): DateTime => GET_DAY_STOP(NOW_APP())
+export const GET_TODAY_STOP = <T = any> (_: {
+  /** @type {Luxon.DateTime} */
+  DateTime: T
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): T => GET_DAY_STOP({ m: NOW_APP(_), ..._ })
 
 /**
  * Wait for a specified number of milliseconds and expect true.
@@ -104,46 +151,132 @@ export const WAIT_MS = async (ms: any): Promise<true> => {
  */
 export const DELAY_MS = async (ms: number): Promise<any> => await new Promise(resolve => setTimeout(resolve, ms))
 
-export const LUXON_IS_SAME_Y = (_: { ma: DateTime, mb: DateTime }): boolean => _.ma.year === _.mb.year
-
-export const LUXON_IS_SAME_YM = (_: { ma: DateTime, mb: DateTime }): boolean => _.ma.month === _.mb.month && LUXON_IS_SAME_Y(_)
-
-export const LUXON_IS_SAME_YMD = (_: { ma: DateTime, mb: DateTime }): boolean => _.ma.day === _.mb.day && LUXON_IS_SAME_YM(_)
-
-export const LUXON_IS_SAME_YMDH = (_: { ma: DateTime, mb: DateTime }): boolean => _.ma.hour === _.mb.hour && LUXON_IS_SAME_YMD(_)
-
-export const LUXON_IS_SAME_YMDHM = (_: { ma: DateTime, mb: DateTime }): boolean => _.ma.minute === _.mb.minute && LUXON_IS_SAME_YMDHM(_)
-
-export const LUXON_IS_SAME_YMDHMS = (_: { ma: DateTime, mb: DateTime }): boolean => _.ma.toUnixInteger() === _.mb.toUnixInteger()
-
-export const LUXON_IS_SAME = (_: { ma: DateTime, mb: DateTime }): boolean => +_.ma === +_.mb
-
-export const FROM_ISO_TO_LOCAL_FORMAT = (_: { iso: any, format?: string }): string => {
-  const m = IS_A_STRING_AND_NOT_EMPTY(TO_STRING(_.iso)) ? DateTime.fromISO(TO_STRING(_.iso)) : DateTime.invalid('iso')
-  return m.isValid ? m.setZone(GET_TZ()).toFormat(_.format ?? LUXON_FORMAT_LOCAL_YMD_HMS_S_Z) : ''
+export const LUXON_IS_SAME_Y = <T = any> (_: { ma: T, mb: T }): boolean => {
+  return (_.ma as any).year === (_.mb as any).year
 }
 
-export const FROM_ISO_TO_LOCAL_DT = (iso: any): string => FROM_ISO_TO_LOCAL_FORMAT({ iso, format: LUXON_FORMAT_LOCAL_YMD_HM })
-
-export const FROM_ISO_TO_LOCAL_DTT = (iso: any): string => FROM_ISO_TO_LOCAL_FORMAT({ iso, format: LUXON_FORMAT_LOCAL_YMD_HMS })
-
-export const FROM_ISO_TO_LOCAL_D = (iso: any): string => FROM_ISO_TO_LOCAL_FORMAT({ iso, format: LUXON_FORMAT_LOCAL_YMD })
-
-export const FROM_ISO_TO_LOCAL_T = (iso: any): string => FROM_ISO_TO_LOCAL_FORMAT({ iso, format: LUXON_FORMAT_LOCAL_HM })
-
-export const FROM_ISO_TO_LOCAL_TT = (iso: any): string => FROM_ISO_TO_LOCAL_FORMAT({ iso, format: LUXON_FORMAT_LOCAL_HMS })
-
-export const FROM_UNIX_TO_LOCAL_FORMAT = (_: { unix: any, format?: string }): string => {
-  const m = IS_NUMERIC(_.unix) ? DateTime.fromSeconds(TO_NUMBER(_.unix)) : DateTime.invalid('unix')
-  return m.isValid ? m.setZone(GET_TZ()).toFormat(_.format ?? LUXON_FORMAT_LOCAL_YMD_HMS_S_Z) : ''
+export const LUXON_IS_SAME_YM = <T = any> (_: { ma: T, mb: T }): boolean => {
+  return ((_.ma as any).month === (_.mb as any).month) && LUXON_IS_SAME_Y(_)
 }
 
-export const FROM_UNIX_TO_LOCAL_DT = (unix: any): string => FROM_UNIX_TO_LOCAL_FORMAT({ unix, format: LUXON_FORMAT_LOCAL_YMD_HM })
+export const LUXON_IS_SAME_YMD = <T = any> (_: { ma: T, mb: T }): boolean => {
+  return ((_.ma as any).day === (_.mb as any).day) && LUXON_IS_SAME_YM(_)
+}
 
-export const FROM_UNIX_TO_LOCAL_DTT = (unix: any): string => FROM_UNIX_TO_LOCAL_FORMAT({ unix, format: LUXON_FORMAT_LOCAL_YMD_HMS })
+export const LUXON_IS_SAME_YMDH = <T = any> (_: { ma: T, mb: T }): boolean => {
+  return ((_.ma as any).hour === (_.mb as any).hour) && LUXON_IS_SAME_YMD(_)
+}
 
-export const FROM_UNIX_TO_LOCAL_D = (unix: any): string => FROM_UNIX_TO_LOCAL_FORMAT({ unix, format: LUXON_FORMAT_LOCAL_YMD })
+export const LUXON_IS_SAME_YMDHM = <T = any> (_: { ma: T, mb: T }): boolean => {
+  return ((_.ma as any).minute === (_.mb as any).minute) && LUXON_IS_SAME_YMDHM(_)
+}
 
-export const FROM_UNIX_TO_LOCAL_T = (unix: any): string => FROM_UNIX_TO_LOCAL_FORMAT({ unix, format: LUXON_FORMAT_LOCAL_HM })
+export const LUXON_IS_SAME_YMDHMS = <T = any> (_: { ma: T, mb: T }): boolean => {
+  return (_.ma as any).toUnixInteger() === (_.mb as any).toUnixInteger()
+}
 
-export const FROM_UNIX_TO_LOCAL_TT = (unix: any): string => FROM_UNIX_TO_LOCAL_FORMAT({ unix, format: LUXON_FORMAT_LOCAL_HMS })
+export const LUXON_IS_SAME = <T = any>(_: { ma: T, mb: T }): boolean => +_.ma === +_.mb
+
+export const FROM_ISO_TO_LOCAL_FORMAT = (_: {
+  iso: any
+  format?: string
+  /** @type {Luxon.DateTime} */
+  DateTime: any
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): string => {
+  const m = IS_A_STRING_AND_NOT_EMPTY(TO_STRING(_.iso)) ? _.DateTime.fromISO(TO_STRING(_.iso)) : _.DateTime.invalid('iso')
+  return IS_ON(m.isValid) ? m.setZone(GET_TZ(_)).toFormat(_.format ?? LUXON_FORMAT_LOCAL_YMD_HMS_S_Z) : ''
+}
+
+export const FROM_ISO_TO_LOCAL_DT = (_: {
+  iso: any
+  /** @type {Luxon.DateTime} */
+  DateTime: any
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): string => FROM_ISO_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_YMD_HM })
+
+export const FROM_ISO_TO_LOCAL_DTT = (_: {
+  iso: any
+  /** @type {Luxon.DateTime} */
+  DateTime: any
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): string => FROM_ISO_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_YMD_HMS })
+
+export const FROM_ISO_TO_LOCAL_D = (_: {
+  iso: any
+  /** @type {Luxon.DateTime} */
+  DateTime: any
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): string => FROM_ISO_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_YMD })
+
+export const FROM_ISO_TO_LOCAL_T = (_: {
+  iso: any
+  /** @type {Luxon.DateTime} */
+  DateTime: any
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): string => FROM_ISO_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_HM })
+
+export const FROM_ISO_TO_LOCAL_TT = (_: {
+  iso: any
+  /** @type {Luxon.DateTime} */
+  DateTime: any
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): string => FROM_ISO_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_HMS })
+
+export const FROM_UNIX_TO_LOCAL_FORMAT = (_: {
+  unix: any
+  format?: string
+  /** @type {Luxon.DateTime} */
+  DateTime: any
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): string => {
+  const m = IS_NUMERIC(_.unix) ? _.DateTime.fromSeconds(TO_NUMBER(_.unix)) : _.DateTime.invalid('unix')
+  return IS_SET(m.isValid) ? m.setZone(GET_TZ(_)).toFormat(_.format ?? LUXON_FORMAT_LOCAL_YMD_HMS_S_Z) : ''
+}
+
+export const FROM_UNIX_TO_LOCAL_DT = (_: {
+  unix: any
+  /** @type {Luxon.DateTime} */
+  DateTime: any
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): string => FROM_UNIX_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_YMD_HM })
+
+export const FROM_UNIX_TO_LOCAL_DTT = (_: {
+  unix: any
+  /** @type {Luxon.DateTime} */
+  DateTime: any
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): string => FROM_UNIX_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_YMD_HMS })
+
+export const FROM_UNIX_TO_LOCAL_D = (_: {
+  unix: any
+  /** @type {Luxon.DateTime} */
+  DateTime: any
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): string => FROM_UNIX_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_YMD })
+
+export const FROM_UNIX_TO_LOCAL_T = (_: {
+  unix: any
+  /** @type {Luxon.DateTime} */
+  DateTime: any
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): string => FROM_UNIX_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_HM })
+
+export const FROM_UNIX_TO_LOCAL_TT = (_: {
+  unix: any
+  /** @type {Luxon.DateTime} */
+  DateTime: any
+  /** @type {Luxon.Settings} */
+  Settings: any
+}): string => FROM_UNIX_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_HMS })

@@ -3,7 +3,6 @@ import { TO_ANY_ARRAY, TO_NUMBER } from 'convert/convert.util'
 import { TO_STRING } from 'convert/to-string.util'
 import { type numeric } from 'numeric'
 import { GET_OBJECT_ENTRY_LIST } from 'object.util'
-import { type RawBuilder } from 'objection'
 
 export const NORMALIZE_N_1 = (_: { n?: numeric, min?: numeric, max?: numeric, def?: numeric }): string => {
   const n = TO_NUMBER(_.n ?? 1)
@@ -85,7 +84,7 @@ export const LIKE_KEEP_PERCENT_AND_DASH = (_: { from: string, escapeWith?: strin
 
 export interface WHERE_PARAMS {
   qb: any
-  column: string | RawBuilder
+  column: any
   operator?: string
   value: any
   bKeepPercentAndDash?: boolean
@@ -161,7 +160,7 @@ export const OR_WHERE = (_: WHERE_PARAMS): void => {
 
 export interface WHERE_IN_PARAMS {
   qb: any
-  column: string | RawBuilder
+  column: any
   values: any[] | Set<any> | Map<any, any> | readonly any[] | ReadonlySet<any> | ReadonlyMap<any, any>
 }
 
@@ -225,7 +224,7 @@ export const WHERE_NOT_IN = (_: WHERE_IN_PARAMS): void => {
 
 export interface OR_WHERE_IN_PARAMS {
   qb: any
-  column: string | RawBuilder
+  column: any
   values: any[]
 }
 
