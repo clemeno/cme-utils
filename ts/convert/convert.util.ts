@@ -241,18 +241,16 @@ export const FROM_BASE_10_TO_CSN_DISPLAY = (_: { from: numeric, bCsnHexNumber: b
  * @returns a `Record` where the keys are the stringified values and the values are the stringified labels
  * @example `[{ value: 1, label: 'One' }, { value: 2, label: 'Two' }]` -> `{ '1': 'One', '2': 'Two' }`
  */
-export const OPTIONS_TO_VALUE_LABEL_RECORD = <
-  V extends PropertyKey = any,
-  L = any,
-  T extends { value: V, label: L } = { value: V, label: L }
-> (optionList: T[] | readonly T[]): Record<V, L> => {
-  const res: Record<V, L> = GET_ANY_OBJECT()
+export const OPTIONS_TO_VALUE_LABEL_RECORD = <T extends { value: PropertyKey, label: string }> (
+  optionList: T[] | readonly T[]
+): Record<T['value'], T['label']> => {
+  const res = GET_ANY_OBJECT()
 
-  for (const { value, label } of optionList) {
-    res[value] = label
+  for (const o of optionList) {
+    res[o.value] = o.label
   }
 
-  return res
+  return res as Record<T['value'], T['label']>
 }
 
 export const TO_JSON = (v: any): string => {
