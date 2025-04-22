@@ -1,5 +1,5 @@
 // import dotenv from 'dotenv'
-import { GET_FILE_FULL_TEXT_CONTENT } from 'file.util'
+import { GET_FILE_FULL_TEXT_CONTENT } from './file.util.js'
 import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto'
 
 // dotenv.config()

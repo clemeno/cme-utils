@@ -1,7 +1,7 @@
 // import { type AbstractControl, type ValidationErrors, type ValidatorFn } from '@angular/forms'
-import { IS_NUMERIC } from 'check/check.util'
-import { IS_SET } from 'check/is-set.util'
-import { TO_NUMBER } from 'convert/convert.util'
+import { IS_NUMERIC } from './check/check.util.js'
+import { IS_SET } from './check/is-set.util.js'
+import { TO_NUMBER } from './convert/convert.util.js'
 
 /** Mimic Angular forms `ValidationErrors` type definition */
 export type AppValidationErrors = Record<string, any>

@@ -1,7 +1,7 @@
-import { IS_NUMERIC, IS_ON } from 'check/check.util'
-import { IS_SET } from 'check/is-set.util'
-import { TO_NUMBER } from 'convert/convert.util'
-import { type numeric } from 'numeric'
+import { IS_NUMERIC, IS_ON } from './check/check.util.js'
+import { IS_SET } from './check/is-set.util.js'
+import { TO_NUMBER } from './convert/convert.util.js'
+import { type numeric } from './numeric.js'
 
 export const ARRAY_MAX = <T = any> (a: T[] | readonly T[]): T | undefined => {
   let max: any

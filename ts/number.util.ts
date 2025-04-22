@@ -1,6 +1,6 @@
-import { IS_NUMERIC } from 'check/check.util'
-import { TO_NUMBER } from 'convert/convert.util'
-import { GET_LOCALE } from 'space.util'
+import { IS_NUMERIC } from './check/check.util.js'
+import { TO_NUMBER } from './convert/convert.util.js'
+import { GET_LOCALE } from './space.util.js'
 
 /**
  * ! **Not secure**, simple random number generator.

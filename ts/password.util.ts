@@ -1,4 +1,4 @@
-import { TO_STRING } from 'convert/to-string.util'
+import { TO_STRING } from './convert/to-string.util.js'
 
 export type hashFnType = (clear: string, iterationCount: number) => Promise<string>
 

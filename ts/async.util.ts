@@ -1,4 +1,4 @@
-import { IS_SET } from 'check/is-set.util.js'
+import { IS_SET } from './check/is-set.util.js'
 
 /** expect an { exception } */
 export class ExceptionOnly {

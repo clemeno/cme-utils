@@ -1,6 +1,6 @@
-import { type bool } from 'bool'
-import { IS_NUMERIC, IS_ON } from 'check/check.util'
-import { TO_NUMBER } from 'convert/convert.util'
+import { type bool } from './bool.js'
+import { IS_NUMERIC, IS_ON } from './check/check.util.js'
+import { TO_NUMBER } from './convert/convert.util.js'
 
 export const SORT_OBJECTS = (_: { on: (x: any) => any, order?: any, bPureNumeric?: bool }): ((a: any, b: any) => number) => {
   let res: ((a: any, b: any) => number)

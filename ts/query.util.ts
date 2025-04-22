@@ -1,8 +1,8 @@
-import { IS_A_MAP, IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC, IS_ON } from 'check/check.util'
-import { TO_ANY_ARRAY, TO_NUMBER } from 'convert/convert.util'
-import { TO_STRING } from 'convert/to-string.util'
-import { type numeric } from 'numeric'
-import { GET_OBJECT_ENTRY_LIST } from 'object.util'
+import { IS_A_MAP, IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC, IS_ON } from './check/check.util.js'
+import { TO_ANY_ARRAY, TO_NUMBER } from './convert/convert.util.js'
+import { TO_STRING } from './convert/to-string.util.js'
+import { type numeric } from './numeric.js'
+import { GET_OBJECT_ENTRY_LIST } from './object.util.js'
 
 export const NORMALIZE_N_1 = (_: { n?: numeric, min?: numeric, max?: numeric, def?: numeric }): string => {
   const n = TO_NUMBER(_.n ?? 1)

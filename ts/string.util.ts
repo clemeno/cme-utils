@@ -1,9 +1,9 @@
-import { IS_A_STRING_AND_NOT_EMPTY, IS_AN_ARRAY_AND_NOT_EMPTY } from 'check/check.util'
-import { IS_SET } from 'check/is-set.util'
-import { TO_STRING } from 'convert/to-string.util.js'
+import { IS_A_STRING_AND_NOT_EMPTY, IS_AN_ARRAY_AND_NOT_EMPTY } from './check/check.util.js'
+import { IS_SET } from './check/is-set.util.js'
+import { TO_STRING } from './convert/to-string.util.js'
 // import dotenv from 'dotenv'
 import { basename } from 'node:path'
-import { IS_UUID_STRING } from 'uuid.util'
+import { IS_UUID_STRING } from './uuid.util.js'
 
 // dotenv.config()
 

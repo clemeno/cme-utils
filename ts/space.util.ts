@@ -1,5 +1,5 @@
 // import { env } from 'env/env'
-import { IS_A_STRING_AND_NOT_EMPTY } from 'check/check.util'
+import { IS_A_STRING_AND_NOT_EMPTY } from './check/check.util.js'
 // import dotenv from 'dotenv'
 // import { Locale } from 'date-fns'
 // import { enGB } from 'date-fns/locale'

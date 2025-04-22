@@ -1,7 +1,7 @@
-import { IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC, IS_ON } from 'check/check.util'
-import { IS_SET } from 'check/is-set.util'
-import { TO_NUMBER } from 'convert/convert.util.js'
-import { TO_STRING } from 'convert/to-string.util'
+import { IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC, IS_ON } from './check/check.util.js'
+import { IS_SET } from './check/is-set.util.js'
+import { TO_NUMBER } from './convert/convert.util.js'
+import { TO_STRING } from './convert/to-string.util.js'
 // import dotenv from 'dotenv'
 
 // dotenv.config()

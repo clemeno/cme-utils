@@ -1,5 +1,5 @@
 // import dotenv from 'dotenv'
-import { GET_ANY_OBJECT } from 'factory.util.js'
+import { GET_ANY_OBJECT } from '../factory.util.js'
 import { IS_AN_ARRAY, IS_A_BOOLEAN, IS_A_NUMBER, IS_A_STRING, IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC, IS_ON } from '../check/check.util.js'
 import { IS_A_FUNCTION } from '../check/is-a-function.util.js'
 import { IS_EMPTY } from '../check/is-empty.util.js'

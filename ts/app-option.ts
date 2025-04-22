@@ -1,4 +1,4 @@
-import { IS_SET } from 'check/is-set.util.js'
+import { IS_SET } from './check/is-set.util.js'
 
 /** Used to model html <option> elements in the app + meta-data */
 export class AppOption {

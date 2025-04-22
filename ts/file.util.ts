@@ -1,4 +1,4 @@
-import { TO_STRING } from 'convert/to-string.util'
+import { TO_STRING } from './convert/to-string.util.js'
 import { createReadStream } from 'node:fs'
 import { writeFile } from 'node:fs/promises'
 

@@ -1,6 +1,6 @@
-import { type bool } from 'bool.js'
-import { TO_STRING } from 'convert/to-string.util.js'
+import { type bool } from '../bool.js'
 import { SYMBOLS } from '../constant.util.js'
+import { TO_STRING } from '../convert/to-string.util.js'
 import { type numeric } from '../numeric.js'
 import { IS_EMPTY } from './is-empty.util.js'
 import { IS_SET } from './is-set.util.js'

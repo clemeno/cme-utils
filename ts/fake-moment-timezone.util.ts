@@ -1,5 +1,5 @@
-import { IS_A_DATE_AND_NOT_EMPTY, IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC, IS_ON } from 'check/check.util.js'
-import { TO_NUMBER } from 'convert/convert.util.js'
+import { IS_A_DATE_AND_NOT_EMPTY, IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC, IS_ON } from './check/check.util.js'
+import { TO_NUMBER } from './convert/convert.util.js'
 
 /**
  * `Luxon` `DateTime` `MomentTimezone` mock class for old versions of `Highcharts` (before 11.3)
