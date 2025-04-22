@@ -236,22 +236,35 @@ export const FROM_BASE_10_TO_CSN_DISPLAY = (_: { from: numeric, bCsnHexNumber: b
 }
 
 /**
+ * Converts a `Array<T extends Record<PropertyKey, any>>` into a `Record<T[K], T[V]>` using specified keys
+ * @param list Array of objects to convert
+ * @param keyA Name of the property to use as Record key
+ * @param keyB Name of the property to use as Record value
+ * @returns Record mapping keyA values to keyB values
+ */
+export function FROM_LIST_TO_A_B_RECORD<
+  T extends Record<PropertyKey, any>,
+  K extends keyof T,
+  V extends keyof T
+> (_: { list: T[] | ReadonlyArray<T>, keyA: K, keyB: V }): Record<T[K], T[V]> {
+  const res = GET_ANY_OBJECT()
+
+  for (const row of _.list) {
+    res[row[_.keyA]] = row[_.keyB]
+  }
+
+  return res as Record<T[K], T[V]>
+}
+
+/**
  * Convert a list of options to a mapping of each `{ [value]: label }` in a single object
  * @param optionList list of objects matching `{ value, label }`
  * @returns a `Record` where the keys are the stringified values and the values are the stringified labels
  * @example `[{ value: 1, label: 'One' }, { value: 2, label: 'Two' }]` -> `{ '1': 'One', '2': 'Two' }`
  */
-export const OPTIONS_TO_VALUE_LABEL_RECORD = <T extends { value: PropertyKey, label: string }> (
-  optionList: T[] | readonly T[]
-): Record<T['value'], T['label']> => {
-  const res = GET_ANY_OBJECT()
-
-  for (const o of optionList) {
-    res[o.value] = o.label
-  }
-
-  return res as Record<T['value'], T['label']>
-}
+export const FROM_LIST_TO_VALUE_LABEL_RECORD = <T extends Record<PropertyKey, any>> (
+  list: T[] | ReadonlyArray<T>
+): Record<T['value'], T['label']> => FROM_LIST_TO_A_B_RECORD({ list, keyA: 'value', keyB: 'label' })
 
 export const TO_JSON = (v: any): string => {
   let res: string = ''
