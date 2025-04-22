@@ -1,6 +1,6 @@
 {
   "name": "cme-utils",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "type": "module",
   "license": "MIT",
   "description": "A collection of utility functions for TypaScript/JavaScript",
@@ -23,6 +23,7 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@types/luxon": "^3.6.2",
     "@types/node": "^22.14.1",
     "@typescript-eslint/eslint-plugin": "^8.31.0",
     "@typescript-eslint/parser": "^8.31.0",

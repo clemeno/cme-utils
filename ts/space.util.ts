@@ -1,5 +1,6 @@
-// import { env } from 'env/env'
+import type luxon from 'luxon'
 import { IS_A_STRING_AND_NOT_EMPTY } from './check/check.util.js'
+// import { env } from 'env/env'
 // import dotenv from 'dotenv'
 // import { Locale } from 'date-fns'
 // import { enGB } from 'date-fns/locale'
@@ -13,8 +14,7 @@ import { IS_A_STRING_AND_NOT_EMPTY } from './check/check.util.js'
 /** set the global locale to `Luxon` `Settings` */
 export const SET_LOCALE = (_: {
   locale: string
-  /** @type {Luxon.Settings} */
-  Settings: any
+  Settings: typeof luxon.Settings
 }): void => {
   const locale = IS_A_STRING_AND_NOT_EMPTY(_.locale) ? _.locale : 'en-gb'
 
@@ -34,10 +34,7 @@ export const SET_LOCALE = (_: {
 }
 
 /** get the global locale from `Luxon` `Settings` */
-export const GET_LOCALE = (
-  /** @type {Luxon.Settings} */
-  Settings: any
-): string => Settings.defaultLocale
+export const GET_LOCALE = (Settings: typeof luxon.Settings): string => Settings.defaultLocale
 
 export const SET_GEO = (geo: string): void => {
   try { document.documentElement.setAttribute('geo', geo) } catch {}
@@ -48,8 +45,7 @@ export const SET_GEO_FROM_LOCALE = (locale: string): void => {
 }
 
 export const GET_GEO = (
-  /** @type {Luxon.Settings} */
-  Settings: any
+  Settings: typeof luxon.Settings
 ): string => {
   let geo = ''
 
