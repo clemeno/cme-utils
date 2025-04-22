@@ -55,6 +55,9 @@ export const LUXON_FORMAT_LOCAL_YMD_HMS_S_Z = 'D TT.SSS z'
 export const LUXON_FORMAT_LOCAL_YMD_HMS_O = 'D TT ZZ'
 export const LUXON_FORMAT_LOCAL_YMD_HMS_S_O = 'D TT.SSS ZZ'
 
+export const LUXON_FORMAT_LOCAL_LONG_MONTH = 'MMMM'
+export const LUXON_FORMAT_LOCAL_LONG_MONTH_Y = 'MMMM y'
+
 /** `Luxon` `DateTime` `UTC` */
 export const NOW_UTC = (): DateTime => DateTime.utc()
 
