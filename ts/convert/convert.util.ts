@@ -1,4 +1,5 @@
 // import dotenv from 'dotenv'
+import { GET_ANY_OBJECT } from 'factory.util.js'
 import { DateTime } from 'luxon'
 import { IS_AN_ARRAY, IS_A_BOOLEAN, IS_A_NUMBER, IS_A_STRING, IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC } from '../check/check.util.js'
 import { IS_A_FUNCTION } from '../check/is-a-function.util.js'
@@ -240,11 +241,15 @@ export const FROM_BASE_10_TO_CSN_DISPLAY = (_: { from: numeric, bCsnHexNumber: b
  * @returns a `Record` where the keys are the stringified values and the values are the stringified labels
  * @example `[{ value: 1, label: 'One' }, { value: 2, label: 'Two' }]` -> `{ '1': 'One', '2': 'Two' }`
  */
-export const OPTIONS_TO_VALUE_LABEL_RECORD = (optionList: any[] | readonly any[]): Record<string, string> => {
-  const res: Record<string, string> = {}
+export const OPTIONS_TO_VALUE_LABEL_RECORD = <
+  V extends PropertyKey = any,
+  L = any,
+  T extends { value: V, label: L } = { value: V, label: L }
+> (optionList: T[] | readonly T[]): Record<V, L> => {
+  const res: Record<V, L> = GET_ANY_OBJECT()
 
   for (const { value, label } of optionList) {
-    res[TO_STRING(value)] = TO_STRING(label)
+    res[value] = label
   }
 
   return res
