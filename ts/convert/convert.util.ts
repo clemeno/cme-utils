@@ -1,4 +1,4 @@
-import type luxon from 'luxon'
+import { type DateTime } from 'luxon'
 import { IS_AN_ARRAY, IS_A_BOOLEAN, IS_A_NUMBER, IS_A_STRING, IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC, IS_ON } from '../check/check.util.js'
 import { IS_A_FUNCTION } from '../check/is-a-function.util.js'
 import { IS_EMPTY } from '../check/is-empty.util.js'
@@ -398,7 +398,7 @@ export const TO_UNIQUE_ARRAY = (_: { from: any[], on?: (element: any) => any }):
 export const PERIOD_EXPORT = (_: { min: any, max: any, label: string }): string => {
   return `${TO_STRING(_.min?.toISOString())}_§§_${TO_STRING(_.max?.toISOString())}_§§_${_.label}`
 }
-export const PERIOD_IMPORT = (_: { input: string, DateTime: typeof luxon.DateTime }): { min: any, max: any, label: string } => {
+export const PERIOD_IMPORT = (_: { input: string, DateTime: typeof DateTime }): { min: any, max: any, label: string } => {
   const [minIso, maxIso, label] = _.input.split('_§§_')
 
   const mMin = _.DateTime.fromISO(minIso)

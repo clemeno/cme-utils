@@ -1,4 +1,4 @@
-import type luxon from 'luxon'
+import { type DateTime, type Settings } from 'luxon'
 import { IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC } from './check/check.util.js'
 import { TO_NUMBER } from './convert/convert.util.js'
 import { TO_STRING } from './convert/to-string.util.js'
@@ -13,7 +13,7 @@ import { TO_STRING } from './convert/to-string.util.js'
 /** set the global timezone to `Luxon` `Settings` */
 export const SET_TZ = (_: {
   tz: string
-  Settings: typeof luxon.Settings
+  Settings: typeof Settings
 }): void => {
   const tz = IS_A_STRING_AND_NOT_EMPTY(_.tz) ? _.tz : 'UTC'
 
@@ -23,7 +23,7 @@ export const SET_TZ = (_: {
 }
 
 /** get the global timezone from `Luxon` `Settings` */
-export const GET_TZ = (Settings: typeof luxon.Settings): string => Settings.defaultZone.name
+export const GET_TZ = (_Settings: typeof Settings): string => _Settings.defaultZone.name
 
 // * Luxon DateTime format constants
 export const LUXON_FORMAT_H = 'HH'
@@ -64,16 +64,16 @@ export const LUXON_FORMAT_LOCAL_LONG_MONTH = 'MMMM'
 export const LUXON_FORMAT_LOCAL_LONG_MONTH_Y = 'MMMM y'
 
 /** `Luxon` `DateTime` `UTC` */
-export const NOW_UTC = (DateTime: typeof luxon.DateTime): luxon.DateTime => DateTime.utc()
+export const NOW_UTC = (_DateTime: typeof DateTime): DateTime => _DateTime.utc()
 
 /** `Luxon` `DateTime` `local` */
-export const NOW = (DateTime: typeof luxon.DateTime): luxon.DateTime => DateTime.local()
+export const NOW = (_DateTime: typeof DateTime): DateTime => _DateTime.local()
 
 /** `Luxon` `DateTime` set to the global timezone */
 export const NOW_APP = (_: {
-  DateTime: typeof luxon.DateTime
-  Settings: typeof luxon.Settings
-}): luxon.DateTime => NOW(_.DateTime).setZone(GET_TZ(_.Settings) ?? 'UTC')
+  DateTime: typeof DateTime
+  Settings: typeof Settings
+}): DateTime => NOW(_.DateTime).setZone(GET_TZ(_.Settings) ?? 'UTC')
 
 /** current timestamp in milliseconds */
 export const NOW_MS = (): number => +(new Date())
@@ -82,33 +82,33 @@ export const NOW_MS = (): number => +(new Date())
 export const NOW_UNIX = (): number => Math.trunc(+(new Date()) / 1e3)
 
 /** current SQL `datetime` `UTC` - **without** timzeone display - using `Luxon` `DateTime` */
-export const MYSQL_DATETIME_NOW_UTC = (DateTime: typeof luxon.DateTime): string => NOW_UTC(DateTime).toFormat(LUXON_FORMAT_YMD_HMS)
+export const MYSQL_DATETIME_NOW_UTC = (_DateTime: typeof DateTime): string => NOW_UTC(_DateTime).toFormat(LUXON_FORMAT_YMD_HMS)
 
 /** `Luxon` `DateTime` 7 days before a moment (defaults to `now`) at midnight */
 export const GET_7_DAYS_BEFORE_START = (_: {
-  m?: luxon.DateTime
-  DateTime: typeof luxon.DateTime
-  Settings: typeof luxon.Settings
-}): luxon.DateTime => (_.m ?? NOW_APP(_)).minus({ day: 7 }).startOf('day')
+  m?: DateTime
+  DateTime: typeof DateTime
+  Settings: typeof Settings
+}): DateTime => (_.m ?? NOW_APP(_)).minus({ day: 7 }).startOf('day')
 
 /** `Luxon` `DateTime` 7 days before today at midnight */
 export const GET_7_DAYS_AGO_START = (_: {
-  DateTime: typeof luxon.DateTime
-  Settings: typeof luxon.Settings
-}): luxon.DateTime => GET_7_DAYS_BEFORE_START({ m: NOW_APP(_), ..._ })
+  DateTime: typeof DateTime
+  Settings: typeof Settings
+}): DateTime => GET_7_DAYS_BEFORE_START({ m: NOW_APP(_), ..._ })
 
 /** `Luxon` `DateTime` a moment (defaults to `now`) at the end of the day */
 export const GET_DAY_STOP = (_: {
-  m?: luxon.DateTime
-  DateTime: typeof luxon.DateTime
-  Settings: typeof luxon.Settings
-}): luxon.DateTime => (_.m ?? NOW_APP(_)).endOf('day')
+  m?: DateTime
+  DateTime: typeof DateTime
+  Settings: typeof Settings
+}): DateTime => (_.m ?? NOW_APP(_)).endOf('day')
 
 /** `Luxon` `DateTime` today at the end of the day */
 export const GET_TODAY_STOP = (_: {
-  DateTime: typeof luxon.DateTime
-  Settings: typeof luxon.Settings
-}): luxon.DateTime => GET_DAY_STOP({ m: NOW_APP(_), ..._ })
+  DateTime: typeof DateTime
+  Settings: typeof Settings
+}): DateTime => GET_DAY_STOP({ m: NOW_APP(_), ..._ })
 
 /**
  * Wait for a specified number of milliseconds and expect true.
@@ -116,7 +116,9 @@ export const GET_TODAY_STOP = (_: {
  * @returns expect true when the promise is resolved
  */
 export const WAIT_MS = async (ms: any): Promise<true> => {
-  return await new Promise(resolve => setTimeout(() => { resolve(true) }, TO_NUMBER(ms)))
+  const pTrue = new Promise<true>(resolve => setTimeout(() => { resolve(true) }, TO_NUMBER(ms)))
+  const resTrue = await pTrue
+  return resTrue
 }
 
 /**
@@ -126,37 +128,25 @@ export const WAIT_MS = async (ms: any): Promise<true> => {
  */
 export const DELAY_MS = async (ms: number): Promise<any> => await new Promise(resolve => setTimeout(resolve, ms))
 
-export const LUXON_IS_SAME_Y = (_: { ma: luxon.DateTime, mb: luxon.DateTime }): boolean => {
-  return _.ma.year === _.mb.year
-}
+export const LUXON_IS_SAME_Y = (_: { ma: DateTime, mb: DateTime }): boolean => _.ma.year === _.mb.year
 
-export const LUXON_IS_SAME_YM = (_: { ma: luxon.DateTime, mb: luxon.DateTime }): boolean => {
-  return (_.ma.month === _.mb.month) && LUXON_IS_SAME_Y(_)
-}
+export const LUXON_IS_SAME_YM = (_: { ma: DateTime, mb: DateTime }): boolean => (_.ma.month === _.mb.month) && LUXON_IS_SAME_Y(_)
 
-export const LUXON_IS_SAME_YMD = (_: { ma: luxon.DateTime, mb: luxon.DateTime }): boolean => {
-  return (_.ma.day === _.mb.day) && LUXON_IS_SAME_YM(_)
-}
+export const LUXON_IS_SAME_YMD = (_: { ma: DateTime, mb: DateTime }): boolean => (_.ma.day === _.mb.day) && LUXON_IS_SAME_YM(_)
 
-export const LUXON_IS_SAME_YMDH = (_: { ma: luxon.DateTime, mb: luxon.DateTime }): boolean => {
-  return (_.ma.hour === _.mb.hour) && LUXON_IS_SAME_YMD(_)
-}
+export const LUXON_IS_SAME_YMDH = (_: { ma: DateTime, mb: DateTime }): boolean => (_.ma.hour === _.mb.hour) && LUXON_IS_SAME_YMD(_)
 
-export const LUXON_IS_SAME_YMDHM = (_: { ma: luxon.DateTime, mb: luxon.DateTime }): boolean => {
-  return (_.ma.minute === _.mb.minute) && LUXON_IS_SAME_YMDHM(_)
-}
+export const LUXON_IS_SAME_YMDHM = (_: { ma: DateTime, mb: DateTime }): boolean => (_.ma.minute === _.mb.minute) && LUXON_IS_SAME_YMDHM(_)
 
-export const LUXON_IS_SAME_YMDHMS = (_: { ma: luxon.DateTime, mb: luxon.DateTime }): boolean => {
-  return _.ma.toUnixInteger() === _.mb.toUnixInteger()
-}
+export const LUXON_IS_SAME_YMDHMS = (_: { ma: DateTime, mb: DateTime }): boolean => _.ma.toUnixInteger() === _.mb.toUnixInteger()
 
-export const LUXON_IS_SAME = (_: { ma: luxon.DateTime, mb: luxon.DateTime }): boolean => +_.ma === +_.mb
+export const LUXON_IS_SAME = (_: { ma: DateTime, mb: DateTime }): boolean => +_.ma === +_.mb
 
 export const FROM_ISO_TO_LOCAL_FORMAT = (_: {
   iso: any
   format?: string
-  DateTime: typeof luxon.DateTime
-  Settings: typeof luxon.Settings
+  DateTime: typeof DateTime
+  Settings: typeof Settings
 }): string => {
   const m = IS_A_STRING_AND_NOT_EMPTY(TO_STRING(_.iso)) ? _.DateTime.fromISO(TO_STRING(_.iso)) : _.DateTime.invalid('iso')
   return m.isValid ? m.setZone(GET_TZ(_.Settings)).toFormat(_.format ?? LUXON_FORMAT_LOCAL_YMD_HMS_S_Z) : ''
@@ -164,39 +154,39 @@ export const FROM_ISO_TO_LOCAL_FORMAT = (_: {
 
 export const FROM_ISO_TO_LOCAL_DT = (_: {
   iso: any
-  DateTime: typeof luxon.DateTime
-  Settings: typeof luxon.Settings
+  DateTime: typeof DateTime
+  Settings: typeof Settings
 }): string => FROM_ISO_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_YMD_HM })
 
 export const FROM_ISO_TO_LOCAL_DTT = (_: {
   iso: any
-  DateTime: typeof luxon.DateTime
-  Settings: typeof luxon.Settings
+  DateTime: typeof DateTime
+  Settings: typeof Settings
 }): string => FROM_ISO_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_YMD_HMS })
 
 export const FROM_ISO_TO_LOCAL_D = (_: {
   iso: any
-  DateTime: typeof luxon.DateTime
-  Settings: typeof luxon.Settings
+  DateTime: typeof DateTime
+  Settings: typeof Settings
 }): string => FROM_ISO_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_YMD })
 
 export const FROM_ISO_TO_LOCAL_T = (_: {
   iso: any
-  DateTime: typeof luxon.DateTime
-  Settings: typeof luxon.Settings
+  DateTime: typeof DateTime
+  Settings: typeof Settings
 }): string => FROM_ISO_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_HM })
 
 export const FROM_ISO_TO_LOCAL_TT = (_: {
   iso: any
-  DateTime: typeof luxon.DateTime
-  Settings: typeof luxon.Settings
+  DateTime: typeof DateTime
+  Settings: typeof Settings
 }): string => FROM_ISO_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_HMS })
 
 export const FROM_UNIX_TO_LOCAL_FORMAT = (_: {
   unix: any
   format?: string
-  DateTime: typeof luxon.DateTime
-  Settings: typeof luxon.Settings
+  DateTime: typeof DateTime
+  Settings: typeof Settings
 }): string => {
   const m = IS_NUMERIC(_.unix) ? _.DateTime.fromSeconds(TO_NUMBER(_.unix)) : _.DateTime.invalid('unix')
   return m.isValid ? m.setZone(GET_TZ(_.Settings)).toFormat(_.format ?? LUXON_FORMAT_LOCAL_YMD_HMS_S_Z) : ''
@@ -204,30 +194,30 @@ export const FROM_UNIX_TO_LOCAL_FORMAT = (_: {
 
 export const FROM_UNIX_TO_LOCAL_DT = (_: {
   unix: any
-  DateTime: typeof luxon.DateTime
-  Settings: typeof luxon.Settings
+  DateTime: typeof DateTime
+  Settings: typeof Settings
 }): string => FROM_UNIX_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_YMD_HM })
 
 export const FROM_UNIX_TO_LOCAL_DTT = (_: {
   unix: any
-  DateTime: typeof luxon.DateTime
-  Settings: typeof luxon.Settings
+  DateTime: typeof DateTime
+  Settings: typeof Settings
 }): string => FROM_UNIX_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_YMD_HMS })
 
 export const FROM_UNIX_TO_LOCAL_D = (_: {
   unix: any
-  DateTime: typeof luxon.DateTime
-  Settings: typeof luxon.Settings
+  DateTime: typeof DateTime
+  Settings: typeof Settings
 }): string => FROM_UNIX_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_YMD })
 
 export const FROM_UNIX_TO_LOCAL_T = (_: {
   unix: any
-  DateTime: typeof luxon.DateTime
-  Settings: typeof luxon.Settings
+  DateTime: typeof DateTime
+  Settings: typeof Settings
 }): string => FROM_UNIX_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_HM })
 
 export const FROM_UNIX_TO_LOCAL_TT = (_: {
   unix: any
-  DateTime: typeof luxon.DateTime
-  Settings: typeof luxon.Settings
+  DateTime: typeof DateTime
+  Settings: typeof Settings
 }): string => FROM_UNIX_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_HMS })

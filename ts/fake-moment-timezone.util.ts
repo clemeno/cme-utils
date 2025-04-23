@@ -1,4 +1,4 @@
-import type luxon from 'luxon'
+import { type DateTime } from 'luxon'
 import { IS_A_DATE_AND_NOT_EMPTY, IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC } from './check/check.util.js'
 import { TO_NUMBER } from './convert/convert.util.js'
 
@@ -10,11 +10,11 @@ import { TO_NUMBER } from './convert/convert.util.js'
  * @see https://github.com/highcharts/highcharts/issues/8082#issuecomment-1239143982
  */
 export class FakeMomentTimezone {
-  DateTime: typeof luxon.DateTime
+  DateTime: typeof DateTime
 
-  _: luxon.DateTime
+  _: DateTime
 
-  constructor (_: { DateTime: typeof luxon.DateTime }) {
+  constructor (_: { DateTime: typeof DateTime }) {
     this.DateTime = _.DateTime
     this._ = this.DateTime.now()
   }
