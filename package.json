@@ -1,9 +1,9 @@
 {
   "name": "cme-utils",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "type": "module",
   "license": "MIT",
-  "description": "A collection of utility functions for TypaScript/JavaScript",
+  "description": "A collection of utility functions for TypeScript/JavaScript",
   "author": "CME",
   "keywords": [
     "util",

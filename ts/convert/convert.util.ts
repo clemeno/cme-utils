@@ -1,5 +1,5 @@
 import { type DateTime } from 'luxon'
-import { IS_AN_ARRAY, IS_A_BOOLEAN, IS_A_NUMBER, IS_A_STRING, IS_A_STRING_AND_NOT_EMPTY, IS_NUMERIC, IS_ON } from '../check/check.util.js'
+import { IS_AN_ARRAY, IS_A_BOOLEAN, IS_A_NUMBER, IS_A_STRING, IS_A_STRING_AND_NOT_EMPTY, IS_ON } from '../check/check.util.js'
 import { IS_A_FUNCTION } from '../check/is-a-function.util.js'
 import { IS_EMPTY } from '../check/is-empty.util.js'
 import { IS_SET } from '../check/is-set.util.js'
@@ -17,9 +17,41 @@ export const TO_CANONICAL_STRING = (_: any): string => {
   return TO_STRING(_).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 }
 
-export const TO_BOOLEAN = (v: any): boolean => IS_NUMERIC(v) ? (+v !== 0) : !IS_EMPTY(v)
+export const TO_NUMBER = (v: any): number => {
+  let res = NaN
 
-export const TO_NUMBER = (v: any): number => ((typeof v === 'boolean') ? (v ? 1 : 0) : Number.parseFloat(TO_STRING(v)))
+  if (typeof v === 'number') {
+    res = v
+  } else if (typeof v === 'boolean') {
+    res = v ? 1 : 0
+  } else if (typeof v === 'string') {
+    const a = Number(v)
+    const b = Number.parseFloat(v)
+
+    res = (a === b) ? a : NaN
+  } else if (typeof v.valueOf === 'function') {
+    const valueOf = v.valueOf()
+
+    if (typeof valueOf === 'number') {
+      res = valueOf
+    } else if (typeof valueOf === 'boolean') {
+      res = valueOf ? 1 : 0
+    } else if (typeof valueOf === 'string') {
+      const a = Number(valueOf)
+      const b = Number.parseFloat(valueOf)
+
+      res = (a === b) ? a : NaN
+    }
+  }
+
+  return res
+}
+
+export const TO_BOOLEAN = (v: any): boolean => (typeof v === 'boolean') ? v : !IS_EMPTY(v)
+
+// IS_NUMERIC(v) ? (+v !== 0) : !IS_EMPTY(v)
+
+// ((typeof v === 'boolean') ? (v ? 1 : 0) : Number.parseFloat(TO_STRING(v)))
 
 /**
  * base convert big base small numbers
