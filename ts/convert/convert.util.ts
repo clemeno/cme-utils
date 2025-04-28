@@ -29,7 +29,7 @@ export const TO_NUMBER = (v: any): number => {
     const b = Number.parseFloat(v)
 
     res = (a === b) ? a : NaN
-  } else if (typeof v.valueOf === 'function') {
+  } else if ((typeof v !== 'undefined') && (v !== null) && (typeof v.valueOf === 'function')) {
     const valueOf = v.valueOf()
 
     if (typeof valueOf === 'number') {
