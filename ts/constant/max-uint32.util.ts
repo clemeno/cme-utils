@@ -1,0 +1,1 @@
+export const MAX_UINT32 = 4294967295

@@ -1,0 +1,1 @@
+export const MIN_SAFE_INTEGER = Number.MIN_SAFE_INTEGER

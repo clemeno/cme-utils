@@ -1,4 +1,4 @@
-import { type numeric } from './numeric.js'
+import type { numeric } from './numeric.js'
 
 /**
  * A value representing a `boolean` concept across different types: `boolean`, `number`, or numeric `string`

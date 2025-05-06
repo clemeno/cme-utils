@@ -1,0 +1,2 @@
+/** a string, standard from base 1 to 62, then composed of random utf8 characters to serialize any `Buffer` into `string` */
+export const SYMBOLS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZÀÁÂÃÄÅ♪ÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ⛱⛵ÙÚÛÜÝÞßàáâãäå♩çèéê☯ìí☸ïðñòóôõö♭øùúûüýþÿĀāĂăĄąĆćĈĉĊċČčĎďĐđ☺ēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥ✈ħĨĩĪīĬĭĮįİıĲĳĴĵĶķĸĹĺĻļĽľĿŀŁłŃńŅņŇňŉŊŋŌōŎŏŐő♫♬ŔŕŖŗŘřŚśŜŝŞşŠšŢţŤťŦŧŨũŪūŬŭŮůŰűŲųŴŵŶŷŸŹźŻżŽž⛟⛳☮'

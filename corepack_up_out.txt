@@ -1,31 +1,25 @@
-Installing pnpm@10.9.0 in the project...
+Installing pnpm@10.10.0 in the project...
 
 Progress: resolved 1, reused 0, downloaded 0, added 0
-Progress: resolved 81, reused 80, downloaded 0, added 0
-Progress: resolved 305, reused 290, downloaded 0, added 0
-Packages: +301
+Progress: resolved 71, reused 62, downloaded 5, added 0
+Progress: resolved 328, reused 301, downloaded 10, added 0
+Packages: +320
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Progress: resolved 321, reused 306, downloaded 0, added 80
-Progress: resolved 321, reused 306, downloaded 0, added 229
-Progress: resolved 321, reused 306, downloaded 0, added 299
-Progress: resolved 321, reused 306, downloaded 0, added 301, done
-.../node_modules/unrs-resolver postinstall$ napi-postinstall unrs-resolver check
-.../node_modules/unrs-resolver postinstall: Done
-
-dependencies:
-+ axios 1.8.4
-+ bcryptjs 3.0.2
-+ luxon 3.6.1
-+ objection 3.1.5
+Progress: resolved 341, reused 315, downloaded 10, added 18
+Progress: resolved 341, reused 315, downloaded 10, added 159
+Progress: resolved 341, reused 315, downloaded 10, added 253
+Progress: resolved 341, reused 315, downloaded 10, added 319
+Progress: resolved 341, reused 315, downloaded 10, added 320, done
 
 devDependencies:
 + @types/luxon 3.6.2
-+ @types/node 22.14.1
-+ @typescript-eslint/eslint-plugin 8.31.0
-+ @typescript-eslint/parser 8.31.0
-+ eslint 9.25.1
++ @types/node 22.15.12
++ @typescript-eslint/eslint-plugin 8.32.0
++ @typescript-eslint/parser 8.32.0
++ eslint 9.26.0
 + eslint-utils 3.0.0
++ luxon 3.6.1
 + neostandard 0.12.1
 + typescript 5.8.3
 
-Done in 6.1s using pnpm v10.9.0
+Done in 6.8s using pnpm v10.10.0
