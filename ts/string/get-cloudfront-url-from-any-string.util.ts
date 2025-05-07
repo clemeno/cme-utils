@@ -3,8 +3,8 @@ import { IS_A_STRING_AND_NOT_EMPTY } from '../check/is-a-string-and-not-empty.ut
 import { IS_SET } from '../check/is-set.util.js'
 import { EXTRACT_UUID_FROM_STRING } from './extract-uuid-from-string.util.js'
 import { GET_CLOUDFRONT_URL_FILE } from './get-cloudfront-url-file.util.js'
-import { GET_CLOUDFRONT_URL_PNG_LIGHT_FROM_UUID } from './get-cloudfront-url-png-light-from-uuid.util'
-import { IS_A_URL } from './is-a-url.util'
+import { GET_CLOUDFRONT_URL_PNG_LIGHT_FROM_UUID } from './get-cloudfront-url-png-light-from-uuid.util.js'
+import { IS_A_URL } from './is-a-url.util.js'
 
 /** @returns {string} (path|url)?`filename` -> https:\//subdomain.cloudfront.com/`filename` */
 export const GET_CLOUDFRONT_URL_FROM_ANY_STRING = (_: {
