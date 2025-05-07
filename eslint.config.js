@@ -1,7 +1,7 @@
 import tsEslintPlugin from '@typescript-eslint/eslint-plugin'
 import tsEslintParser from '@typescript-eslint/parser'
 import neostandard, { resolveIgnoresFromGitignore } from 'neostandard'
-import maxReturnStatementsPerFunctionPlugin from './max-return-statements-per-function.plugin.cjs'
+import { MAX_RETURN_STATEMENTS_PER_FUNCTION_PLUGIN } from './esm/index.js'
 
 const optionList = [
   ...neostandard({
@@ -27,7 +27,7 @@ const optionList = [
     },
   },
   {
-    plugins: { 'max-return-statements-per-function': maxReturnStatementsPerFunctionPlugin },
+    plugins: { 'max-return-statements-per-function': MAX_RETURN_STATEMENTS_PER_FUNCTION_PLUGIN },
     rules: {
       'max-return-statements-per-function/max-return-statements-per-function': ['error', 1],
     },

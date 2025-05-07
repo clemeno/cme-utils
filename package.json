@@ -1,12 +1,16 @@
 {
   "name": "cme-utils",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "type": "module",
   "license": "MIT",
   "description": "A collection of utility functions for TypeScript/JavaScript",
   "author": "CME",
   "main": "./esm/index.js",
-  "module": "./esm/index.js",
+  "exports": {
+    ".": "./esm/index.js",
+    "./cjs": "./cjs",
+    "./ts": "./ts/index.ts"
+  },
   "keywords": [
     "util",
     "utils",
@@ -26,6 +30,7 @@
   "dependencies": {},
   "devDependencies": {
     "luxon": "^3.6.1",
+    "@types/eslint-utils": "^3.0.5",
     "@types/luxon": "^3.6.2",
     "@types/node": "^22.15.14",
     "@typescript-eslint/eslint-plugin": "^8.32.0",
