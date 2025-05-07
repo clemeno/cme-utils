@@ -1,4 +1,4 @@
-import { IS_EMPTY } from 'check/is-empty.util.js'
+import { IS_EMPTY } from '../check/is-empty.util.js'
 import { IS_A_FUNCTION } from '../check/is-a-function.util.js'
 import { IS_SET } from '../check/is-set.util.js'
 

@@ -1,8 +1,8 @@
-import { IS_A_STRING_AND_NOT_EMPTY } from 'check/is-a-string-and-not-empty.util.js'
-import { IS_ON } from 'check/is-on.util.js'
-import { TO_STRING } from 'convert/to-string.util.js'
-import { LIKE_KEEP_PERCENT_AND_DASH } from './like-keep-percent-and-dash.util.js'
+import { IS_A_STRING_AND_NOT_EMPTY } from '../check/is-a-string-and-not-empty.util.js'
+import { IS_ON } from '../check/is-on.util.js'
+import { TO_STRING } from '../convert/to-string.util.js'
 import type { WhereParams } from '../where-params.js'
+import { LIKE_KEEP_PERCENT_AND_DASH } from './like-keep-percent-and-dash.util.js'
 
 export const OR_WHERE = (_: WhereParams): void => {
   const bBeginsWith = IS_ON(_.bBeginsWith)

@@ -1,4 +1,4 @@
-import { SYMBOLS } from 'constant'
+import { SYMBOLS } from '../constant/symbols.util.js'
 import type { numeric } from '../numeric.js'
 
 /**

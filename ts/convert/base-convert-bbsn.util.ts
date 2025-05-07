@@ -1,4 +1,4 @@
-import { SYMBOLS } from 'constant/symbols.util.js'
+import { SYMBOLS } from '../constant/symbols.util.js'
 import { SYMBOLS_LENGTH } from '../constant/symbols-length.util.js'
 import type { numeric } from '../numeric.js'
 
