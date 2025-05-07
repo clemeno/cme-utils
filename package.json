@@ -1,6 +1,6 @@
 {
   "name": "cme-utils",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "type": "module",
   "license": "MIT",
   "description": "A collection of utility functions for TypeScript/JavaScript",
@@ -8,8 +8,9 @@
   "main": "./esm/index.js",
   "exports": {
     ".": "./esm/index.js",
-    "./cjs": "./cjs",
-    "./ts": "./ts/index.ts"
+    "./ts": "./ts/index.ts",
+    "./cjs/max-return-statements-per-function.rule.cjs": "./cjs/max-return-statements-per-function.rule.cjs",
+    "./cjs/max-return-statements-per-function.plugin.cjs": "./cjs/max-return-statements-per-function.plugin.cjs"
   },
   "keywords": [
     "util",
