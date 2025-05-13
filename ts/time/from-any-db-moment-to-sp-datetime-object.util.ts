@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon'
+import type { DateTime } from 'luxon'
 import { IS_A_STRING_AND_NOT_EMPTY } from '../check/is-a-string-and-not-empty.util.js'
 import { IS_NUMERIC_AND_SAFE } from '../check/is-numeric-and-safe.util.js'
 import { IS_SET } from '../check/is-set.util.js'
@@ -6,25 +6,25 @@ import { TO_STRING } from '../convert/to-string.util.js'
 import type { AppSpDate } from './app-sp-date.js'
 import { NULL_DATE } from './null-date.util.js'
 
-export const FROM_ANY_DB_MOMENT_TO_SP_DATETIME_OBJECT = (_: { from: any, dbTz: string }): AppSpDate | null => {
+export const FROM_ANY_DB_MOMENT_TO_SP_DATETIME_OBJECT = (_: { from: any, dbTz: string, DateTime: typeof DateTime }): AppSpDate | null => {
   let res: AppSpDate | null = null
 
-  let m: DateTime | null = DateTime.invalid('i')
+  let m: DateTime | null = _.DateTime.invalid('i')
 
   const from = _.from
   const dbTz = _.dbTz
 
   if (from === NULL_DATE) {
     m = null
-  } else if (from instanceof DateTime) {
+  } else if (from instanceof _.DateTime) {
     m = from.setZone(dbTz)
   } else if (from instanceof Date || IS_NUMERIC_AND_SAFE(from)) {
-    m = DateTime.fromMillis(+from, { zone: dbTz })
+    m = _.DateTime.fromMillis(+from, { zone: dbTz })
   } else if (IS_A_STRING_AND_NOT_EMPTY(from)) {
-    m = DateTime.fromISO(from).setZone(dbTz)
+    m = _.DateTime.fromISO(from).setZone(dbTz)
 
     if (!m.isValid) {
-      m = DateTime.fromSQL(from, { zone: dbTz })
+      m = _.DateTime.fromSQL(from, { zone: dbTz })
     }
   }
 
