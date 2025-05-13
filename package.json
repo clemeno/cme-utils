@@ -1,6 +1,6 @@
 {
   "name": "cme-utils",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "type": "module",
   "license": "MIT",
   "description": "A collection of utility functions for TypeScript/JavaScript",
