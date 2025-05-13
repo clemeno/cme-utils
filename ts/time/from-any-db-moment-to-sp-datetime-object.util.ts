@@ -1,6 +1,6 @@
-import { IS_A_STRING_AND_NOT_EMPTY } from 'check/is-a-string-and-not-empty.util.js'
-import { IS_NUMERIC_AND_SAFE } from 'check/is-numeric-and-safe.util.js'
 import { DateTime } from 'luxon'
+import { IS_A_STRING_AND_NOT_EMPTY } from '../check/is-a-string-and-not-empty.util.js'
+import { IS_NUMERIC_AND_SAFE } from '../check/is-numeric-and-safe.util.js'
 import { IS_SET } from '../check/is-set.util.js'
 import { TO_STRING } from '../convert/to-string.util.js'
 import type { AppSpDate } from './app-sp-date.js'

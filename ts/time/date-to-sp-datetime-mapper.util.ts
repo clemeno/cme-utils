@@ -1,4 +1,4 @@
-import type { ObjectWithKeyValueType } from 'object-with-key-value-type.js'
+import type { ObjectWithKeyValueType } from '../object-with-key-value-type.js'
 import type { AppSpDate } from './app-sp-date.js'
 import { FROM_ANY_DB_MOMENT_TO_SP_DATETIME_OBJECT } from './from-any-db-moment-to-sp-datetime-object.util.js'
 
