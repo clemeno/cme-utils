@@ -1,5 +1,6 @@
-import { IS_NUMERIC, IS_SET } from 'check'
-import { TO_STRING } from './to-string.util'
+import { IS_NUMERIC } from '../check/is-numeric.util.js'
+import { IS_SET } from '../check/is-set.util.js'
+import { TO_STRING } from './to-string.util.js'
 
 /**
  * * check if v is SET before using this function
