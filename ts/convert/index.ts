@@ -25,6 +25,7 @@ export { FROM_LIST_TO_VALUE_LABEL_RECORD } from './from-list-to-value-label-reco
 export { HEX_TO_BASE64 } from './hex-to-base64.util.js'
 export { IGNORE_DUPLICATES } from './ignore-duplicates.util.js'
 export { PARSE_BOOL } from './parse-bool.util.js'
+export { PARSE_BOOLEAN_STRICT_OR_THROW } from './parse-boolean-strict-or-throw.util.js'
 export { PARSE_INT_FROM_CUSTOM_BASE } from './parse-int-from-custom-base.util.js'
 export { PERIOD_EXPORT } from './period-export.util.js'
 export { PERIOD_IMPORT } from './period-import.util.js'
