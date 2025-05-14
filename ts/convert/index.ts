@@ -19,6 +19,7 @@ export { FROM_BASE_10_TO_CSN_DISPLAY } from './from-base-10-to-csn-display.util.
 export { FROM_BASE_16_TO_10 } from './from-base-16-to-10.util.js'
 export { FROM_BASE_16_TO_CARD_SERIAL } from './from-base-16-to-card-serial.util.js'
 export { FROM_BASE_16_TO_CSN_DISPLAY } from './from-base-16-to-csn-display.util.js'
+export { FROM_BASE_16_TO_UUID } from './from-base-16-to-uuid.util.js'
 export { FROM_BASE_64_TO_UINT8_LIST } from './from-base-64-to-uint8-list.util.js'
 export { FROM_LIST_TO_A_B_RECORD } from './from-list-to-a-b-record.util.js'
 export { FROM_LIST_TO_VALUE_LABEL_RECORD } from './from-list-to-value-label-record.util.js'
