@@ -1,6 +1,6 @@
 {
   "name": "cme-utils",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "type": "module",
   "license": "MIT",
   "description": "A collection of utility functions for TypeScript/JavaScript",
@@ -30,10 +30,11 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "axios": "^1.9.0",
     "luxon": "^3.6.1",
     "@types/eslint-utils": "^3.0.5",
     "@types/luxon": "^3.6.2",
-    "@types/node": "^22.15.17",
+    "@types/node": "^22.15.18",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
     "eslint-utils": "^3.0.0",
