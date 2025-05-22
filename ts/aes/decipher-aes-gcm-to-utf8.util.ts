@@ -1,8 +1,8 @@
+import { TO_STRING } from '../convert/to-string.util.js'
+
 /**
  * import { createDecipheriv } from 'node:crypto'
  */
-import { TO_STRING } from 'convert'
-
 export const DECIPHER_AES_GCM_TO_UTF8 = (_: { cipheredBuffer: Buffer, keyBuffer: Buffer, createDecipheriv: any }): string => {
   // ? cipheredByteList = [ ...iv (head: 12 bytes), ...ciphertext PAYLOAD (body: dynamic), ...tag (tail: 16 bytes) ]
   const cipheredByteList: number[] = Array.from(_.cipheredBuffer)
