@@ -1,6 +1,9 @@
-import { createDecipheriv } from 'node:crypto'
+/**
+ * import { createDecipheriv } from 'node:crypto'
+ */
+import { TO_STRING } from 'convert'
 
-export const DECIPHER_AES_GCM_TO_UTF8 = (_: { cipheredBuffer: Buffer, keyBuffer: Buffer }): string => {
+export const DECIPHER_AES_GCM_TO_UTF8 = (_: { cipheredBuffer: Buffer, keyBuffer: Buffer, createDecipheriv: any }): string => {
   // ? cipheredByteList = [ ...iv (head: 12 bytes), ...ciphertext PAYLOAD (body: dynamic), ...tag (tail: 16 bytes) ]
   const cipheredByteList: number[] = Array.from(_.cipheredBuffer)
 
@@ -8,7 +11,7 @@ export const DECIPHER_AES_GCM_TO_UTF8 = (_: { cipheredBuffer: Buffer, keyBuffer:
 
   // ? iv: Initialization Vector (first 12 bytes)
   // * createDecipheriv
-  const decipher = createDecipheriv('aes-128-gcm', _.keyBuffer, Buffer.from(cipheredByteList.slice(0, 12)), { authTagLength })
+  const decipher = _.createDecipheriv('aes-128-gcm', _.keyBuffer, Buffer.from(cipheredByteList.slice(0, 12)), { authTagLength })
 
   // ? tag: Authentication Tag (last 16 bytes)
   // * decipher.setAuthTag
@@ -20,5 +23,5 @@ export const DECIPHER_AES_GCM_TO_UTF8 = (_: { cipheredBuffer: Buffer, keyBuffer:
 
   // * decipher.final
   // ? don't forget to finalize and return the deciphered text concatenated with the final deciphered part
-  return `${deciphered}${decipher.final('utf8')}`
+  return `${TO_STRING(deciphered)}${TO_STRING(decipher.final('utf8'))}`
 }

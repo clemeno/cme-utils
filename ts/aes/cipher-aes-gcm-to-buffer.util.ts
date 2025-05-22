@@ -1,12 +1,13 @@
-import { createCipheriv, randomBytes } from 'node:crypto'
-
-export const CIPHER_AES_GCM_TO_BUFFER = (_: { plainString: string, keyBuffer: Buffer }): Buffer => {
+/**
+ * import { createCipheriv, randomBytes } from 'node:crypto'
+ */
+export const CIPHER_AES_GCM_TO_BUFFER = (_: { plainString: string, keyBuffer: Buffer, randomBytes: any, createCipheriv: any }): Buffer => {
   // ? iv: Initialization Vector (first 12 bytes)
-  const ivBuffer = randomBytes(12)
+  const ivBuffer = _.randomBytes(12)
 
   // ? tag: Authentication Tag (last 16 bytes)
   // * createCipheriv
-  const cipher = createCipheriv('aes-128-gcm', _.keyBuffer, ivBuffer, { authTagLength: 16 })
+  const cipher = _.createCipheriv('aes-128-gcm', _.keyBuffer, ivBuffer, { authTagLength: 16 })
 
   // * cipher.update
   const cipheredBuffer = cipher.update(_.plainString, 'utf8')

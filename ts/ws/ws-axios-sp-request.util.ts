@@ -1,11 +1,13 @@
-import { GET_EXCEPTION_RESULT_OF } from '../async/get-exception-result-of.util.js'
 import type { AxiosError, AxiosRequestConfig, AxiosResponse, AxiosStatic } from 'axios'
-import https from 'node:https'
 import type { AppExceptionResult } from '../app-exception-result.js'
+import { GET_EXCEPTION_RESULT_OF } from '../async/get-exception-result-of.util.js'
 import { IS_A_STRING_AND_NOT_EMPTY } from '../check/is-a-string-and-not-empty.util.js'
 import { IS_SET } from '../check/is-set.util.js'
 import { TO_STRING } from '../convert/to-string.util.js'
 
+/**
+ * import https from 'node:https'
+ */
 export const WS_AXIOS_SP_REQUEST = async (_: {
   axios: AxiosStatic
   wsResolve: string
@@ -14,6 +16,7 @@ export const WS_AXIOS_SP_REQUEST = async (_: {
   dataObject?: any
   dataString?: string
   contentType?: string
+  https: any
 }): Promise<AppExceptionResult<AxiosError, AxiosResponse>> => {
   const method = _.method ?? 'POST'
 
@@ -118,13 +121,14 @@ export const WS_AXIOS_SP_REQUEST = async (_: {
   }
 
   if (bUrlHttps) {
-    const agentConfig: https.AgentOptions = { rejectUnauthorized: false }
+    // ? https.AgentOptions
+    const agentConfig: any = { rejectUnauthorized: false }
 
     if (bWsResolve) {
       agentConfig.servername = envWsResolveSpoofHost
     }
 
-    axiosConfig.httpsAgent = new https.Agent(agentConfig)
+    axiosConfig.httpsAgent = new _.https.Agent(agentConfig)
   }
 
   const exceptionResult = await GET_EXCEPTION_RESULT_OF<AxiosError, AxiosResponse>(_.axios.request(axiosConfig))
