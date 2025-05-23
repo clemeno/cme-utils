@@ -1,5 +1,8 @@
 import type { Settings } from 'luxon'
 import { IS_A_STRING_AND_NOT_EMPTY } from '../check/is-a-string-and-not-empty.util.js'
+import { SET_DOCUMENT_GEO_FROM_LOCALE } from './set-document-geo-from-locale.util.js'
+import { SET_DOCUMENT_LANG_FROM_LOCALE } from './set-document-lang-from-locale.util.js'
+import { SET_DOCUMENT_LOCALE } from './set-document-locale.util.js'
 
 /** set the global locale to `Luxon` `Settings` */
 export const SET_LOCALE = (_: {
@@ -10,15 +13,9 @@ export const SET_LOCALE = (_: {
 
   _.Settings.defaultLocale = locale
 
-  const partList = locale.split('-')
+  SET_DOCUMENT_LOCALE(locale)
 
-  const lang = partList[0]
-  const geo = partList.slice(1).join('-')
+  SET_DOCUMENT_LANG_FROM_LOCALE(locale)
 
-  try { document.documentElement.setAttribute('lang', lang) } catch {}
-  try { document.documentElement.setAttribute('locale', locale) } catch {}
-
-  if (IS_A_STRING_AND_NOT_EMPTY(geo)) {
-    try { document.documentElement.setAttribute('geo', geo) } catch {}
-  }
+  SET_DOCUMENT_GEO_FROM_LOCALE(locale)
 }

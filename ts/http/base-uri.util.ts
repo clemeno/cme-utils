@@ -3,7 +3,7 @@ export const GET_BASE_URI = () => {
 
   try {
     // @ts-ignore
-    baseURI = window.document.head.baseURI.replace(/\/$/, '')
+    baseURI = window.document.documentElement.baseURI.replace(/\/$/, '')
   } catch { }
 
   return baseURI
