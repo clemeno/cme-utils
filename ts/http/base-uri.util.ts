@@ -1,5 +1,5 @@
 export const GET_BASE_URI = () => {
-  const baseURI = ''
+  let baseURI = ''
 
   try {
     // @ts-ignore
