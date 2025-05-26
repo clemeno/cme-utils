@@ -22,4 +22,6 @@ export { GET_UPLOADED_FILE_LINK_FROM_ANY_STRING } from './get-uploaded-file-link
 export { GET_UPLOADED_FILE_PATH } from './get-uploaded-file-path.util.js'
 export { GET_UPLOADED_LIGHT_PNG_FROM_UUID } from './get-uploaded-light-png-from-uuid.util.js'
 export { IS_A_URL } from './is-a-url.util.js'
+export { OR_DASH } from './or-dash.util.js'
+export { STRING_LCF } from './string-lcf.util.js'
 export { STRING_UCF } from './string-ucf.util.js'

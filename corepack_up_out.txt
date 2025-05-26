@@ -1,26 +1,29 @@
 Installing pnpm@10.11.0 in the project...
 
 Progress: resolved 1, reused 0, downloaded 0, added 0
-Progress: resolved 76, reused 74, downloaded 1, added 0
-Progress: resolved 353, reused 334, downloaded 1, added 0
-Packages: +332
+Progress: resolved 68, reused 60, downloaded 0, added 0
+Progress: resolved 195, reused 186, downloaded 2, added 0
+Progress: resolved 287, reused 268, downloaded 3, added 0
+Packages: +279
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Progress: resolved 353, reused 336, downloaded 1, added 73
-Progress: resolved 353, reused 336, downloaded 1, added 232
-Progress: resolved 353, reused 336, downloaded 1, added 331
-Progress: resolved 353, reused 336, downloaded 1, added 332, done
+Progress: resolved 300, reused 281, downloaded 3, added 72
+Progress: resolved 300, reused 281, downloaded 3, added 98
+Progress: resolved 300, reused 281, downloaded 3, added 168
+Progress: resolved 300, reused 281, downloaded 3, added 242
+Progress: resolved 300, reused 281, downloaded 3, added 278
+Progress: resolved 300, reused 281, downloaded 3, added 279, done
 
 devDependencies:
 + @types/eslint-utils 3.0.5
 + @types/luxon 3.6.2
-+ @types/node 22.15.18
++ @types/node 22.15.21
 + @typescript-eslint/eslint-plugin 8.32.1
 + @typescript-eslint/parser 8.32.1
 + axios 1.9.0
-+ eslint 9.26.0
++ eslint 9.27.0
 + eslint-utils 3.0.0
 + luxon 3.6.1
 + neostandard 0.12.1
 + typescript 5.8.3
 
-Done in 6.1s using pnpm v10.11.0
+Done in 8.9s using pnpm v10.11.0
