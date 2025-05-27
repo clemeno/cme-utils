@@ -1,12 +1,13 @@
 /**
  * * provide createCipheriv and randomBytes -> import { createCipheriv, randomBytes } from 'node:crypto'
  */
-export const CIPHER_AES_GCM_TO_BUFFER = <TypeofCreateCipheriv = any, TypeofRandomBytes = any> (_: {
+export const CIPHER_AES_GCM_TO_BUFFER = <TypeofBuffer = any, TypeofCreateCipheriv = any, TypeofRandomBytes = any> (_: {
+  Buffer: TypeofBuffer
   createCipheriv: TypeofCreateCipheriv
   randomBytes: TypeofRandomBytes
   plainString: string
-  keyBuffer: Buffer
-}): Buffer => {
+  keyBuffer: TypeofBuffer
+}): TypeofBuffer => {
   // ? iv: Initialization Vector (first 12 bytes)
   const ivBuffer = (_.randomBytes as any)(12)
 
@@ -21,5 +22,5 @@ export const CIPHER_AES_GCM_TO_BUFFER = <TypeofCreateCipheriv = any, TypeofRando
   const finalCipheredBuffer = cipher.final()
 
   // ? [ ...iv (head: 12 bytes), ...ciphertext PAYLOAD (body: dynamic), ...tag (tail: 16 bytes) ]
-  return Buffer.concat([ivBuffer, cipheredBuffer, finalCipheredBuffer, cipher.getAuthTag()])
+  return (_.Buffer as any).concat([ivBuffer, cipheredBuffer, finalCipheredBuffer, cipher.getAuthTag()])
 }

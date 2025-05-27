@@ -1,14 +1,18 @@
 import { IS_SET } from '../check/is-set.util.js'
 import { TO_STRING } from './to-string.util.js'
 
-export const BASE64_TO_HEX = (base64: any): string => {
+export const BASE64_TO_HEX = <TypeofBuffer = any> (_: {
+  Buffer?: TypeofBuffer
+  base64: any
+}): string => {
   let res = ''
 
   let error: any
 
-  const base64String = TO_STRING(base64)
+  const base64String = TO_STRING(_.base64)
 
-  try { res = Buffer.from(base64String, 'base64').toString('hex') } catch (err) { error = err }
+  // * provide Buffer
+  try { res = (_.Buffer as any).from(base64String, 'base64').toString('hex') } catch (err) { error = err }
 
   if (IS_SET(error)) {
     let raw = ''
@@ -19,6 +23,7 @@ export const BASE64_TO_HEX = (base64: any): string => {
 
     for (let charPos = 0; charPos < raw.length; charPos += 1) {
       const hex = raw.charCodeAt(charPos).toString(16)
+
       resList.push(`${(hex.length < 2) ? '0' : ''}${hex}`)
     }
 
