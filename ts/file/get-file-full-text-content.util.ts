@@ -1,13 +1,16 @@
 import { TO_STRING } from '../convert/to-string.util.js'
 
 /**
- * import { createReadStream } from 'node:fs'
+ * * provide createReadStream -> import { createReadStream } from 'node:fs'
  */
-export const GET_FILE_FULL_TEXT_CONTENT = async (_: { filePath: string, createReadStream: any }): Promise<string> => {
+export const GET_FILE_FULL_TEXT_CONTENT = async <TypeofCreateReadStream = any> (_: {
+  createReadStream: TypeofCreateReadStream
+  filePath: string
+}): Promise<string> => {
   const chunkList: string[] = []
 
   try {
-    const fileReadStream = _.createReadStream(_.filePath)
+    const fileReadStream = (_.createReadStream as any)(_.filePath)
 
     for await (const chunk of fileReadStream) {
       chunkList.push(TO_STRING(chunk).trim())

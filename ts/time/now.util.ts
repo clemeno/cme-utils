@@ -1,4 +1,5 @@
-import type { DateTime } from 'luxon'
-
-/** `Luxon` `DateTime` `local` */
-export const NOW = (_DateTime: typeof DateTime): DateTime => _DateTime.local()
+/**
+ * `Luxon` `DateTime` `local`
+ * * provide DateTime -> import type { DateTime } from 'luxon'
+ */
+export const NOW = <DateTime = any, TypeofDateTime = any> (_DateTime: TypeofDateTime): DateTime => (_DateTime as any).local()

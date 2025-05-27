@@ -1,4 +1,4 @@
-import type { DateTime } from 'luxon'
+import { IS_ON } from './check/is-on.util.js'
 import { IS_A_DATE_AND_NOT_EMPTY } from './check/is-a-date-and-not-empty.util.js'
 import { IS_A_STRING_AND_NOT_EMPTY } from './check/is-a-string-and-not-empty.util.js'
 import { IS_NUMERIC } from './check/is-numeric.util.js'
@@ -6,19 +6,23 @@ import { TO_NUMBER } from './convert/to-number.util.js'
 
 /**
  * `Luxon` `DateTime` `MomentTimezone` mock class for old versions of `Highcharts` (before 11.3)
+ * * provide DateTime -> import { DateTime } from 'luxon'
  * @use `const moment: any = new FakeMomentTimezone()`
  * @description Highcharts < 11.3 config.  `time: { timezone, moment }`
  * @see https://github.com/highcharts/highcharts/issues/8082
  * @see https://github.com/highcharts/highcharts/issues/8082#issuecomment-1239143982
  */
-export class FakeMomentTimezone {
-  DateTime: typeof DateTime
+export class FakeMomentTimezone <DateTime = any, TypeofDateTime = any> {
+  DateTime: TypeofDateTime
 
   _: DateTime
 
-  constructor (_: { DateTime: typeof DateTime }) {
+  constructor (_: { DateTime: TypeofDateTime }) {
     this.DateTime = _.DateTime
-    this._ = this.DateTime.now()
+
+    const { now } = this.DateTime as any
+
+    this._ = now()
   }
 
   // eslint-disable-next-line max-params
@@ -27,14 +31,18 @@ export class FakeMomentTimezone {
 
     const _options = IS_A_STRING_AND_NOT_EMPTY(tz) ? { zone: tz } : undefined
 
-    const m = IS_NUMERIC(_ms) ? this.DateTime.fromMillis(_ms, _options) : this.DateTime.now()
+    const { fromMillis, now } = this.DateTime as any
 
-    this._ = m.isValid ? m : this.DateTime.now()
+    const m = IS_NUMERIC(_ms) ? fromMillis(_ms, _options) : now()
+
+    this._ = IS_ON(m.isValid) ? m : now()
 
     return this
   }
 
   utcOffset (): number {
-    return this._.offset
+    const { offset } = this._ as any
+
+    return TO_NUMBER(offset)
   }
 }

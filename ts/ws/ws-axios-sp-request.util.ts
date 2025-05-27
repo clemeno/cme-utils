@@ -1,23 +1,28 @@
-import type { AxiosError, AxiosRequestConfig, AxiosResponse, AxiosStatic } from 'axios'
 import type { AppExceptionResult } from '../app-exception-result.js'
 import { GET_EXCEPTION_RESULT_OF } from '../async/get-exception-result-of.util.js'
 import { IS_A_STRING_AND_NOT_EMPTY } from '../check/is-a-string-and-not-empty.util.js'
 import { IS_SET } from '../check/is-set.util.js'
 import { TO_STRING } from '../convert/to-string.util.js'
+import type { numeric } from '../numeric.js'
 
 /**
- * import https from 'node:https'
+ * Emulates a curl request to an HTTP WebSevice using Axios
+ * * provide axios -> import axios from 'axios'
+ * * provide https -> import https from 'node:https' (optional, required only for an "https:" URL protocol)
+ * * axios: AxiosStatic
+ * * type AE = AxiosError
+ * * type AR = AxiosResponse
  */
-export const WS_AXIOS_SP_REQUEST = async (_: {
+export const WS_AXIOS_SP_REQUEST = async <AxiosStatic = any, NodeHttps = any, AxiosResult = any, AxiosError = any> (_: {
   axios: AxiosStatic
+  https?: NodeHttps
   wsResolve: string
   method?: string
   wsUrl: string
   dataObject?: any
   dataString?: string
   contentType?: string
-  https: any
-}): Promise<AppExceptionResult<AxiosError, AxiosResponse>> => {
+}): Promise<AppExceptionResult<AxiosError, AxiosResult>> => {
   const method = _.method ?? 'POST'
 
   const envWsResolvePartList = _.wsResolve.split(':')
@@ -93,7 +98,14 @@ export const WS_AXIOS_SP_REQUEST = async (_: {
     }
   }
 
-  const axiosConfig: AxiosRequestConfig = { method, url }
+  /** AxiosRequestConfig */
+  const axiosConfig: {
+    method: string
+    url: string
+    data?: any
+    headers?: Record<string, numeric>
+    httpsAgent?: any
+  } = { method, url }
 
   const dataObject = _.dataObject
   const bDataObject = IS_SET(dataObject)
@@ -128,10 +140,10 @@ export const WS_AXIOS_SP_REQUEST = async (_: {
       agentConfig.servername = envWsResolveSpoofHost
     }
 
-    axiosConfig.httpsAgent = new _.https.Agent(agentConfig)
+    axiosConfig.httpsAgent = new (_.https as any).Agent(agentConfig)
   }
 
-  const exceptionResult = await GET_EXCEPTION_RESULT_OF<AxiosError, AxiosResponse>(_.axios.request(axiosConfig))
+  const exceptionResult = await GET_EXCEPTION_RESULT_OF<AxiosError, AxiosResult>((_.axios as any).request(axiosConfig))
 
   return exceptionResult
 }

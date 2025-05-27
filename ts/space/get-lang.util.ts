@@ -1,8 +1,11 @@
-import type { Settings } from 'luxon'
 import { GET_LOCALE } from './get-locale.util.js'
 import { SET_DOCUMENT_LANG } from './set-document-lang.util.js'
 
-export const GET_LANG = (_Settings: typeof Settings): string => {
+/**
+ * get the global lang from `Luxon` `Settings`
+ * * provide Settings -> import type { Settings } from 'luxon'
+ */
+export const GET_LANG = <TypeofSettings = any> (_Settings: TypeofSettings): string => {
   let documentLang = ''
 
   try {

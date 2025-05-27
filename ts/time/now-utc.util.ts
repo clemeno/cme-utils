@@ -1,4 +1,5 @@
-import type { DateTime } from 'luxon'
-
-/** `Luxon` `DateTime` `UTC` */
-export const NOW_UTC = (_DateTime: typeof DateTime): DateTime => _DateTime.utc()
+/**
+ * `Luxon` `DateTime` `UTC`
+ * * provide DateTime -> import type { DateTime } from 'luxon'
+ */
+export const NOW_UTC = <DateTime = any, TypeofDateTime = any> (_DateTime: TypeofDateTime): DateTime => (_DateTime as any).utc()

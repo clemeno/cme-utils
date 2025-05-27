@@ -1,9 +1,13 @@
 import { TO_STRING } from '../convert/to-string.util.js'
 
 /**
- * import { createDecipheriv } from 'node:crypto'
+ * * provide createDecipheriv -> import { createDecipheriv } from 'node:crypto'
  */
-export const DECIPHER_AES_GCM_TO_UTF8 = (_: { cipheredBuffer: Buffer, keyBuffer: Buffer, createDecipheriv: any }): string => {
+export const DECIPHER_AES_GCM_TO_UTF8 = <TypeofCreateDecipheriv = any> (_: {
+  createDecipheriv: TypeofCreateDecipheriv
+  cipheredBuffer: Buffer
+  keyBuffer: Buffer
+}): string => {
   // ? cipheredByteList = [ ...iv (head: 12 bytes), ...ciphertext PAYLOAD (body: dynamic), ...tag (tail: 16 bytes) ]
   const cipheredByteList: number[] = Array.from(_.cipheredBuffer)
 
@@ -11,7 +15,7 @@ export const DECIPHER_AES_GCM_TO_UTF8 = (_: { cipheredBuffer: Buffer, keyBuffer:
 
   // ? iv: Initialization Vector (first 12 bytes)
   // * createDecipheriv
-  const decipher = _.createDecipheriv('aes-128-gcm', _.keyBuffer, Buffer.from(cipheredByteList.slice(0, 12)), { authTagLength })
+  const decipher = (_.createDecipheriv as any)('aes-128-gcm', _.keyBuffer, Buffer.from(cipheredByteList.slice(0, 12)), { authTagLength })
 
   // ? tag: Authentication Tag (last 16 bytes)
   // * decipher.setAuthTag

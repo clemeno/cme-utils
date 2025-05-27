@@ -6,15 +6,15 @@ import { GET_CLOUDFRONT_URL_PNG_LIGHT_FROM_UUID } from './get-cloudfront-url-png
 import { IS_A_URL } from './is-a-url.util.js'
 
 /**
- * import { basename } from 'node:path'
+ * * provide basename -> import { basename } from 'node:path'
  * @returns {string} (path|url)?`filename` -> https:\//subdomain.cloudfront.com/`filename`
  */
-export const GET_CLOUDFRONT_URL_FROM_ANY_STRING = (_: {
+export const GET_CLOUDFRONT_URL_FROM_ANY_STRING = <TypeofBasename = any> (_: {
+  basename: TypeofBasename
   s: string
   cloudfrontUri: string
   fileUploadFolder: string
   publicStaticImageFolder: string
-  basename: any
 }): string => {
   const s = _.s
 
@@ -24,10 +24,12 @@ export const GET_CLOUDFRONT_URL_FROM_ANY_STRING = (_: {
   const fileUploadFolder = _.fileUploadFolder
   const publicStaticImageFolder = _.publicStaticImageFolder
 
+  const basename: any = _.basename
+
   const strategyList = [
     { if: () => IS_A_STRING_AND_NOT_EMPTY(uuid), then: () => GET_CLOUDFRONT_URL_PNG_LIGHT_FROM_UUID({ uuid, cloudfrontUri }) },
-    { if: () => s.includes(fileUploadFolder), then: () => GET_CLOUDFRONT_URL_FILE({ filename: _.basename(s), cloudfrontUri }) },
-    { if: () => s.includes(publicStaticImageFolder), then: () => GET_CLOUDFRONT_URL_FILE({ filename: _.basename(s), cloudfrontUri }) },
+    { if: () => s.includes(fileUploadFolder), then: () => GET_CLOUDFRONT_URL_FILE({ filename: basename(s), cloudfrontUri }) },
+    { if: () => s.includes(publicStaticImageFolder), then: () => GET_CLOUDFRONT_URL_FILE({ filename: basename(s), cloudfrontUri }) },
     {
       if: () => IS_A_URL(s),
       then: () => {
