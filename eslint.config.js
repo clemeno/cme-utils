@@ -1,4 +1,4 @@
-import tsEslintPlugin from '@typescript-eslint/eslint-plugin'
+// import tsEslintPlugin from '@typescript-eslint/eslint-plugin'
 import tsEslintParser from '@typescript-eslint/parser'
 import neostandard, { resolveIgnoresFromGitignore } from 'neostandard'
 import { MAX_RETURN_STATEMENTS_PER_FUNCTION_PLUGIN } from './esm/index.js'
@@ -34,9 +34,9 @@ const optionList = [
   },
   {
     files: ['**/*.ts', '**/*.tsx'],
-    plugins: {
-      '@typescript-eslint': tsEslintPlugin,
-    },
+    // plugins: {
+    //   '@typescript-eslint': tsEslintPlugin,
+    // },
     languageOptions: {
       parser: tsEslintParser,
       parserOptions: {

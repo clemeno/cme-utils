@@ -1,22 +1,21 @@
-Installing pnpm@10.11.0 in the project...
+Installing pnpm@10.12.1 in the project...
 
 Progress: resolved 1, reused 0, downloaded 0, added 0
-Progress: resolved 51, reused 51, downloaded 0, added 0
-Progress: resolved 272, reused 253, downloaded 1, added 0
-Packages: +266
+Progress: resolved 274, reused 254, downloaded 0, added 0
+Packages: +271
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Progress: resolved 287, reused 270, downloaded 1, added 71
-Progress: resolved 287, reused 270, downloaded 1, added 185
-Progress: resolved 287, reused 270, downloaded 1, added 265
-Progress: resolved 287, reused 270, downloaded 1, added 266, done
+Progress: resolved 295, reused 277, downloaded 0, added 270
+Progress: resolved 295, reused 277, downloaded 0, added 271, done
+.../node_modules/unrs-resolver postinstall$ napi-postinstall unrs-resolver 1.9.0 check
+.../node_modules/unrs-resolver postinstall: Done
 
 devDependencies:
 + @types/eslint-utils 3.0.5
-+ @typescript-eslint/eslint-plugin 8.32.1
-+ @typescript-eslint/parser 8.32.1
-+ eslint 9.27.0
++ @typescript-eslint/eslint-plugin 8.34.0
++ @typescript-eslint/parser 8.34.0
++ eslint 9.28.0
 + eslint-utils 3.0.0
 + neostandard 0.12.1
 + typescript 5.8.3
 
-Done in 5.9s using pnpm v10.11.0
+Done in 2.8s using pnpm v10.12.1
