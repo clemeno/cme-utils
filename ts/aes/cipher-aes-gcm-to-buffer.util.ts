@@ -1,13 +1,13 @@
 /**
  * * provide createCipheriv and randomBytes -> import { createCipheriv, randomBytes } from 'node:crypto'
  */
-export const CIPHER_AES_GCM_TO_BUFFER = <TypeofBuffer = any, TypeofCreateCipheriv = any, TypeofRandomBytes = any> (_: {
+export const CIPHER_AES_GCM_TO_BUFFER = <Buffer = any, TypeofBuffer = any, TypeofCreateCipheriv = any, TypeofRandomBytes = any> (_: {
   Buffer: TypeofBuffer
   createCipheriv: TypeofCreateCipheriv
   randomBytes: TypeofRandomBytes
   plainString: string
-  keyBuffer: TypeofBuffer
-}): TypeofBuffer => {
+  keyBuffer: Buffer
+}): Buffer => {
   // ? iv: Initialization Vector (first 12 bytes)
   const ivBuffer = (_.randomBytes as any)(12)
 

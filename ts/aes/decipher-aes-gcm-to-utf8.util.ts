@@ -3,11 +3,11 @@ import { TO_STRING } from '../convert/to-string.util.js'
 /**
  * * provide createDecipheriv -> import { createDecipheriv } from 'node:crypto'
  */
-export const DECIPHER_AES_GCM_TO_UTF8 = <TypeofBuffer = any, TypeofCreateDecipheriv = any> (_: {
+export const DECIPHER_AES_GCM_TO_UTF8 = <Buffer = any, TypeofBuffer = any, TypeofCreateDecipheriv = any> (_: {
   Buffer: TypeofBuffer
   createDecipheriv: TypeofCreateDecipheriv
-  cipheredBuffer: TypeofBuffer
-  keyBuffer: TypeofBuffer
+  cipheredBuffer: Buffer
+  keyBuffer: Buffer
 }): string => {
   // ? cipheredByteList = [ ...iv (head: 12 bytes), ...ciphertext PAYLOAD (body: dynamic), ...tag (tail: 16 bytes) ]
   const cipheredByteList: number[] = Array.from(_.cipheredBuffer as any)
