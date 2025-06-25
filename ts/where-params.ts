@@ -6,4 +6,5 @@ export interface WhereParams {
   bKeepPercentAndDash?: boolean
   bBeginsWith?: boolean
   bEndsWith?: boolean
+  bPg?: boolean
 }
