@@ -1,3 +1,4 @@
+export { ALL_SETTLED } from './all-settled.util.js'
 export { GET_EXCEPTION_ONLY } from './get-exception-only.util.js'
 export { GET_EXCEPTION_RESULT_OF } from './get-exception-result-of.util.js'
 export { READ_FILE_CONTENT } from './read-file-content.util.js'
