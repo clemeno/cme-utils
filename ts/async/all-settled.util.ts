@@ -8,10 +8,10 @@
  */
 export const ALL_SETTLED = async <T = any, Reason = any> (
   todoInParallel: Iterable<T | PromiseLike<T>>
-): Promise<{ fullfiled: T[], rejected: Reason[], size: number }> => {
+): Promise<{ fullfiled: Array<Awaited<T>>, rejected: Reason[], size: number }> => {
   const allSettledList = await Promise.allSettled(todoInParallel)
 
-  const fullfiled: T[] = []
+  const fullfiled: Array<Awaited<T>> = []
   const rejected: Reason[] = []
 
   for (const settled of allSettledList) {
