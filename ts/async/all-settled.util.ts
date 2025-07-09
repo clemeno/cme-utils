@@ -7,7 +7,7 @@
  * @returns A promise that resolves to an object containing two arrays: `fullfiled` and `rejected`.
  */
 export const ALL_SETTLED = async <T = any, Reason = any> (
-  todoInParallel: Iterable<T | PromiseLike<T>>
+  todoInParallel: Iterable<T>
 ): Promise<{ fullfiled: Array<Awaited<T>>, rejected: Reason[], size: number }> => {
   const allSettledList = await Promise.allSettled(todoInParallel)
 
