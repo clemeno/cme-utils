@@ -4,25 +4,40 @@
  * It returns an object containing two arrays: one for fulfilled promises and one for rejected promises.
  *
  * @param todoInParallel - An array of tasks to be executed in parallel.
- * @returns A promise that resolves to an object containing two arrays: `fullfiled` and `rejected`.
+ * @returns A promise that resolves to an object containing the `fullfiled` and `rejected` results clearly separated.
  */
 export const ALL_SETTLED = async <T = any, Reason = any> (
   todoInParallel: Iterable<T>
-): Promise<{ fullfiled: Array<Awaited<T>>, rejected: Reason[], size: number }> => {
+): Promise<{
+  fullfiled: Record<string, Awaited<T>>
+  rejected: Record<string, Reason>
+  fullfiledSize: number
+  rejectedSize: number
+  size: number
+}> => {
   const allSettledList = await Promise.allSettled(todoInParallel)
 
-  const fullfiled: Array<Awaited<T>> = []
-  const rejected: Reason[] = []
+  const fullfiled: Record<string, Awaited<T>> = {}
+  let fullfiledSize = 0
 
-  for (const settled of allSettledList) {
+  const rejected: Record<string, Reason> = {}
+  let rejectedSize = 0
+
+  for (const [index, settled] of allSettledList.entries()) {
+    const i = index.toString()
+
     if (settled.status === 'fulfilled') {
-      fullfiled.push(settled.value)
+      fullfiled[i] = settled.value
+
+      fullfiledSize += 1
     } else {
-      rejected.push(settled.reason)
+      rejected[i] = settled.reason
+
+      rejectedSize += 1
     }
   }
 
-  const size = fullfiled.length + rejected.length
+  const size = fullfiledSize + rejectedSize
 
-  return { fullfiled, rejected, size }
+  return { fullfiled, rejected, fullfiledSize, rejectedSize, size }
 }
