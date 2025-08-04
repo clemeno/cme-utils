@@ -11,6 +11,8 @@ const optionList = [
   {
     rules: {
       'no-plusplus': 'error',
+      'no-dupe-else-if': 'error',
+      'no-lonely-if': 'error',
       yoda: 0,
       'max-params': ['warn', 1],
       '@stylistic/arrow-parens': ['error', 'as-needed'],

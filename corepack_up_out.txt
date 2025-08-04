@@ -1,25 +1,41 @@
-Installing pnpm@10.13.1 in the project...
+Installing pnpm@10.14.0 in the project...
 
 Progress: resolved 1, reused 0, downloaded 0, added 0
-Progress: resolved 6, reused 4, downloaded 2, added 0
-Progress: resolved 143, reused 120, downloaded 6, added 0
-Progress: resolved 270, reused 237, downloaded 11, added 0
+Progress: resolved 64, reused 64, downloaded 0, added 0
+Progress: resolved 295, reused 276, downloaded 0, added 0
 Packages: +271
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Progress: resolved 295, reused 263, downloaded 14, added 48
-Progress: resolved 295, reused 263, downloaded 14, added 106
-Progress: resolved 295, reused 263, downloaded 14, added 151
-Progress: resolved 295, reused 263, downloaded 14, added 256
-Progress: resolved 295, reused 263, downloaded 14, added 270
-Progress: resolved 295, reused 263, downloaded 14, added 271, done
+Progress: resolved 295, reused 277, downloaded 0, added 83
+Progress: resolved 295, reused 277, downloaded 0, added 200
+Progress: resolved 295, reused 277, downloaded 0, added 270
+Progress: resolved 295, reused 277, downloaded 0, added 271, done
+ÔÇëWARNÔÇë Issues with peer dependencies found
+.
+Ôö£ÔöÇÔö¼ @typescript-eslint/parser 8.38.0
+Ôöé Ôö£ÔöÇÔöÇ Ô£ò unmet peer typescript@">=4.8.4 <5.9.0": found 5.9.2
+Ôöé ÔööÔöÇÔö¼ @typescript-eslint/typescript-estree 8.38.0
+Ôöé   Ôö£ÔöÇÔöÇ Ô£ò unmet peer typescript@">=4.8.4 <5.9.0": found 5.9.2
+Ôöé   ÔööÔöÇÔö¼ @typescript-eslint/project-service 8.38.0
+Ôöé     Ôö£ÔöÇÔöÇ Ô£ò unmet peer typescript@">=4.8.4 <5.9.0": found 5.9.2
+Ôöé     ÔööÔöÇÔö¼ @typescript-eslint/tsconfig-utils 8.38.0
+Ôöé       ÔööÔöÇÔöÇ Ô£ò unmet peer typescript@">=4.8.4 <5.9.0": found 5.9.2
+Ôö£ÔöÇÔö¼ @typescript-eslint/utils 8.38.0
+Ôöé ÔööÔöÇÔöÇ Ô£ò unmet peer typescript@">=4.8.4 <5.9.0": found 5.9.2
+Ôö£ÔöÇÔö¼ @typescript-eslint/eslint-plugin 8.38.0
+Ôöé Ôö£ÔöÇÔöÇ Ô£ò unmet peer typescript@">=4.8.4 <5.9.0": found 5.9.2
+Ôöé ÔööÔöÇÔö¼ @typescript-eslint/type-utils 8.38.0
+Ôöé   ÔööÔöÇÔöÇ Ô£ò unmet peer typescript@">=4.8.4 <5.9.0": found 5.9.2
+ÔööÔöÇÔö¼ neostandard 0.12.2
+  ÔööÔöÇÔö¼ typescript-eslint 8.38.0
+    ÔööÔöÇÔöÇ Ô£ò unmet peer typescript@">=4.8.4 <5.9.0": found 5.9.2
 
 devDependencies:
 + @types/eslint-utils 3.0.5
-+ @typescript-eslint/eslint-plugin 8.36.0
-+ @typescript-eslint/parser 8.36.0
-+ eslint 9.30.1
++ @typescript-eslint/eslint-plugin 8.38.0
++ @typescript-eslint/parser 8.38.0
++ eslint 9.32.0
 + eslint-utils 3.0.0
 + neostandard 0.12.2
-+ typescript 5.8.3
++ typescript 5.9.2
 
-Done in 8.9s using pnpm v10.13.1
+Done in 6.1s using pnpm v10.14.0
