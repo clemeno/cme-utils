@@ -2,7 +2,7 @@ import { GET_TZ } from './get-tz.util.js'
 import { NOW } from './now.util.js'
 
 /**
- * `Luxon` `DateTime` set to the global timezone
+ * `Luxon` `DateTime` set to the global timezone using `Settings`
  * * provide DateTime and Settings -> import type { DateTime, Settings } from 'luxon'
  */
 export const NOW_APP = <DateTime = any, TypeofDateTime = any, TypeofSettings = any> (_: {
