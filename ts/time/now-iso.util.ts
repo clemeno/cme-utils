@@ -1,4 +1,4 @@
-import { NOW } from './now.util'
+import { NOW } from './now.util.js'
 
 /**
  * `Luxon` `DateTime` `local` `toISO` or `''`
