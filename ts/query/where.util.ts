@@ -7,17 +7,15 @@ import type { WhereParams } from '../where-params.js'
 import { LIKE_KEEP_PERCENT_AND_DASH } from './like-keep-percent-and-dash.util.js'
 
 export const WHERE = (_: WhereParams): void => {
-  const bStartsWith = IS_ON(_.bBeginsWith)
+  const bBeginsWith = IS_ON(_.bBeginsWith)
   const bEndsWith = IS_ON(_.bEndsWith)
   const bPg = IS_ON(_.bPg)
 
-  if (bStartsWith || bEndsWith || IS_A_STRING_AND_NOT_EMPTY(_.operator)) {
+  if (bBeginsWith || bEndsWith || IS_A_STRING_AND_NOT_EMPTY(_.operator)) {
     const bKeepPercentAndDash = IS_ON(_.bKeepPercentAndDash)
     let pattern = `${bKeepPercentAndDash ? LIKE_KEEP_PERCENT_AND_DASH({ from: _.value }) : TO_STRING(_.value)}`
 
-    if (bStartsWith || bEndsWith || (_.operator === 'ilike')) {
-      const bBeginsWith = IS_ON(_.bBeginsWith)
-
+    if (bBeginsWith || bEndsWith || (_.operator === 'ilike')) {
       if (bBeginsWith) {
         pattern = `${pattern}%`
       }
