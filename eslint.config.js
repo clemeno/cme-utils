@@ -10,6 +10,7 @@ const optionList = [
   }),
   {
     rules: {
+      curly: ['error', 'all'],
       'no-plusplus': 'error',
       'no-dupe-else-if': 'error',
       'no-lonely-if': 'error',
