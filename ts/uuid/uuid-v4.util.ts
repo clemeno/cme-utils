@@ -28,8 +28,10 @@ export const UUID_V4 = (): string => {
       }
     }
 
-    // ! set the version to 4 (random UUID) and the variant to RFC 4122
+    // ! version: 4 (random UUID)
     randomByteArray[6] = (randomByteArray[6] & 0x0f) | 0x40
+
+    // ! variant: RFC 4122
     randomByteArray[8] = (randomByteArray[8] & 0x3f) | 0x80
 
     res = BYTE_ARRAY_TO_UUID(randomByteArray)

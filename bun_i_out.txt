@@ -1,11 +1,11 @@
-[0m[1mbun install [0m[2mv1.2.23 (cf136713)[0m
+bun install v1.3.2 (b131639c)
 
-[0m[32m+[0m [1m@types/eslint-utils[0m[2m@3.0.5[0m
-[0m[32m+[0m [1m@typescript-eslint/eslint-plugin[0m[2m@8.46.0[0m
-[0m[32m+[0m [1m@typescript-eslint/parser[0m[2m@8.46.0[0m
-[0m[32m+[0m [1meslint[0m[2m@9.37.0[0m
-[0m[32m+[0m [1meslint-utils[0m[2m@3.0.0[0m
-[0m[32m+[0m [1mneostandard[0m[2m@0.12.2[0m
-[0m[32m+[0m [1mtypescript[0m[2m@5.9.3[0m
++ @types/eslint-utils@3.0.5
++ @typescript-eslint/eslint-plugin@8.47.0
++ @typescript-eslint/parser@8.47.0
++ eslint@9.39.1
++ eslint-utils@3.0.0
++ neostandard@0.12.2
++ typescript@5.9.3
 
-[32m268[0m packages[0m installed [0m[2m[[1m1381.00ms[0m[2m][0m[0m
+268 packages installed [1.84s]
