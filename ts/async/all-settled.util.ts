@@ -6,32 +6,30 @@
  * @param todoInParallel - An array of tasks to be executed in parallel.
  * @returns A promise that resolves to an object containing the `fulfilled` and `rejected` results clearly separated.
  */
-export const ALL_SETTLED = async <T = any, Reason = any> (
-  todoInParallel: Iterable<T>
-): Promise<{
-  fulfilled: Record<string, Awaited<T>>
-  rejected: Record<string, Reason>
+export const ALL_SETTLED = async <const T extends readonly unknown[], Reason = any> (todoInParallel: T): Promise<{
+  fulfilled: { [K in keyof T]?: Awaited<T[K]> }
+  rejected: { [K in keyof T]?: Reason }
   fulfilledSize: number
   rejectedSize: number
   size: number
 }> => {
   const allSettledList = await Promise.allSettled(todoInParallel)
 
-  const fulfilled: Record<string, Awaited<T>> = {}
+  const fulfilled: { [K in keyof T]?: Awaited<T[K]> } = {}
   let fulfilledSize = 0
 
-  const rejected: Record<string, Reason> = {}
+  const rejected: { [K in keyof T]?: Reason } = {}
   let rejectedSize = 0
 
   for (const [index, settled] of allSettledList.entries()) {
-    const i = index.toString()
+    const i: keyof T = index
 
     if (settled.status === 'fulfilled') {
-      fulfilled[i] = settled.value
+      fulfilled[i] = settled.value as Awaited<T[typeof i]>
 
       fulfilledSize += 1
     } else {
-      rejected[i] = settled.reason
+      rejected[i] = settled.reason as Reason
 
       rejectedSize += 1
     }
