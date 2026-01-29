@@ -1,5 +1,5 @@
 export interface WhereInParams {
   qb: any
-  column: any
-  values: any[] | Set<any> | Map<any, any> | readonly any[] | ReadonlySet<any> | ReadonlyMap<any, any>
+  column: string
+  values: unknown[] | Set<unknown> | Map<unknown, unknown> | readonly unknown[] | ReadonlySet<unknown> | ReadonlyMap<unknown, unknown>
 }

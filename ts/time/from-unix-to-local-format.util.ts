@@ -10,7 +10,7 @@ import { LUXON_FORMAT_LOCAL_YMD_HMS_S_Z } from './luxon.util.js'
 export const FROM_UNIX_TO_LOCAL_FORMAT = <TypeofDateTime = any, TypeofSettings = any> (_: {
   DateTime: TypeofDateTime
   Settings: TypeofSettings
-  unix: any
+  unix: number
   format?: string
 }): string => {
   const DateTimeClass = _.DateTime as any

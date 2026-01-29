@@ -21,6 +21,9 @@ export const CIPHER_AES_GCM_TO_BUFFER = <Buffer = any, TypeofBuffer = any, Typeo
   // * cipher.final
   const finalCipheredBuffer = cipher.final()
 
+  // * cipher.getAuthTag
+  const authTag = cipher.getAuthTag()
+
   // ? [ ...iv (head: 12 bytes), ...ciphertext PAYLOAD (body: dynamic), ...tag (tail: 16 bytes) ]
-  return (_.Buffer as any).concat([ivBuffer, cipheredBuffer, finalCipheredBuffer, cipher.getAuthTag()])
+  return (_.Buffer as any).concat([ivBuffer, cipheredBuffer, finalCipheredBuffer, authTag])
 }

@@ -21,10 +21,10 @@ export const DECIPHER_AES_GCM_TO_UTF8 = <Buffer = any, TypeofBuffer = any, Typeo
 
   // ? tag: Authentication Tag (last 16 bytes)
   // * decipher.setAuthTag
-  decipher.setAuthTag((_.Buffer as any).from(cipheredByteList.slice(0 - authTagLength)))
+  decipher.setAuthTag((_.Buffer as any).from(cipheredByteList.slice(-authTagLength)))
 
   // ? ciphertext: Encrypted Data PAYLOAD (dynamic bytes)
-  const cipheredPayloadHex = (_.Buffer as any).from(cipheredByteList.slice(12, 0 - authTagLength)).toString('hex')
+  const cipheredPayloadHex = (_.Buffer as any).from(cipheredByteList.slice(12, -authTagLength)).toString('hex')
   // * decipher.update
   const deciphered = decipher.update(cipheredPayloadHex, 'hex', 'utf8')
 

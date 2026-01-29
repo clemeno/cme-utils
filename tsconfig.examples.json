@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "types": [
+      "bun-types"
+    ]
+  },
+  "include": [
+    "ts/**/*",
+    "examples/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "esm"
+  ]
+}

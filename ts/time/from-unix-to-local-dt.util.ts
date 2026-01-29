@@ -7,5 +7,5 @@ import { LUXON_FORMAT_LOCAL_YMD_HM } from './luxon.util.js'
 export const FROM_UNIX_TO_LOCAL_DT = <TypeofDateTime = any, TypeofSettings = any> (_: {
   DateTime: TypeofDateTime
   Settings: TypeofSettings
-  unix: any
+  unix: number
 }): string => FROM_UNIX_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_YMD_HM })

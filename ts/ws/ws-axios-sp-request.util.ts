@@ -19,7 +19,7 @@ export const WS_AXIOS_SP_REQUEST = async <AxiosStatic = any, NodeHttps = any, Ax
   wsResolve: string
   method?: string
   wsUrl: string
-  dataObject?: any
+  dataObject?: unknown
   dataString?: string
   contentType?: string
 }): Promise<AppExceptionResult<AxiosError, AxiosResult>> => {
@@ -102,9 +102,9 @@ export const WS_AXIOS_SP_REQUEST = async <AxiosStatic = any, NodeHttps = any, Ax
   const axiosConfig: {
     method: string
     url: string
-    data?: any
+    data?: string
     headers?: Record<string, numeric>
-    httpsAgent?: any
+    httpsAgent?: unknown
   } = { method, url }
 
   const dataObject = _.dataObject
@@ -134,7 +134,7 @@ export const WS_AXIOS_SP_REQUEST = async <AxiosStatic = any, NodeHttps = any, Ax
 
   if (bUrlHttps) {
     // ? https.AgentOptions
-    const agentConfig: any = { rejectUnauthorized: false }
+    const agentConfig: Record<string, unknown> = { rejectUnauthorized: false }
 
     if (bWsResolve) {
       agentConfig.servername = envWsResolveSpoofHost

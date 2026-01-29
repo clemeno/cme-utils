@@ -11,8 +11,8 @@ export const INIT_OPTI_TIME_NUMBER_AVG_SERIE_FUNCTION = async <DateTime = any, D
 
   const pointList: Array<[number, number | null]> = []
 
-  for (let mStep: any = mFrom; mStep <= mTo; mStep = mStep.plus(step)) {
-    pointList.push([mStep.toMillis(), null])
+  for (let mStep: any = mFrom; +mStep <= +mTo; mStep = mStep.plus(step)) {
+    pointList.push([+mStep, null])
   }
 
   return pointList

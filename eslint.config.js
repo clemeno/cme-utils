@@ -1,7 +1,25 @@
 // import tsEslintPlugin from '@typescript-eslint/eslint-plugin'
 import tsEslintParser from '@typescript-eslint/parser'
 import neostandard, { resolveIgnoresFromGitignore } from 'neostandard'
-import { MAX_RETURN_STATEMENTS_PER_FUNCTION_PLUGIN } from './esm/index.js'
+import { MAX_RETURN_STATEMENTS_PER_FUNCTION_PLUGIN } from './esm/max-return-statements-per-function.plugin.js'
+
+const tsRules = {
+  '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
+  '@typescript-eslint/no-floating-promises': 'error',
+  '@typescript-eslint/strict-boolean-expressions': ['error', { allowString: false, allowNumber: false, allowNullableObject: false }],
+  '@typescript-eslint/restrict-template-expressions': [
+    'error',
+    {
+      allowAny: false,
+      allowArray: false,
+      allowBoolean: false,
+      allowNever: false,
+      allowNullish: false,
+      allowNumber: true,
+      allowRegExp: false,
+    },
+  ],
+}
 
 const optionList = [
   ...neostandard({
@@ -37,6 +55,7 @@ const optionList = [
   },
   {
     files: ['**/*.ts', '**/*.tsx'],
+    ignores: ['tests/**/*', 'examples/**/*'],
     // plugins: {
     //   '@typescript-eslint': tsEslintPlugin,
     // },
@@ -46,23 +65,27 @@ const optionList = [
         project: './tsconfig.json',
       },
     },
-    rules: {
-      '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
-      '@typescript-eslint/no-floating-promises': 'error',
-      '@typescript-eslint/strict-boolean-expressions': ['error', { allowString: false, allowNumber: false, allowNullableObject: false }],
-      '@typescript-eslint/restrict-template-expressions': [
-        'error',
-        {
-          allowAny: false,
-          allowArray: false,
-          allowBoolean: false,
-          allowNever: false,
-          allowNullish: false,
-          allowNumber: true,
-          allowRegExp: false,
-        },
-      ],
+    rules: tsRules,
+  },
+  {
+    files: ['tests/**/*.ts', 'tests/**/*.tsx'],
+    languageOptions: {
+      parser: tsEslintParser,
+      parserOptions: {
+        project: './tsconfig.tests.json',
+      },
     },
+    rules: tsRules,
+  },
+  {
+    files: ['examples/**/*.ts', 'examples/**/*.tsx'],
+    languageOptions: {
+      parser: tsEslintParser,
+      parserOptions: {
+        project: './tsconfig.examples.json',
+      },
+    },
+    rules: tsRules,
   },
 ]
 

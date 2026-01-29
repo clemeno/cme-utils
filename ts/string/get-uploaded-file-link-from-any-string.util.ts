@@ -9,7 +9,7 @@ import { IS_A_URL } from './is-a-url.util.js'
  * * provide basename -> import { basename } from 'node:path'
  * @returns {string} (path|url)?`filename` -> /opt/cme/svd/www/svd/public_html/static/`filename`
  */
-export const GET_UPLOADED_FILE_LINK_FROM_ANY_STRING = <TypeofBasename = any> (_: {
+export const GET_UPLOADED_FILE_LINK_FROM_ANY_STRING = <TypeofBasename extends (s: string) => string> (_: {
   basename: TypeofBasename
   s: string
   fileUploadFolder: string
@@ -22,11 +22,9 @@ export const GET_UPLOADED_FILE_LINK_FROM_ANY_STRING = <TypeofBasename = any> (_:
   const fileUploadFolder = _.fileUploadFolder
   const publicStaticImageFolder = _.publicStaticImageFolder
 
-  const basename: any = _.basename
-
   const strategyList = [
     { if: () => IS_A_STRING_AND_NOT_EMPTY(uuid), then: () => GET_CLOUDFRONT_LIGHT_LINK_FROM_UUID({ uuid, publicStaticImageFolder }) },
-    { if: () => s.includes(fileUploadFolder), then: () => GET_CLOUDFRONT_LINK_PATH({ filename: basename(s), publicStaticImageFolder }) },
+    { if: () => s.includes(fileUploadFolder), then: () => GET_CLOUDFRONT_LINK_PATH({ filename: _.basename(s), publicStaticImageFolder }) },
     { if: () => s.includes(publicStaticImageFolder), then: () => s },
     {
       if: () => IS_A_URL(s),

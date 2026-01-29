@@ -4,7 +4,7 @@ import { TO_NUMBER } from '../convert/to-number.util.js'
 import type { numeric } from '../numeric.js'
 
 export const ARRAY_SUM = (a: numeric[]): number => {
-  let sum = NaN
+  let sum: number | undefined
 
   for (const v of a) {
     if (IS_NUMERIC(v)) {
@@ -18,5 +18,5 @@ export const ARRAY_SUM = (a: numeric[]): number => {
     }
   }
 
-  return sum
+  return sum ?? NaN
 }

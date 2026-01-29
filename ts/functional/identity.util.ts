@@ -1,2 +1,2 @@
-/** idenftity function */
-export const IDENTITY = (_: any): any => _
+/** identity function */
+export const IDENTITY = (_: unknown): unknown => _

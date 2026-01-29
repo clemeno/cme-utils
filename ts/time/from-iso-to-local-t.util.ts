@@ -7,5 +7,5 @@ import { LUXON_FORMAT_LOCAL_HM } from './luxon.util.js'
 export const FROM_ISO_TO_LOCAL_T = <TypeofDateTime = any, TypeofSettings = any> (_: {
   DateTime: TypeofDateTime
   Settings: TypeofSettings
-  iso: any
+  iso: string
 }): string => FROM_ISO_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_HM })

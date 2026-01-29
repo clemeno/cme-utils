@@ -64,3 +64,4 @@ Thumbs.db
 config.gypi
 CVS
 # npm-debug.log
+/tests

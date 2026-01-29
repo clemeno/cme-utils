@@ -12,7 +12,7 @@ export const OR_WHERE = (_: WhereParams): void => {
 
   if (bBeginsWith || bEndsWith || IS_A_STRING_AND_NOT_EMPTY(_.operator)) {
     const bKeepPercentAndDash = IS_ON(_.bKeepPercentAndDash)
-    let pattern = `${bKeepPercentAndDash ? LIKE_KEEP_PERCENT_AND_DASH({ from: _.value }) : TO_STRING(_.value)}`
+    let pattern = `${bKeepPercentAndDash ? LIKE_KEEP_PERCENT_AND_DASH({ from: _.value as string }) : TO_STRING(_.value)}`
 
     if (bBeginsWith || bEndsWith || (_.operator === 'ilike')) {
       if (bBeginsWith) {

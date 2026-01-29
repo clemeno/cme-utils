@@ -6,7 +6,7 @@ export const IS_ODD = (v: any): boolean => {
     ((typeof v === 'number') && !Number.isNaN(v)) ||
     ((typeof v === 'string') && (v !== '') && !Number.isNaN(Number(v)) && !Number.isNaN(Number.parseFloat(v)))
   ) {
-    res = (+v % 2) === 1
+    res = (+v % 2) !== 0
   }
 
   return res

@@ -9,7 +9,7 @@ import { IS_A_URL } from './is-a-url.util.js'
  * * provide basename -> import { basename } from 'node:path'
  * @returns {string} (path|url)?`filename` -> ./uploads/`filename`
  */
-export const GET_UPLOADED_FILE_FROM_ANY_STRING = <TypeofBasename = any> (_: {
+export const GET_UPLOADED_FILE_FROM_ANY_STRING = <TypeofBasename extends (s: string) => string> (_: {
   basename: TypeofBasename
   s: string
   fileUploadFolder: string
@@ -22,12 +22,10 @@ export const GET_UPLOADED_FILE_FROM_ANY_STRING = <TypeofBasename = any> (_: {
   const fileUploadFolder = _.fileUploadFolder
   const publicStaticImageFolder = _.publicStaticImageFolder
 
-  const basename: any = _.basename
-
   const strategyList = [
     { if: () => IS_A_STRING_AND_NOT_EMPTY(uuid), then: () => GET_UPLOADED_LIGHT_PNG_FROM_UUID({ uuid, fileUploadFolder }) },
     { if: () => s.includes(fileUploadFolder), then: () => s },
-    { if: () => s.includes(publicStaticImageFolder), then: () => GET_UPLOADED_FILE_PATH({ filename: basename(s), fileUploadFolder }) },
+    { if: () => s.includes(publicStaticImageFolder), then: () => GET_UPLOADED_FILE_PATH({ filename: _.basename(s), fileUploadFolder }) },
     {
       if: () => IS_A_URL(s),
       then: () => {

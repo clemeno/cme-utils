@@ -13,7 +13,7 @@ export const INIT_TIME_NUMBER_SERIE_FUNCTION = async <DateTime = any, DurationOb
 
   const pointList: any[] = []
 
-  for (let mStep: any = mFrom; mStep <= mTo; mStep = mStep.plus(step)) {
+  for (let mStep: any = mFrom; +mStep <= +mTo; mStep = mStep.plus(step)) {
     pointList.push({ name: mStep.setZone(_.toTz).toFormat(_.toFormat), y: 0 })
   }
 

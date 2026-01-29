@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "rootDir": "./ts",
     "baseUrl": "./ts",
     "outDir": "./esm",
     "resolveJsonModule": true,
@@ -24,4 +25,10 @@
     ],
     "useDefineForClassFields": false
   },
+  "exclude": [
+    "node_modules",
+    "esm",
+    "tests",
+    "examples"
+  ]
 }

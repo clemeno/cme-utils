@@ -11,8 +11,8 @@ export const INIT_OPTI_TIME_NUMBER_SERIE_FUNCTION = async <DateTime = any, Durat
 
   const pointList: Array<[number, number]> = []
 
-  for (let mStep: any = mFrom; mStep <= mTo; mStep = mStep.plus(step)) {
-    pointList.push([mStep.toMillis(), 0])
+  for (let mStep: any = mFrom; +mStep <= +mTo; mStep = mStep.plus(step)) {
+    pointList.push([+mStep, 0])
   }
 
   return pointList
