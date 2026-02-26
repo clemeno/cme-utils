@@ -183,6 +183,11 @@ describe(
         check: (result: unknown) => {
           expect(typeof result).toBe('object')
           expect(typeof (result as any).next).toBe('function')
+          // Iterate to cover the yield lines
+          const first = (result as Generator).next()
+          expect(first.value).toBe(1)
+          const second = (result as Generator).next()
+          expect(second.value).toBe(2)
         },
       },
       {
@@ -191,18 +196,23 @@ describe(
           yield 1
           yield 2
         }()),
-        check: (result: unknown) => {
+        check: async (result: unknown) => {
           expect(typeof result).toBe('object')
+          // Iterate to cover the yield lines
+          const first = await (result as AsyncGenerator).next()
+          expect(first.value).toBe(1)
+          const second = await (result as AsyncGenerator).next()
+          expect(second.value).toBe(2)
         },
       },
     ]
 
     it.each(functionTestCases)(
       'should handle $name',
-      ({ input, check }) => {
+      async ({ input, check }) => {
         const result = IDENTITY(input)
         expect(result).toBe(input)
-        check(result, input as any)
+        await check(result, input as any)
       }
     )
 

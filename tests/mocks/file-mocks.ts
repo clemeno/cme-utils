@@ -28,3 +28,17 @@ export function createMockWriteFile (options: { shouldThrow?: boolean; errorMess
   fn.getCalls = () => calls
   return fn
 }
+
+/**
+ * Returns an async-iterable stream that yields the provided `chunks` in order.
+ * Suitable for use as the return value of a `createReadStream` mock.
+ */
+export function createMockReadStream (chunks: Buffer[]) {
+  return {
+    async * [Symbol.asyncIterator] () {
+      for (const chunk of chunks) {
+        yield chunk
+      }
+    },
+  }
+}

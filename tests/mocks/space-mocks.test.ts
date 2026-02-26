@@ -37,6 +37,28 @@ describe(
             expect(mock.getSetAttributeCalls()).toEqual([])
           }
         )
+
+        it(
+          'should track getAttribute calls and return getAttributeValue',
+          () => {
+            const mock = createMockDocument({ getAttributeValue: 'en' })
+            const result = mock.documentElement.getAttribute('lang')
+            expect(result).toBe('en')
+            const calls = mock.getGetAttributeCalls()
+            expect(calls).toHaveLength(1)
+            expect(calls[0]).toBe('lang')
+          }
+        )
+
+        it(
+          'should return default empty string for getAttribute when no value provided',
+          () => {
+            const mock = createMockDocument()
+            const result = mock.documentElement.getAttribute('lang')
+            expect(result).toBe('')
+            expect(mock.getGetAttributeCalls()).toEqual(['lang'])
+          }
+        )
       }
     )
 

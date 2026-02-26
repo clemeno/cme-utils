@@ -13,6 +13,7 @@ export { BYTE_ARRAY_LIKE_TO_BASE_256 } from './byte-array-like-to-base-256.util.
 export { DISPLAY_NB } from './display-nb.util.js'
 export { DISPLAY_NS_OR_NB } from './display-ns-or-nb.util.js'
 export { DISPLAY_NS } from './display-ns.util.js'
+export { FROM_ANY_TO_BUFFER } from './from-any-to-buffer.util.js'
 export { FROM_BASE_10_TO_16 } from './from-base-10-to-16.util.js'
 export { FROM_BASE_10_TO_CARD_SERIAL } from './from-base-10-to-card-serial.util.js'
 export { FROM_BASE_10_TO_CSN_DISPLAY } from './from-base-10-to-csn-display.util.js'

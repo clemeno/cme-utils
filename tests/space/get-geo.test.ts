@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test'
 import { GET_GEO } from '../../ts/space/get-geo.util.js'
+import { createMockDocument } from '../mocks/space-mocks.js'
 import { createMockSettings } from '../mocks/luxon-mock.js'
 
 describe(
@@ -34,12 +35,7 @@ describe(
     it(
       'should set document geo if different',
       () => {
-        const mockDocument = {
-          documentElement: {
-            getAttribute: () => 'old-geo',
-            setAttribute: () => {},
-          },
-        }
+        const mockDocument = createMockDocument({ getAttributeValue: 'old-geo' })
         // Mock window.document
         const originalDocument = global.window?.document
         global.window = { document: mockDocument } as any

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { mockDateTime, type DurationObjectUnits } from './luxon-mock.js'
+import { mockDateTime, MockDateTime, createMockSettings, type DurationObjectUnits } from './luxon-mock.js'
 
 describe(
   'Luxon DateTime Mock',
@@ -344,6 +344,141 @@ describe(
             expect(mock.second).toBe(1)
           }
         )
+      }
+    )
+
+    describe(
+      'minus method',
+      () => {
+        it('should subtract milliseconds', () => {
+          expect(mockDateTime(2000).minus({ milliseconds: 500 }).toMillis()).toBe(1500)
+        })
+        it('should subtract seconds', () => {
+          expect(mockDateTime(5000).minus({ seconds: 2 }).toMillis()).toBe(3000)
+        })
+        it('should subtract minutes', () => {
+          expect(mockDateTime(120000).minus({ minutes: 1 }).toMillis()).toBe(60000)
+        })
+        it('should subtract hours', () => {
+          expect(mockDateTime(7200000).minus({ hours: 1 }).toMillis()).toBe(3600000)
+        })
+        it('should subtract days', () => {
+          expect(mockDateTime(172800000).minus({ days: 1 }).toMillis()).toBe(86400000)
+        })
+        it('should subtract weeks', () => {
+          expect(mockDateTime(1209600000).minus({ weeks: 1 }).toMillis()).toBe(604800000)
+        })
+        it('should subtract months', () => {
+          expect(mockDateTime(2592001000).minus({ months: 1 }).toMillis()).toBe(1000)
+        })
+        it('should subtract quarters', () => {
+          expect(mockDateTime(7776001000).minus({ quarters: 1 }).toMillis()).toBe(1000)
+        })
+        it('should subtract years', () => {
+          expect(mockDateTime(31536001000).minus({ years: 1 }).toMillis()).toBe(1000)
+        })
+      }
+    )
+
+    describe(
+      'startOf and endOf methods',
+      () => {
+        it('should set startOf day to midnight', () => {
+          const mock = mockDateTime(1640995261500) // 2022-01-01T00:01:01.500Z
+          const start = mock.startOf('day')
+          expect(start.getHours()).toBe(0)
+          expect(start.getMinutes()).toBe(0)
+          expect(start.getSeconds()).toBe(0)
+          expect(start.getMilliseconds()).toBe(0)
+        })
+        it('should set endOf day to 23:59:59.999', () => {
+          const mock = mockDateTime(1640995261500)
+          const end = mock.endOf('day')
+          expect(end.getHours()).toBe(23)
+          expect(end.getMinutes()).toBe(59)
+          expect(end.getSeconds()).toBe(59)
+          expect(end.getMilliseconds()).toBe(999)
+        })
+        it('should leave time unchanged for unsupported startOf unit', () => {
+          const mock = mockDateTime(1640995261500)
+          const result = mock.startOf('month')
+          expect(result.toMillis()).toBe(1640995261500)
+        })
+        it('should leave time unchanged for unsupported endOf unit', () => {
+          const mock = mockDateTime(1640995261500)
+          const result = mock.endOf('month')
+          expect(result.toMillis()).toBe(1640995261500)
+        })
+      }
+    )
+
+    describe(
+      'toISO and toSQL methods',
+      () => {
+        it('should return ISO string from toISO', () => {
+          const mock = mockDateTime(0)
+          expect(mock.toISO()).toBe('1970-01-01T00:00:00.000Z')
+        })
+        it('should return SQL-formatted string from toSQL', () => {
+          const mock = mockDateTime(0)
+          expect(mock.toSQL()).toBe('1970-01-01 00:00:00.000')
+        })
+      }
+    )
+
+    describe(
+      'toUnixInteger method',
+      () => {
+        it('should return floor of millis/1000', () => {
+          expect(mockDateTime(1500).toUnixInteger()).toBe(1)
+          expect(mockDateTime(1000).toUnixInteger()).toBe(1)
+          expect(mockDateTime(0).toUnixInteger()).toBe(0)
+        })
+      }
+    )
+
+    describe(
+      'MockDateTime static methods',
+      () => {
+        it('invalid returns null', () => {
+          expect(MockDateTime.invalid('reason')).toBeNull()
+        })
+        it('fromMillis returns correct datetime', () => {
+          expect(MockDateTime.fromMillis(1000).toMillis()).toBe(1000)
+        })
+        it('fromISO parses ISO string', () => {
+          const dt = MockDateTime.fromISO('1970-01-01T00:00:00.000Z')
+          expect(dt.toMillis()).toBe(0)
+        })
+        it('fromSQL parses SQL string', () => {
+          const dt = MockDateTime.fromSQL('1970-01-01 00:00:00')
+          expect(dt.toMillis()).toBeGreaterThanOrEqual(0)
+        })
+        it('fromSeconds returns correct datetime', () => {
+          expect(MockDateTime.fromSeconds(1).toMillis()).toBe(1000)
+        })
+        it('local returns a datetime', () => {
+          expect(MockDateTime.local().toMillis()).toBeGreaterThan(0)
+        })
+        it('utc returns a datetime', () => {
+          expect(MockDateTime.utc().toMillis()).toBeGreaterThan(0)
+        })
+      }
+    )
+
+    describe(
+      'createMockSettings',
+      () => {
+        it('returns default zone and locale', () => {
+          const s = createMockSettings()
+          expect(s.defaultZone.name).toBe('UTC')
+          expect(s.defaultLocale).toBe('en')
+        })
+        it('accepts custom zone and locale', () => {
+          const s = createMockSettings({ initialZone: 'Europe/London', initialLocale: 'fr' })
+          expect(s.defaultZone.name).toBe('Europe/London')
+          expect(s.defaultLocale).toBe('fr')
+        })
       }
     )
   }

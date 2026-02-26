@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test'
 import { GET_LANG } from '../../ts/space/get-lang.util.js'
+import { createMockDocument } from '../mocks/space-mocks.js'
 import { createMockSettings } from '../mocks/luxon-mock.js'
 
 describe(
@@ -23,12 +24,7 @@ describe(
     it(
       'should set document lang if different',
       () => {
-        const mockDocument = {
-          documentElement: {
-            getAttribute: () => 'old-lang',
-            setAttribute: () => {},
-          },
-        }
+        const mockDocument = createMockDocument({ getAttributeValue: 'old-lang' })
         const originalDocument = global.window?.document
         global.window = { document: mockDocument } as any
 

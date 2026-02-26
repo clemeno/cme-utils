@@ -1,4 +1,3 @@
-import { IS_A_FUNCTION } from '../check/is-a-function.util.js'
 import { IS_A_NUMBER } from '../check/is-a-number.util.js'
 import { IS_A_STRING } from '../check/is-a-string.util.js'
 import { IS_SET } from '../check/is-set.util.js'
@@ -25,11 +24,10 @@ export const TO_CSV_VALUE = (v: any): string => {
     } else if (IS_A_STRING(v)) {
       // Quote strings to handle commas and special characters
       res = JSON.stringify(v)
-    } else if (IS_A_FUNCTION(v.toString)) {
-      // Convert objects to string representation, then quote
-      res = JSON.stringify(v.toString())
     } else {
-      res = v
+      // ! All objects have toString in standard JS so we can:
+      // Convert the object to its string representation, then quote using JSON
+      res = JSON.stringify(v.toString())
     }
   }
 

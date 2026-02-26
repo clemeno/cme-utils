@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test'
 import { GET_FILE_FULL_TEXT_CONTENT } from '../../ts/file/get-file-full-text-content.util.js'
+import { createMockReadStream } from '../mocks/file-mocks.js'
 
 describe(
   'GET_FILE_FULL_TEXT_CONTENT',
@@ -7,12 +8,7 @@ describe(
     it(
       'should read text file content',
       async () => {
-        const mockReadStream = {
-          async * [Symbol.asyncIterator] () {
-            yield Buffer.from('Hello ')
-            yield Buffer.from('world!')
-          },
-        }
+        const mockReadStream = createMockReadStream([Buffer.from('Hello '), Buffer.from('world!')])
 
         const mockCreateReadStream = (filePath: string) => {
           expect(filePath).toBe('/tmp/test.txt')
@@ -31,11 +27,7 @@ describe(
     it(
       'should handle single chunk',
       async () => {
-        const mockReadStream = {
-          async * [Symbol.asyncIterator] () {
-            yield Buffer.from('Single chunk content')
-          },
-        }
+        const mockReadStream = createMockReadStream([Buffer.from('Single chunk content')])
 
         const mockCreateReadStream = () => mockReadStream
 
@@ -51,11 +43,7 @@ describe(
     it(
       'should handle empty file',
       async () => {
-        const mockReadStream = {
-          async * [Symbol.asyncIterator] () {
-            // No chunks
-          },
-        }
+        const mockReadStream = createMockReadStream([])
 
         const mockCreateReadStream = () => mockReadStream
 
@@ -87,12 +75,7 @@ describe(
     it(
       'should trim whitespace from chunks',
       async () => {
-        const mockReadStream = {
-          async * [Symbol.asyncIterator] () {
-            yield Buffer.from('  line 1  \n')
-            yield Buffer.from('  line 2  ')
-          },
-        }
+        const mockReadStream = createMockReadStream([Buffer.from('  line 1  \n'), Buffer.from('  line 2  ')])
 
         const mockCreateReadStream = () => mockReadStream
 
