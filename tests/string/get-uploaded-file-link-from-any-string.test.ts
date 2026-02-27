@@ -52,16 +52,14 @@ describe(
       },
     ]
 
-    it(
-      'should handle various inputs correctly',
-      () => {
-        for (const { input, expected } of testCases) {
-          const result = GET_UPLOADED_FILE_LINK_FROM_ANY_STRING(input)
-          if (typeof expected === 'string') {
-            expect(result).toBe(expected)
-          } else if (expected.contains !== undefined) {
-            expect(result).toContain(expected.contains)
-          }
+    it.each(testCases)(
+      'handles "$input.s"',
+      ({ input, expected }) => {
+        const result = GET_UPLOADED_FILE_LINK_FROM_ANY_STRING(input)
+        if (typeof expected === 'string') {
+          expect(result).toBe(expected)
+        } else {
+          expect(result).toContain(expected.contains)
         }
       }
     )

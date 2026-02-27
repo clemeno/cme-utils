@@ -4,60 +4,28 @@ import { TO_CANONICAL_STRING } from '../../ts/convert/to-canonical-string.util.j
 describe(
   'TO_CANONICAL_STRING',
   () => {
-    it(
-      'should convert strings to lowercase',
-      () => {
-        expect(TO_CANONICAL_STRING('HELLO')).toBe('hello')
-        expect(TO_CANONICAL_STRING('Hello World')).toBe('hello world')
-      }
-    )
+    const testCases = [
+      { label: '"HELLO"', input: 'HELLO', expected: 'hello' },
+      { label: '"Hello World"', input: 'Hello World', expected: 'hello world' },
+      { label: '"café" (diacritics)', input: 'café', expected: 'cafe' },
+      { label: '"naïve" (diacritics)', input: 'naïve', expected: 'naive' },
+      { label: '"résumé" (diacritics)', input: 'résumé', expected: 'resume' },
+      { label: '"Müller" (diacritics)', input: 'Müller', expected: 'muller' },
+      { label: '123 (number)', input: 123, expected: '123' },
+      { label: '123.45 (number)', input: 123.45, expected: '123.45' },
+      { label: 'true (boolean)', input: true, expected: 'true' },
+      { label: 'false (boolean)', input: false, expected: 'false' },
+      { label: '{ a: 1 } (object)', input: { a: 1 }, expected: '{"a":1}' },
+      { label: 'null', input: null, expected: '' },
+      { label: 'undefined', input: undefined, expected: '' },
+      { label: 'NaN', input: NaN, expected: '' },
+      { label: '"ỆᶍǍᶆṔƚÉ" (complex Unicode)', input: 'ỆᶍǍᶆṔƚÉ', expected: 'eᶍaᶆpƚe' },
+    ]
 
-    it(
-      'should remove diacritics',
-      () => {
-        expect(TO_CANONICAL_STRING('café')).toBe('cafe')
-        expect(TO_CANONICAL_STRING('naïve')).toBe('naive')
-        expect(TO_CANONICAL_STRING('résumé')).toBe('resume')
-        expect(TO_CANONICAL_STRING('Müller')).toBe('muller')
-      }
-    )
-
-    it(
-      'should handle numbers',
-      () => {
-        expect(TO_CANONICAL_STRING(123)).toBe('123')
-        expect(TO_CANONICAL_STRING(123.45)).toBe('123.45')
-      }
-    )
-
-    it(
-      'should handle booleans',
-      () => {
-        expect(TO_CANONICAL_STRING(true)).toBe('true')
-        expect(TO_CANONICAL_STRING(false)).toBe('false')
-      }
-    )
-
-    it(
-      'should handle objects',
-      () => {
-        expect(TO_CANONICAL_STRING({ a: 1 })).toBe('{"a":1}')
-      }
-    )
-
-    it(
-      'should return empty string for null, undefined, or NaN',
-      () => {
-        expect(TO_CANONICAL_STRING(null)).toBe('')
-        expect(TO_CANONICAL_STRING(undefined)).toBe('')
-        expect(TO_CANONICAL_STRING(NaN)).toBe('')
-      }
-    )
-
-    it(
-      'should handle complex Unicode',
-      () => {
-        expect(TO_CANONICAL_STRING('ỆᶍǍᶆṔƚÉ')).toBe('eᶍaᶆpƚe')
+    it.each(testCases)(
+      'TO_CANONICAL_STRING($label) -> "$expected"',
+      ({ input, expected }) => {
+        expect(TO_CANONICAL_STRING(input)).toBe(expected)
       }
     )
   }

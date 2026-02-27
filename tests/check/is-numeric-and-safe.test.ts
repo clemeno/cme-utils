@@ -4,52 +4,38 @@ import { IS_NUMERIC_AND_SAFE } from '../../ts/check/is-numeric-and-safe.util.js'
 describe(
   'IS_NUMERIC_AND_SAFE',
   () => {
-    it(
-      'should return true for safe numeric values',
-      () => {
-        expect(IS_NUMERIC_AND_SAFE(0)).toBe(true)
-        expect(IS_NUMERIC_AND_SAFE(1)).toBe(true)
-        expect(IS_NUMERIC_AND_SAFE(100)).toBe(true)
-        expect(IS_NUMERIC_AND_SAFE(123.45)).toBe(true)
-        expect(IS_NUMERIC_AND_SAFE(Number.EPSILON)).toBe(true)
-        expect(IS_NUMERIC_AND_SAFE(Number.MAX_SAFE_INTEGER)).toBe(true)
-        expect(IS_NUMERIC_AND_SAFE('0')).toBe(true)
-        expect(IS_NUMERIC_AND_SAFE('123')).toBe(true)
-        expect(IS_NUMERIC_AND_SAFE('123.45')).toBe(true)
-        expect(IS_NUMERIC_AND_SAFE(-1)).toBe(true)
-        expect(IS_NUMERIC_AND_SAFE(-100)).toBe(true)
-        expect(IS_NUMERIC_AND_SAFE('-123')).toBe(true)
-        expect(IS_NUMERIC_AND_SAFE(-1.5)).toBe(true)
-        expect(IS_NUMERIC_AND_SAFE(-123.45)).toBe(true)
-        expect(IS_NUMERIC_AND_SAFE('-1.5')).toBe(true)
-        expect(IS_NUMERIC_AND_SAFE('-123.45')).toBe(true)
-      }
-    )
+    const testCases = [
+      { label: '0', input: 0, expected: true },
+      { label: '1', input: 1, expected: true },
+      { label: '100', input: 100, expected: true },
+      { label: '123.45', input: 123.45, expected: true },
+      { label: 'Number.EPSILON', input: Number.EPSILON, expected: true },
+      { label: 'Number.MAX_SAFE_INTEGER', input: Number.MAX_SAFE_INTEGER, expected: true },
+      { label: '"0"', input: '0', expected: true },
+      { label: '"123"', input: '123', expected: true },
+      { label: '"123.45"', input: '123.45', expected: true },
+      { label: '-1', input: -1, expected: true },
+      { label: '-100', input: -100, expected: true },
+      { label: '"-123"', input: '-123', expected: true },
+      { label: '-1.5', input: -1.5, expected: true },
+      { label: '-123.45', input: -123.45, expected: true },
+      { label: '"-1.5"', input: '-1.5', expected: true },
+      { label: '"-123.45"', input: '-123.45', expected: true },
+      { label: 'Number.EPSILON - ε (below threshold)', input: Number.EPSILON - 0.0000000000000001, expected: false },
+      { label: '-Number.EPSILON + ε (above negative threshold)', input: -Number.EPSILON + 0.0000000000000001, expected: false },
+      { label: 'Number.MAX_SAFE_INTEGER + 1', input: Number.MAX_SAFE_INTEGER + 1, expected: false },
+      { label: 'Number.MAX_VALUE', input: Number.MAX_VALUE, expected: false },
+      { label: 'NaN', input: NaN, expected: false },
+      { label: '""', input: '', expected: false },
+      { label: '"abc"', input: 'abc', expected: false },
+      { label: 'null', input: null, expected: false },
+      { label: 'undefined', input: undefined, expected: false },
+    ]
 
-    it(
-      'should return false for values below EPSILON',
-      () => {
-        expect(IS_NUMERIC_AND_SAFE(Number.EPSILON - 0.0000000000000001)).toBe(false)
-        expect(IS_NUMERIC_AND_SAFE(-Number.EPSILON + 0.0000000000000001)).toBe(false)
-      }
-    )
-
-    it(
-      'should return false for values above MAX_SAFE_INTEGER',
-      () => {
-        expect(IS_NUMERIC_AND_SAFE(Number.MAX_SAFE_INTEGER + 1)).toBe(false)
-        expect(IS_NUMERIC_AND_SAFE(Number.MAX_VALUE)).toBe(false)
-      }
-    )
-
-    it(
-      'should return false for NaN and invalid strings',
-      () => {
-        expect(IS_NUMERIC_AND_SAFE(NaN)).toBe(false)
-        expect(IS_NUMERIC_AND_SAFE('')).toBe(false)
-        expect(IS_NUMERIC_AND_SAFE('abc')).toBe(false)
-        expect(IS_NUMERIC_AND_SAFE(null)).toBe(false)
-        expect(IS_NUMERIC_AND_SAFE(undefined)).toBe(false)
+    it.each(testCases)(
+      'IS_NUMERIC_AND_SAFE($label) → $expected',
+      ({ input, expected }) => {
+        expect(IS_NUMERIC_AND_SAFE(input)).toBe(expected)
       }
     )
   }

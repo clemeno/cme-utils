@@ -4,33 +4,25 @@ import { IS_AN_OBJECT } from '../../ts/check/is-an-object.util.js'
 describe(
   'IS_AN_OBJECT',
   () => {
-    it(
-      'should return true for objects',
-      () => {
-        expect(IS_AN_OBJECT({})).toBe(true)
-        expect(IS_AN_OBJECT({ a: 1 })).toBe(true)
-        expect(IS_AN_OBJECT([])).toBe(true)
-        expect(IS_AN_OBJECT(new Date())).toBe(true)
-        expect(IS_AN_OBJECT(new Set())).toBe(true)
-        expect(IS_AN_OBJECT(new Map())).toBe(true)
-      }
-    )
+    const testCases = [
+      { label: '{}', input: {}, expected: true },
+      { label: '{ a: 1 }', input: { a: 1 }, expected: true },
+      { label: '[]', input: [], expected: true },
+      { label: 'new Date()', input: new Date(), expected: true },
+      { label: 'new Set()', input: new Set(), expected: true },
+      { label: 'new Map()', input: new Map(), expected: true },
+      { label: 'null', input: null, expected: false },
+      { label: '"hello"', input: 'hello', expected: false },
+      { label: '123', input: 123, expected: false },
+      { label: 'true', input: true, expected: false },
+      { label: 'undefined', input: undefined, expected: false },
+      { label: 'NaN', input: NaN, expected: false },
+    ]
 
-    it(
-      'should return false for null',
-      () => {
-        expect(IS_AN_OBJECT(null)).toBe(false)
-      }
-    )
-
-    it(
-      'should return false for primitives',
-      () => {
-        expect(IS_AN_OBJECT('hello')).toBe(false)
-        expect(IS_AN_OBJECT(123)).toBe(false)
-        expect(IS_AN_OBJECT(true)).toBe(false)
-        expect(IS_AN_OBJECT(undefined)).toBe(false)
-        expect(IS_AN_OBJECT(NaN)).toBe(false)
+    it.each(testCases)(
+      'IS_AN_OBJECT($label) → $expected',
+      ({ input, expected }) => {
+        expect(IS_AN_OBJECT(input)).toBe(expected)
       }
     )
   }

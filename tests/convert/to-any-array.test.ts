@@ -4,45 +4,31 @@ import { TO_ANY_ARRAY } from '../../ts/convert/to-any-array.util.js'
 describe(
   'TO_ANY_ARRAY',
   () => {
-    it('returns an array as-is', () => {
-      const arr = [1, 2, 3]
-      expect(TO_ANY_ARRAY(arr)).toBe(arr)
-    })
+    it(
+      'returns an array as-is (reference identity)',
+      () => {
+        const arr = [1, 2, 3]
+        expect(TO_ANY_ARRAY(arr)).toBe(arr)
+      }
+    )
 
-    it('converts Uint8Array to plain array', () => {
-      expect(TO_ANY_ARRAY(new Uint8Array([10, 20, 30]))).toEqual([10, 20, 30])
-    })
+    const testCases = [
+      { label: 'Uint8Array([10,20,30])', input: new Uint8Array([10, 20, 30]), expected: [10, 20, 30] },
+      { label: 'Buffer([1,2,3])', input: Buffer.from([1, 2, 3]), expected: [1, 2, 3] },
+      { label: '"abc" (string iterable)', input: 'abc', expected: ['a', 'b', 'c'] },
+      { label: 'new Set([1,2,3])', input: new Set([1, 2, 3]), expected: [1, 2, 3] },
+      { label: 'array-like {length:3,0:"x",...}', input: { length: 3, 0: 'x', 1: 'y', 2: 'z' }, expected: ['x', 'y', 'z'] },
+      { label: 'null', input: null, expected: [] },
+      { label: 'undefined', input: undefined, expected: [] },
+      { label: '42 (number)', input: 42, expected: [] },
+      { label: '{ a: 1 } (plain object, no length)', input: { a: 1 }, expected: [] },
+    ]
 
-    it('converts Buffer to plain array', () => {
-      expect(TO_ANY_ARRAY(Buffer.from([1, 2, 3]))).toEqual([1, 2, 3])
-    })
-
-    it('converts a string (iterable) to array of characters', () => {
-      expect(TO_ANY_ARRAY('abc')).toEqual(['a', 'b', 'c'])
-    })
-
-    it('converts a Set to array', () => {
-      expect(TO_ANY_ARRAY(new Set([1, 2, 3]))).toEqual([1, 2, 3])
-    })
-
-    it('converts an array-like object to array', () => {
-      expect(TO_ANY_ARRAY({ length: 3, 0: 'x', 1: 'y', 2: 'z' })).toEqual(['x', 'y', 'z'])
-    })
-
-    it('returns empty array for null', () => {
-      expect(TO_ANY_ARRAY(null)).toEqual([])
-    })
-
-    it('returns empty array for undefined', () => {
-      expect(TO_ANY_ARRAY(undefined)).toEqual([])
-    })
-
-    it('returns empty array for a number', () => {
-      expect(TO_ANY_ARRAY(42)).toEqual([])
-    })
-
-    it('returns empty array for a plain object without length', () => {
-      expect(TO_ANY_ARRAY({ a: 1 })).toEqual([])
-    })
+    it.each(testCases)(
+      'TO_ANY_ARRAY($label)',
+      ({ input, expected }) => {
+        expect(TO_ANY_ARRAY(input)).toEqual(expected)
+      }
+    )
   }
 )

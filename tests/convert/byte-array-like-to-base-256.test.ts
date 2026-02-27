@@ -4,45 +4,20 @@ import { BYTE_ARRAY_LIKE_TO_BASE_256 } from '../../ts/convert/byte-array-like-to
 describe(
   'BYTE_ARRAY_LIKE_TO_BASE_256',
   () => {
-    it(
-      'empty array → empty string',
-      () => {
-        expect(BYTE_ARRAY_LIKE_TO_BASE_256([])).toBe('')
-      }
-    )
+    const testCases = [
+      { label: '[]', input: [], expected: '' },
+      { label: '[0]', input: [0], expected: '0' },
+      { label: '[10]', input: [10], expected: 'a' },
+      { label: '[35]', input: [35], expected: 'z' },
+      { label: '[36]', input: [36], expected: 'A' },
+      { label: '[0, 10, 35]', input: [0, 10, 35], expected: '0az' },
+      { label: 'null', input: null, expected: '' },
+    ]
 
-    it(
-      '[0] → first SYMBOLS character ("0")',
-      () => {
-        expect(BYTE_ARRAY_LIKE_TO_BASE_256([0])).toBe('0')
-      }
-    )
-
-    it(
-      '[10] → SYMBOLS[10] ("a")',
-      () => {
-        expect(BYTE_ARRAY_LIKE_TO_BASE_256([10])).toBe('a')
-      }
-    )
-
-    it(
-      '[35] → SYMBOLS[35] ("z")',
-      () => {
-        expect(BYTE_ARRAY_LIKE_TO_BASE_256([35])).toBe('z')
-      }
-    )
-
-    it(
-      '[36] → SYMBOLS[36] ("A")',
-      () => {
-        expect(BYTE_ARRAY_LIKE_TO_BASE_256([36])).toBe('A')
-      }
-    )
-
-    it(
-      '[0, 10, 35] → "0az"',
-      () => {
-        expect(BYTE_ARRAY_LIKE_TO_BASE_256([0, 10, 35])).toBe('0az')
+    it.each(testCases)(
+      'BYTE_ARRAY_LIKE_TO_BASE_256($label) -> "$expected"',
+      ({ input, expected }) => {
+        expect(BYTE_ARRAY_LIKE_TO_BASE_256(input)).toBe(expected)
       }
     )
 
@@ -51,13 +26,6 @@ describe(
       () => {
         const result = BYTE_ARRAY_LIKE_TO_BASE_256([1, 2, 3, 4, 5])
         expect(result.length).toBe(5)
-      }
-    )
-
-    it(
-      'null input returns empty string',
-      () => {
-        expect(BYTE_ARRAY_LIKE_TO_BASE_256(null)).toBe('')
       }
     )
   }

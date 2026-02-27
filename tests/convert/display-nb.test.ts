@@ -4,36 +4,22 @@ import { DISPLAY_NB } from '../../ts/convert/display-nb.util.js'
 describe(
   'DISPLAY_NB',
   () => {
-    it('returns nbIdentifier when present', () => {
-      expect(DISPLAY_NB({ nbIdentifier: 'ABC-001' })).toBe('ABC-001')
-    })
+    const testCases = [
+      { label: 'returns nbIdentifier when present', input: { nbIdentifier: 'ABC-001' }, expected: 'ABC-001' },
+      { label: 'falls back to nbNumber when nbIdentifier is absent', input: { nbNumber: 'NB-42' }, expected: 'NB-42' },
+      { label: 'falls back to "ID <nbId>" when only nbId is present', input: { nbId: 99 }, expected: 'ID 99' },
+      { label: 'returns empty string for unrecognised fields', input: {}, expected: '' },
+      { label: 'returns empty string for null', input: null, expected: '' },
+      { label: 'returns empty string for undefined', input: undefined, expected: '' },
+      { label: 'prefers nbIdentifier over nbNumber and nbId', input: { nbIdentifier: 'ID-1', nbNumber: 'N-2', nbId: 3 }, expected: 'ID-1' },
+      { label: 'prefers nbNumber over nbId when nbIdentifier is absent', input: { nbNumber: 'N-2', nbId: 3 }, expected: 'N-2' },
+    ]
 
-    it('falls back to nbNumber when nbIdentifier is absent', () => {
-      expect(DISPLAY_NB({ nbNumber: 'NB-42' })).toBe('NB-42')
-    })
-
-    it('falls back to "ID <nbId>" when only nbId is present', () => {
-      expect(DISPLAY_NB({ nbId: 99 })).toBe('ID 99')
-    })
-
-    it('returns empty string when object has none of the recognised fields', () => {
-      expect(DISPLAY_NB({})).toBe('')
-    })
-
-    it('returns empty string for null', () => {
-      expect(DISPLAY_NB(null)).toBe('')
-    })
-
-    it('returns empty string for undefined', () => {
-      expect(DISPLAY_NB(undefined)).toBe('')
-    })
-
-    it('prefers nbIdentifier over nbNumber and nbId', () => {
-      expect(DISPLAY_NB({ nbIdentifier: 'ID-1', nbNumber: 'N-2', nbId: 3 })).toBe('ID-1')
-    })
-
-    it('prefers nbNumber over nbId when nbIdentifier is absent', () => {
-      expect(DISPLAY_NB({ nbNumber: 'N-2', nbId: 3 })).toBe('N-2')
-    })
+    it.each(testCases)(
+      '$label',
+      ({ input, expected }) => {
+        expect(DISPLAY_NB(input)).toBe(expected)
+      }
+    )
   }
 )

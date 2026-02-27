@@ -5,37 +5,32 @@ describe(
   'REGEX_NO_WHITESPACE_STRING',
   () => {
     it(
-      'should be a valid regex string for no whitespace',
+      'is a string with value "^\\\\S*$"',
       () => {
         expect(typeof REGEX_NO_WHITESPACE_STRING).toBe('string')
         expect(REGEX_NO_WHITESPACE_STRING).toBe('^\\S*$')
       }
     )
 
-    it(
-      'should match strings without whitespace when used as regex',
-      () => {
+    const testCases = [
+      { input: 'hello', expected: true },
+      { input: 'hello123', expected: true },
+      { input: 'a', expected: true },
+      { input: '', expected: true },
+      { input: 'hello-world', expected: true },
+      { input: 'hello world', expected: false },
+      { input: ' hello', expected: false },
+      { input: 'hello ', expected: false },
+      { input: ' ', expected: false },
+      { input: '\t', expected: false },
+      { input: '\n', expected: false },
+    ]
+
+    it.each(testCases)(
+      'new RegExp(REGEX_NO_WHITESPACE_STRING).test("$input") → $expected',
+      ({ input, expected }) => {
         const regex = new RegExp(REGEX_NO_WHITESPACE_STRING)
-
-        expect(regex.test('hello')).toBe(true)
-        expect(regex.test('hello123')).toBe(true)
-        expect(regex.test('a')).toBe(true)
-        expect(regex.test('')).toBe(true)
-        expect(regex.test('hello-world')).toBe(true)
-      }
-    )
-
-    it(
-      'should not match strings with whitespace when used as regex',
-      () => {
-        const regex = new RegExp(REGEX_NO_WHITESPACE_STRING)
-
-        expect(regex.test('hello world')).toBe(false)
-        expect(regex.test(' hello')).toBe(false)
-        expect(regex.test('hello ')).toBe(false)
-        expect(regex.test(' ')).toBe(false)
-        expect(regex.test('\t')).toBe(false)
-        expect(regex.test('\n')).toBe(false)
+        expect(regex.test(input)).toBe(expected)
       }
     )
   }

@@ -4,54 +4,28 @@ import { SANITIZE_STRING_FOR_EXCEL } from '../../ts/convert/sanitize-string-for-
 describe(
   'SANITIZE_STRING_FOR_EXCEL',
   () => {
-    it(
-      'should remove special characters',
-      () => {
-        expect(SANITIZE_STRING_FOR_EXCEL('Hello@#$%World!')).toBe('Hello@World!')
-        expect(SANITIZE_STRING_FOR_EXCEL('Test©®™String')).toBe('TestTMString')
-        expect(SANITIZE_STRING_FOR_EXCEL('Data±×÷String')).toBe('DataString')
-      }
-    )
+    const testCases = [
+      { label: '"Hello@#$%World!"', input: 'Hello@#$%World!', expected: 'Hello@World!' },
+      { label: '"Test©®™String"', input: 'Test©®™String', expected: 'TestTMString' },
+      { label: '"Data±×÷String"', input: 'Data±×÷String', expected: 'DataString' },
+      { label: '"Hello-World_Test,File!"', input: 'Hello-World_Test,File!', expected: 'Hello-World_Test,File!' },
+      { label: '"User[0].Name"', input: 'User[0].Name', expected: 'User[0].Name' },
+      { label: '"Path/To\\File.Name"', input: 'Path/To\\File.Name', expected: 'Path/To\\File.Name' },
+      { label: '"café" (diacritics)', input: 'café', expected: 'cafe' },
+      { label: '"naïve" (diacritics)', input: 'naïve', expected: 'naive' },
+      { label: '"résumé" (diacritics)', input: 'résumé', expected: 'resume' },
+      { label: '"Hello   World" (multi-space)', input: 'Hello   World', expected: 'Hello World' },
+      { label: '"Line1\\n\\tLine2" (newline/tab)', input: 'Line1\n\tLine2', expected: 'Line1 Line2' },
+      { label: '"Multiple   spaces   here"', input: 'Multiple   spaces   here', expected: 'Multiple spaces here' },
+      { label: '""', input: '', expected: '' },
+      { label: '"@#$%^&*()"', input: '@#$%^&*()', expected: '@()' },
+      { label: '"©®™±×÷"', input: '©®™±×÷', expected: 'TM' },
+    ]
 
-    it(
-      'should keep allowed special characters',
-      () => {
-        expect(SANITIZE_STRING_FOR_EXCEL('Hello-World_Test,File!')).toBe('Hello-World_Test,File!')
-        expect(SANITIZE_STRING_FOR_EXCEL('User[0].Name')).toBe('User[0].Name')
-        expect(SANITIZE_STRING_FOR_EXCEL('Path/To\\File.Name')).toBe('Path/To\\File.Name')
-      }
-    )
-
-    it(
-      'should normalize Unicode characters',
-      () => {
-        expect(SANITIZE_STRING_FOR_EXCEL('café')).toBe('cafe')
-        expect(SANITIZE_STRING_FOR_EXCEL('naïve')).toBe('naive')
-        expect(SANITIZE_STRING_FOR_EXCEL('résumé')).toBe('resume')
-      }
-    )
-
-    it(
-      'should replace multiple whitespace with single space',
-      () => {
-        expect(SANITIZE_STRING_FOR_EXCEL('Hello   World')).toBe('Hello World')
-        expect(SANITIZE_STRING_FOR_EXCEL('Line1\n\tLine2')).toBe('Line1 Line2')
-        expect(SANITIZE_STRING_FOR_EXCEL('Multiple   spaces   here')).toBe('Multiple spaces here')
-      }
-    )
-
-    it(
-      'should handle empty string',
-      () => {
-        expect(SANITIZE_STRING_FOR_EXCEL('')).toBe('')
-      }
-    )
-
-    it(
-      'should handle strings with only special characters',
-      () => {
-        expect(SANITIZE_STRING_FOR_EXCEL('@#$%^&*()')).toBe('@()')
-        expect(SANITIZE_STRING_FOR_EXCEL('©®™±×÷')).toBe('TM')
+    it.each(testCases)(
+      'SANITIZE_STRING_FOR_EXCEL($label)',
+      ({ input, expected }) => {
+        expect(SANITIZE_STRING_FOR_EXCEL(input)).toBe(expected)
       }
     )
   }

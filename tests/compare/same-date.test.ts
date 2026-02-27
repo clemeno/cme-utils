@@ -4,71 +4,29 @@ import { SAME_DATE } from '../../ts/compare/same-date.util.js'
 describe(
   'SAME_DATE',
   () => {
-    it(
-      'should return true for identical Date objects',
-      () => {
-        const date = new Date('2023-01-01T12:00:00Z')
-        expect(SAME_DATE({ a: date, b: date })).toBe(true)
-        expect(SAME_DATE({ a: new Date('2023-01-01T12:00:00Z'), b: new Date('2023-01-01T12:00:00Z') })).toBe(true)
-      }
-    )
+    const testCases = [
+      { label: 'two Date objects with the same value', a: new Date('2023-01-01T12:00:00Z'), b: new Date('2023-01-01T12:00:00Z'), expected: true },
+      { label: 'identical timestamps', a: 1672531200000, b: 1672531200000, expected: true },
+      { label: 'Date and equivalent timestamp', a: new Date('2023-01-01T00:00:00Z'), b: 1672531200000, expected: true },
+      { label: 'timestamp and equivalent Date', a: 1672531200000, b: new Date('2023-01-01T00:00:00Z'), expected: true },
+      { label: 'objects with valueOf returning same value', a: { valueOf: () => 1672531200000 }, b: { valueOf: () => 1672531200000 }, expected: true },
+      { label: 'timestamp and matching numeric string', a: 1672531200000, b: '1672531200000', expected: true },
+      { label: 'numeric string and matching timestamp', a: '1672531200000', b: 1672531200000, expected: true },
+      { label: 'different Date objects', a: new Date('2023-01-01'), b: new Date('2023-01-02'), expected: false },
+      { label: 'different timestamps', a: 1672531200000, b: 1672617600000, expected: false },
+      { label: 'null and null', a: null, b: null, expected: false },
+      { label: 'undefined and undefined', a: undefined, b: undefined, expected: false },
+      { label: 'null and undefined', a: null, b: undefined, expected: false },
+      { label: 'undefined and null', a: undefined, b: null, expected: false },
+      { label: 'Date and null', a: new Date('2023-01-01'), b: null, expected: false },
+      { label: 'null and Date', a: null, b: new Date('2023-01-01'), expected: false },
+      { label: 'timestamp and undefined', a: 1672531200000, b: undefined, expected: false },
+    ]
 
-    it(
-      'should return true for identical timestamps',
-      () => {
-        expect(SAME_DATE({ a: 1672531200000, b: 1672531200000 })).toBe(true)
-      }
-    )
-
-    it(
-      'should return true for equivalent Date and timestamp',
-      () => {
-        expect(SAME_DATE({ a: new Date('2023-01-01T00:00:00Z'), b: 1672531200000 })).toBe(true)
-        expect(SAME_DATE({ a: 1672531200000, b: new Date('2023-01-01T00:00:00Z') })).toBe(true)
-      }
-    )
-
-    it(
-      'should return false for different dates',
-      () => {
-        expect(SAME_DATE({ a: new Date('2023-01-01'), b: new Date('2023-01-02') })).toBe(false)
-        expect(SAME_DATE({ a: 1672531200000, b: 1672617600000 })).toBe(false)
-      }
-    )
-
-    it(
-      'should return false for null/undefined values when both are null/undefined',
-      () => {
-        expect(SAME_DATE({ a: null, b: null })).toBe(false)
-        expect(SAME_DATE({ a: undefined, b: undefined })).toBe(false)
-        expect(SAME_DATE({ a: null, b: undefined })).toBe(false)
-        expect(SAME_DATE({ a: undefined, b: null })).toBe(false)
-      }
-    )
-
-    it(
-      'should return false when one value is null/undefined and the other is not',
-      () => {
-        expect(SAME_DATE({ a: new Date('2023-01-01'), b: null })).toBe(false)
-        expect(SAME_DATE({ a: null, b: new Date('2023-01-01') })).toBe(false)
-        expect(SAME_DATE({ a: 1672531200000, b: undefined })).toBe(false)
-      }
-    )
-
-    it(
-      'should handle objects with valueOf method',
-      () => {
-        const obj1 = { valueOf: () => 1672531200000 }
-        const obj2 = { valueOf: () => 1672531200000 }
-        expect(SAME_DATE({ a: obj1, b: obj2 })).toBe(true)
-      }
-    )
-
-    it(
-      'should handle numbers and numeric strings',
-      () => {
-        expect(SAME_DATE({ a: 1672531200000, b: '1672531200000' })).toBe(true)
-        expect(SAME_DATE({ a: '1672531200000', b: 1672531200000 })).toBe(true)
+    it.each(testCases)(
+      'SAME_DATE($label) → $expected',
+      ({ a, b, expected }) => {
+        expect(SAME_DATE({ a, b })).toBe(expected)
       }
     )
   }

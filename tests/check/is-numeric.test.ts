@@ -25,12 +25,10 @@ describe(
       { input: -Infinity, expected: true },
     ]
 
-    it(
-      'should validate numeric values correctly',
-      () => {
-        for (const { input, expected } of testCases) {
-          expect(IS_NUMERIC(input)).toBe(expected)
-        }
+    it.each(testCases)(
+      'IS_NUMERIC($input) → $expected',
+      ({ input, expected }) => {
+        expect(IS_NUMERIC(input)).toBe(expected)
       }
     )
   }

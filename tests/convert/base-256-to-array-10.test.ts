@@ -4,31 +4,17 @@ import { BASE_256_TO_ARRAY_10 } from '../../ts/convert/base-256-to-array-10.util
 describe(
   'BASE_256_TO_ARRAY_10',
   () => {
-    it(
-      'single char "0" → [0]',
-      () => {
-        expect(BASE_256_TO_ARRAY_10('0')).toEqual([0])
-      }
-    )
+    const testCases = [
+      { label: '"0"', input: '0', expected: [0] },
+      { label: '"a"', input: 'a', expected: [10] },
+      { label: '"0a"', input: '0a', expected: [0, 10] },
+      { label: '""', input: '', expected: [] },
+    ]
 
-    it(
-      'single char "a" → [10]',
-      () => {
-        expect(BASE_256_TO_ARRAY_10('a')).toEqual([10])
-      }
-    )
-
-    it(
-      'multi-char "0a" → [0, 10]',
-      () => {
-        expect(BASE_256_TO_ARRAY_10('0a')).toEqual([0, 10])
-      }
-    )
-
-    it(
-      'empty string → []',
-      () => {
-        expect(BASE_256_TO_ARRAY_10('')).toEqual([])
+    it.each(testCases)(
+      'BASE_256_TO_ARRAY_10($label)',
+      ({ input, expected }) => {
+        expect(BASE_256_TO_ARRAY_10(input)).toEqual(expected)
       }
     )
 

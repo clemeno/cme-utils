@@ -4,44 +4,24 @@ import { SET_CHAR_AT } from '../../ts/convert/set-char-at.util.js'
 describe(
   'SET_CHAR_AT',
   () => {
-    it(
-      'should replace a single character',
-      () => {
-        expect(SET_CHAR_AT({ input: 'hello', at: 1, set: 'a' })).toBe('hallo')
-        expect(SET_CHAR_AT({ input: 'world', at: 0, set: 'H' })).toBe('Horld')
-        expect(SET_CHAR_AT({ input: 'test', at: 3, set: 'x' })).toBe('tesx')
-      }
-    )
+    const testCases = [
+      { label: '"hello" at 1 set "a"', input: 'hello', at: 1, set: 'a', expected: 'hallo' },
+      { label: '"world" at 0 set "H"', input: 'world', at: 0, set: 'H', expected: 'Horld' },
+      { label: '"test" at 3 set "x"', input: 'test', at: 3, set: 'x', expected: 'tesx' },
+      { label: '"hello" at 1 set "abc" (multi-char)', input: 'hello', at: 1, set: 'abc', expected: 'habco' },
+      { label: '"world" at 0 set "Hi" (multi-char)', input: 'world', at: 0, set: 'Hi', expected: 'Hirld' },
+      { label: '"hello" at 0 (start)', input: 'hello', at: 0, set: 'X', expected: 'Xello' },
+      { label: '"hello" at 4 (end)', input: 'hello', at: 4, set: 'X', expected: 'hellX' },
+      { label: '"hello" at 10 (beyond length)', input: 'hello', at: 10, set: 'X', expected: 'helloX' },
+      { label: '"hi" at 5 set "world" (beyond length)', input: 'hi', at: 5, set: 'world', expected: 'hiworld' },
+      { label: '"hello" at 1 set "" (empty replacement)', input: 'hello', at: 1, set: '', expected: 'hello' },
+      { label: '"abc" at 0 set "" (empty replacement)', input: 'abc', at: 0, set: '', expected: 'abc' },
+    ]
 
-    it(
-      'should replace multiple characters',
-      () => {
-        expect(SET_CHAR_AT({ input: 'hello', at: 1, set: 'abc' })).toBe('habco')
-        expect(SET_CHAR_AT({ input: 'world', at: 0, set: 'Hi' })).toBe('Hirld')
-      }
-    )
-
-    it(
-      'should handle edge positions',
-      () => {
-        expect(SET_CHAR_AT({ input: 'hello', at: 0, set: 'X' })).toBe('Xello')
-        expect(SET_CHAR_AT({ input: 'hello', at: 4, set: 'X' })).toBe('hellX')
-      }
-    )
-
-    it(
-      'should handle positions beyond string length',
-      () => {
-        expect(SET_CHAR_AT({ input: 'hello', at: 10, set: 'X' })).toBe('helloX')
-        expect(SET_CHAR_AT({ input: 'hi', at: 5, set: 'world' })).toBe('hiworld')
-      }
-    )
-
-    it(
-      'should handle empty replacement string',
-      () => {
-        expect(SET_CHAR_AT({ input: 'hello', at: 1, set: '' })).toBe('hello')
-        expect(SET_CHAR_AT({ input: 'abc', at: 0, set: '' })).toBe('abc')
+    it.each(testCases)(
+      'SET_CHAR_AT($label) -> "$expected"',
+      ({ input, at, set, expected }) => {
+        expect(SET_CHAR_AT({ input, at, set })).toBe(expected)
       }
     )
   }

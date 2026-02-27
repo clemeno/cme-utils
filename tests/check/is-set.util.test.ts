@@ -4,23 +4,21 @@ import { IS_SET } from '../../ts/check/is-set.util.js'
 describe(
   'IS_SET',
   () => {
-    it(
-      'should return true for defined values',
-      () => {
-        expect(IS_SET(0)).toBe(true)
-        expect(IS_SET(false)).toBe(true)
-        expect(IS_SET('')).toBe(true)
-        expect(IS_SET([])).toBe(true)
-        expect(IS_SET({})).toBe(true)
-        expect(IS_SET(NaN)).toBe(true)
-      }
-    )
+    const testCases = [
+      { label: '0', input: 0, expected: true },
+      { label: 'false', input: false, expected: true },
+      { label: '""', input: '', expected: true },
+      { label: '[]', input: [], expected: true },
+      { label: '{}', input: {}, expected: true },
+      { label: 'NaN', input: NaN, expected: true },
+      { label: 'null', input: null, expected: false },
+      { label: 'undefined', input: undefined, expected: false },
+    ]
 
-    it(
-      'should return false for null and undefined',
-      () => {
-        expect(IS_SET(null)).toBe(false)
-        expect(IS_SET(undefined)).toBe(false)
+    it.each(testCases)(
+      'IS_SET($label) → $expected',
+      ({ input, expected }) => {
+        expect(IS_SET(input)).toBe(expected)
       }
     )
   }

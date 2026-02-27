@@ -4,57 +4,27 @@ import { TO_CSV_VALUE } from '../../ts/convert/to-csv-value.util.js'
 describe(
   'TO_CSV_VALUE',
   () => {
-    it(
-      'should convert numbers to string',
-      () => {
-        expect(TO_CSV_VALUE(123)).toBe('123')
-        expect(TO_CSV_VALUE(123.45)).toBe('123.45')
-        expect(TO_CSV_VALUE(0)).toBe('0')
-        expect(TO_CSV_VALUE(-123)).toBe('-123')
-      }
-    )
+    const testCases = [
+      { label: '123', input: 123, expected: '123' },
+      { label: '123.45', input: 123.45, expected: '123.45' },
+      { label: '0', input: 0, expected: '0' },
+      { label: '-123', input: -123, expected: '-123' },
+      { label: '"hello"', input: 'hello', expected: '"hello"' },
+      { label: '"hello,world"', input: 'hello,world', expected: '"hello,world"' },
+      { label: '"hello \\"world\\""', input: 'hello "world"', expected: '"hello \\"world\\""' },
+      { label: 'object with toString()', input: { toString: () => 'custom string', value: 42 }, expected: '"custom string"' },
+      { label: 'plain object { a: 1 }', input: { a: 1 }, expected: '"[object Object]"' },
+      { label: 'null', input: null, expected: '' },
+      { label: 'undefined', input: undefined, expected: '' },
+      { label: 'NaN', input: NaN, expected: '"NaN"' },
+      { label: 'true', input: true, expected: '"true"' },
+      { label: 'false', input: false, expected: '"false"' },
+    ]
 
-    it(
-      'should quote strings with JSON.stringify',
-      () => {
-        expect(TO_CSV_VALUE('hello')).toBe('"hello"')
-        expect(TO_CSV_VALUE('hello,world')).toBe('"hello,world"')
-        expect(TO_CSV_VALUE('hello "world"')).toBe('"hello \\"world\\""')
-      }
-    )
-
-    it(
-      'should handle objects with toString method',
-      () => {
-        const obj = {
-          toString: () => 'custom string',
-          value: 42,
-        }
-        expect(TO_CSV_VALUE(obj)).toBe('"custom string"')
-      }
-    )
-
-    it(
-      'should handle plain objects',
-      () => {
-        expect(TO_CSV_VALUE({ a: 1 })).toBe('"[object Object]"')
-      }
-    )
-
-    it(
-      'should return empty string for null, undefined, or NaN',
-      () => {
-        expect(TO_CSV_VALUE(null)).toBe('')
-        expect(TO_CSV_VALUE(undefined)).toBe('')
-        expect(TO_CSV_VALUE(NaN)).toBe('"NaN"')
-      }
-    )
-
-    it(
-      'should handle booleans',
-      () => {
-        expect(TO_CSV_VALUE(true)).toBe('"true"')
-        expect(TO_CSV_VALUE(false)).toBe('"false"')
+    it.each(testCases)(
+      'TO_CSV_VALUE($label)',
+      ({ input, expected }) => {
+        expect(TO_CSV_VALUE(input)).toBe(expected)
       }
     )
   }

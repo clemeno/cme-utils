@@ -4,27 +4,25 @@ import { IS_A_SET } from '../../ts/check/is-a-set.util.js'
 describe(
   'IS_A_SET',
   () => {
-    it(
-      'should return true for Set instances',
-      () => {
-        expect(IS_A_SET(new Set())).toBe(true)
-        expect(IS_A_SET(new Set([1, 2, 3]))).toBe(true)
-        expect(IS_A_SET(new Set(['a', 'b']))).toBe(true)
-      }
-    )
+    const testCases = [
+      { label: 'new Set()', input: new Set(), expected: true },
+      { label: 'new Set([1,2,3])', input: new Set([1, 2, 3]), expected: true },
+      { label: 'new Set(["a","b"])', input: new Set(['a', 'b']), expected: true },
+      { label: '[]', input: [], expected: false },
+      { label: '{}', input: {}, expected: false },
+      { label: '"hello"', input: 'hello', expected: false },
+      { label: '123', input: 123, expected: false },
+      { label: 'null', input: null, expected: false },
+      { label: 'undefined', input: undefined, expected: false },
+      { label: 'true', input: true, expected: false },
+      { label: 'new Map()', input: new Map(), expected: false },
+      { label: 'new Date()', input: new Date(), expected: false },
+    ]
 
-    it(
-      'should return false for non-Set values',
-      () => {
-        expect(IS_A_SET([])).toBe(false)
-        expect(IS_A_SET({})).toBe(false)
-        expect(IS_A_SET('hello')).toBe(false)
-        expect(IS_A_SET(123)).toBe(false)
-        expect(IS_A_SET(null)).toBe(false)
-        expect(IS_A_SET(undefined)).toBe(false)
-        expect(IS_A_SET(true)).toBe(false)
-        expect(IS_A_SET(new Map())).toBe(false)
-        expect(IS_A_SET(new Date())).toBe(false)
+    it.each(testCases)(
+      'IS_A_SET($label) → $expected',
+      ({ input, expected }) => {
+        expect(IS_A_SET(input)).toBe(expected)
       }
     )
   }

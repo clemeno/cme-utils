@@ -4,28 +4,20 @@ import { IS_UNDEFINED } from '../../ts/check/is-undefined.util.js'
 describe(
   'IS_UNDEFINED',
   () => {
-    it(
-      'should return true for undefined',
-      () => {
-        expect(IS_UNDEFINED(undefined)).toBe(true)
-      }
-    )
+    const testCases = [
+      { label: 'undefined', input: undefined, expected: true },
+      { label: 'null', input: null, expected: false },
+      { label: '0', input: 0, expected: false },
+      { label: '""', input: '', expected: false },
+      { label: 'false', input: false, expected: false },
+      { label: '{}', input: {}, expected: false },
+      { label: '[]', input: [], expected: false },
+    ]
 
-    it(
-      'should return false for null',
-      () => {
-        expect(IS_UNDEFINED(null)).toBe(false)
-      }
-    )
-
-    it(
-      'should return false for other values',
-      () => {
-        expect(IS_UNDEFINED(0)).toBe(false)
-        expect(IS_UNDEFINED('')).toBe(false)
-        expect(IS_UNDEFINED(false)).toBe(false)
-        expect(IS_UNDEFINED({})).toBe(false)
-        expect(IS_UNDEFINED([])).toBe(false)
+    it.each(testCases)(
+      'IS_UNDEFINED($label) → $expected',
+      ({ input, expected }) => {
+        expect(IS_UNDEFINED(input)).toBe(expected)
       }
     )
   }

@@ -4,33 +4,25 @@ import { IS_A_STRING_AND_NOT_EMPTY } from '../../ts/check/is-a-string-and-not-em
 describe(
   'IS_A_STRING_AND_NOT_EMPTY',
   () => {
-    it(
-      'should return true for non-empty strings',
-      () => {
-        expect(IS_A_STRING_AND_NOT_EMPTY('hello')).toBe(true)
-        expect(IS_A_STRING_AND_NOT_EMPTY(' ')).toBe(true)
-        expect(IS_A_STRING_AND_NOT_EMPTY('123')).toBe(true)
-        expect(IS_A_STRING_AND_NOT_EMPTY('a')).toBe(true)
-      }
-    )
+    const testCases = [
+      { label: '"hello"', input: 'hello', expected: true },
+      { label: '" "', input: ' ', expected: true },
+      { label: '"123"', input: '123', expected: true },
+      { label: '"a"', input: 'a', expected: true },
+      { label: '""', input: '', expected: false },
+      { label: '123', input: 123, expected: false },
+      { label: 'null', input: null, expected: false },
+      { label: 'undefined', input: undefined, expected: false },
+      { label: 'true', input: true, expected: false },
+      { label: '{}', input: {}, expected: false },
+      { label: '[]', input: [], expected: false },
+      { label: 'NaN', input: NaN, expected: false },
+    ]
 
-    it(
-      'should return false for empty string',
-      () => {
-        expect(IS_A_STRING_AND_NOT_EMPTY('')).toBe(false)
-      }
-    )
-
-    it(
-      'should return false for non-strings',
-      () => {
-        expect(IS_A_STRING_AND_NOT_EMPTY(123)).toBe(false)
-        expect(IS_A_STRING_AND_NOT_EMPTY(null)).toBe(false)
-        expect(IS_A_STRING_AND_NOT_EMPTY(undefined)).toBe(false)
-        expect(IS_A_STRING_AND_NOT_EMPTY(true)).toBe(false)
-        expect(IS_A_STRING_AND_NOT_EMPTY({})).toBe(false)
-        expect(IS_A_STRING_AND_NOT_EMPTY([])).toBe(false)
-        expect(IS_A_STRING_AND_NOT_EMPTY(NaN)).toBe(false)
+    it.each(testCases)(
+      'IS_A_STRING_AND_NOT_EMPTY($label) → $expected',
+      ({ input, expected }) => {
+        expect(IS_A_STRING_AND_NOT_EMPTY(input)).toBe(expected)
       }
     )
   }

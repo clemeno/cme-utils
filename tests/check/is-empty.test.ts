@@ -4,77 +4,31 @@ import { IS_EMPTY } from '../../ts/check/is-empty.util.js'
 describe(
   'IS_EMPTY',
   () => {
-    it(
-      'should return true for null and undefined',
-      () => {
-        expect(IS_EMPTY(null)).toBe(true)
-        expect(IS_EMPTY(undefined)).toBe(true)
-      }
-    )
+    const testCases = [
+      { label: 'null', input: null, expected: true },
+      { label: 'undefined', input: undefined, expected: true },
+      { label: 'NaN', input: NaN, expected: true },
+      { label: '""', input: '', expected: true },
+      { label: '[]', input: [], expected: true },
+      { label: 'new Set()', input: new Set(), expected: true },
+      { label: 'new Map()', input: new Map(), expected: true },
+      { label: 'new Date("invalid")', input: new Date('invalid'), expected: true },
+      { label: 'new Date(NaN)', input: new Date(NaN), expected: true },
+      { label: '{}', input: {}, expected: true },
+      { label: '0', input: 0, expected: false },
+      { label: '123', input: 123, expected: false },
+      { label: '"hello"', input: 'hello', expected: false },
+      { label: '[1]', input: [1], expected: false },
+      { label: 'new Set([1])', input: new Set([1]), expected: false },
+      { label: 'new Map([["key","value"]])', input: new Map([['key', 'value']]), expected: false },
+      { label: 'new Date()', input: new Date(), expected: false },
+      { label: '{ a: 1 }', input: { a: 1 }, expected: false },
+    ]
 
-    it(
-      'should return true for NaN',
-      () => {
-        expect(IS_EMPTY(NaN)).toBe(true)
-      }
-    )
-
-    it(
-      'should return true for empty strings',
-      () => {
-        expect(IS_EMPTY('')).toBe(true)
-      }
-    )
-
-    it(
-      'should return true for empty arrays',
-      () => {
-        expect(IS_EMPTY([])).toBe(true)
-      }
-    )
-
-    it(
-      'should return true for empty sets',
-      () => {
-        expect(IS_EMPTY(new Set())).toBe(true)
-      }
-    )
-
-    it(
-      'should return true for empty maps',
-      () => {
-        expect(IS_EMPTY(new Map())).toBe(true)
-      }
-    )
-
-    it(
-      'should return true for invalid dates',
-      () => {
-        expect(IS_EMPTY(new Date('invalid'))).toBe(true)
-        expect(IS_EMPTY(new Date(NaN))).toBe(true)
-      }
-    )
-
-    it(
-      'should return true for empty plain objects',
-      () => {
-        expect(IS_EMPTY({})).toBe(true)
-      }
-    )
-
-    it(
-      'should return false for non-empty values',
-      () => {
-        expect(IS_EMPTY(0)).toBe(false)
-        expect(IS_EMPTY(123)).toBe(false)
-        expect(IS_EMPTY('hello')).toBe(false)
-        expect(IS_EMPTY([1])).toBe(false)
-        expect(IS_EMPTY(new Set([1]))).toBe(false)
-        expect(IS_EMPTY(new Map([['key', 'value']]))).toBe(false)
-        expect(IS_EMPTY(new Date())).toBe(false)
-        expect(IS_EMPTY({ a: 1 })).toBe(false)
-        // Note: boolean true is considered "empty" by this function's logic
-        // expect(IS_EMPTY(true)).toBe(false)
+    it.each(testCases)(
+      'IS_EMPTY($label) → $expected',
+      ({ input, expected }) => {
+        expect(IS_EMPTY(input)).toBe(expected)
       }
     )
   }

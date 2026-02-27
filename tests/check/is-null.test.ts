@@ -4,28 +4,20 @@ import { IS_NULL } from '../../ts/check/is-null.util.js'
 describe(
   'IS_NULL',
   () => {
-    it(
-      'should return true for null',
-      () => {
-        expect(IS_NULL(null)).toBe(true)
-      }
-    )
+    const testCases = [
+      { label: 'null', input: null, expected: true },
+      { label: 'undefined', input: undefined, expected: false },
+      { label: '0', input: 0, expected: false },
+      { label: '""', input: '', expected: false },
+      { label: 'false', input: false, expected: false },
+      { label: '{}', input: {}, expected: false },
+      { label: '[]', input: [], expected: false },
+    ]
 
-    it(
-      'should return false for undefined',
-      () => {
-        expect(IS_NULL(undefined)).toBe(false)
-      }
-    )
-
-    it(
-      'should return false for other values',
-      () => {
-        expect(IS_NULL(0)).toBe(false)
-        expect(IS_NULL('')).toBe(false)
-        expect(IS_NULL(false)).toBe(false)
-        expect(IS_NULL({})).toBe(false)
-        expect(IS_NULL([])).toBe(false)
+    it.each(testCases)(
+      'IS_NULL($label) → $expected',
+      ({ input, expected }) => {
+        expect(IS_NULL(input)).toBe(expected)
       }
     )
   }

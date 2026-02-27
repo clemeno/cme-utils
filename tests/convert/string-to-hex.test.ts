@@ -4,50 +4,30 @@ import { STRING_TO_HEX } from '../../ts/convert/string-to-hex.util.js'
 describe(
   'STRING_TO_HEX',
   () => {
-    it(
-      'should convert ASCII characters to hex',
-      () => {
-        expect(STRING_TO_HEX('A')).toBe('41')
-        expect(STRING_TO_HEX('B')).toBe('42')
-        expect(STRING_TO_HEX('a')).toBe('61')
-        expect(STRING_TO_HEX('0')).toBe('30')
-        expect(STRING_TO_HEX('9')).toBe('39')
-      }
-    )
+    const testCases = [
+      { label: '"A"', input: 'A', expected: '41' },
+      { label: '"B"', input: 'B', expected: '42' },
+      { label: '"a"', input: 'a', expected: '61' },
+      { label: '"0"', input: '0', expected: '30' },
+      { label: '"9"', input: '9', expected: '39' },
+      { label: '"AB"', input: 'AB', expected: '4142' },
+      { label: '"Hello"', input: 'Hello', expected: '48656c6c6f' },
+      { label: '"123"', input: '123', expected: '313233' },
+      { label: '""', input: '', expected: '' },
+      { label: '"!"', input: '!', expected: '21' },
+      { label: '"@"', input: '@', expected: '40' },
+      { label: '" " (space)', input: ' ', expected: '20' },
+      { label: '"\\n" (newline)', input: '\n', expected: 'a' },
+      { label: '"\\t" (tab)', input: '\t', expected: '9' },
+      { label: '"©" (Unicode)', input: '©', expected: 'a9' },
+      { label: '"€" (Unicode)', input: '€', expected: '20ac' },
+      { label: '"🚀" (emoji)', input: '🚀', expected: 'd83dde80' },
+    ]
 
-    it(
-      'should convert multiple characters to concatenated hex',
-      () => {
-        expect(STRING_TO_HEX('AB')).toBe('4142')
-        expect(STRING_TO_HEX('Hello')).toBe('48656c6c6f')
-        expect(STRING_TO_HEX('123')).toBe('313233')
-      }
-    )
-
-    it(
-      'should handle empty string',
-      () => {
-        expect(STRING_TO_HEX('')).toBe('')
-      }
-    )
-
-    it(
-      'should handle special characters',
-      () => {
-        expect(STRING_TO_HEX('!')).toBe('21')
-        expect(STRING_TO_HEX('@')).toBe('40')
-        expect(STRING_TO_HEX(' ')).toBe('20')
-        expect(STRING_TO_HEX('\n')).toBe('a')
-        expect(STRING_TO_HEX('\t')).toBe('9')
-      }
-    )
-
-    it(
-      'should handle Unicode characters',
-      () => {
-        expect(STRING_TO_HEX('©')).toBe('a9')
-        expect(STRING_TO_HEX('€')).toBe('20ac')
-        expect(STRING_TO_HEX('🚀')).toBe('d83dde80')
+    it.each(testCases)(
+      'STRING_TO_HEX($label) -> "$expected"',
+      ({ input, expected }) => {
+        expect(STRING_TO_HEX(input)).toBe(expected)
       }
     )
   }

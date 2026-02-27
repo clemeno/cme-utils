@@ -4,35 +4,31 @@ import { REGEX_NO_WHITESPACE } from '../../ts/regex/regex-no-whitespace.util.js'
 describe(
   'REGEX_NO_WHITESPACE',
   () => {
-    it(
-      'should match strings without whitespace',
-      () => {
-        const regex = new RegExp(REGEX_NO_WHITESPACE.source)
+    const testCases = [
+      { input: 'hello', expected: true },
+      { input: 'hello123', expected: true },
+      { input: 'a', expected: true },
+      { input: '', expected: true },
+      { input: 'hello-world', expected: true },
+      { input: 'hello world', expected: false },
+      { input: ' hello', expected: false },
+      { input: 'hello ', expected: false },
+      { input: ' ', expected: false },
+      { input: '\t', expected: false },
+      { input: '\n', expected: false },
+    ]
 
-        expect(regex.test('hello')).toBe(true)
-        expect(regex.test('hello123')).toBe(true)
-        expect(regex.test('a')).toBe(true)
-        expect(regex.test('')).toBe(true)
-        expect(regex.test('hello-world')).toBe(true)
+    it.each(testCases)(
+      'REGEX_NO_WHITESPACE.test("$input") → $expected',
+      ({ input, expected }) => {
+        // create a fresh copy per test to avoid stateful lastIndex from the global flag
+        const regex = new RegExp(REGEX_NO_WHITESPACE.source)
+        expect(regex.test(input)).toBe(expected)
       }
     )
 
     it(
-      'should not match strings with whitespace',
-      () => {
-        const regex = new RegExp(REGEX_NO_WHITESPACE.source)
-
-        expect(regex.test('hello world')).toBe(false)
-        expect(regex.test(' hello')).toBe(false)
-        expect(regex.test('hello ')).toBe(false)
-        expect(regex.test(' ')).toBe(false)
-        expect(regex.test('\t')).toBe(false)
-        expect(regex.test('\n')).toBe(false)
-      }
-    )
-
-    it(
-      'should be a RegExp with global flag',
+      'is a RegExp with global flag',
       () => {
         expect(REGEX_NO_WHITESPACE).toBeInstanceOf(RegExp)
         expect(REGEX_NO_WHITESPACE.flags).toContain('g')

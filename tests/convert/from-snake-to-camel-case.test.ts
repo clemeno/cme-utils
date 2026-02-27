@@ -4,51 +4,25 @@ import { FROM_SNAKE_TO_CAMEL_CASE } from '../../ts/convert/from-snake-to-camel-c
 describe(
   'FROM_SNAKE_TO_CAMEL_CASE',
   () => {
-    it(
-      'should convert snake_case to camelCase',
-      () => {
-        expect(FROM_SNAKE_TO_CAMEL_CASE('hello_world')).toBe('helloWorld')
-        expect(FROM_SNAKE_TO_CAMEL_CASE('user_name')).toBe('userName')
-        expect(FROM_SNAKE_TO_CAMEL_CASE('xml_http_request')).toBe('xmlHttpRequest')
-      }
-    )
+    const testCases = [
+      { input: 'hello_world', expected: 'helloWorld' },
+      { input: 'user_name', expected: 'userName' },
+      { input: 'xml_http_request', expected: 'xmlHttpRequest' },
+      { input: 'hello', expected: 'hello' },
+      { input: 'WORLD', expected: 'world' },
+      { input: '', expected: '' },
+      { input: 'user_123_name', expected: 'user123Name' },
+      { input: 'test_1_test_2', expected: 'test1Test2' },
+      { input: 'hello__world', expected: 'helloWorld' },
+      { input: 'user___name', expected: 'userName' },
+      { input: '_hello_world', expected: 'helloWorld' },
+      { input: '_user_name', expected: 'userName' },
+    ]
 
-    it(
-      'should handle single words',
-      () => {
-        expect(FROM_SNAKE_TO_CAMEL_CASE('hello')).toBe('hello')
-        expect(FROM_SNAKE_TO_CAMEL_CASE('WORLD')).toBe('world')
-      }
-    )
-
-    it(
-      'should handle empty string',
-      () => {
-        expect(FROM_SNAKE_TO_CAMEL_CASE('')).toBe('')
-      }
-    )
-
-    it(
-      'should handle strings with numbers',
-      () => {
-        expect(FROM_SNAKE_TO_CAMEL_CASE('user_123_name')).toBe('user123Name')
-        expect(FROM_SNAKE_TO_CAMEL_CASE('test_1_test_2')).toBe('test1Test2')
-      }
-    )
-
-    it(
-      'should handle multiple consecutive underscores',
-      () => {
-        expect(FROM_SNAKE_TO_CAMEL_CASE('hello__world')).toBe('helloWorld')
-        expect(FROM_SNAKE_TO_CAMEL_CASE('user___name')).toBe('userName')
-      }
-    )
-
-    it(
-      'should handle strings starting with underscore',
-      () => {
-        expect(FROM_SNAKE_TO_CAMEL_CASE('_hello_world')).toBe('helloWorld')
-        expect(FROM_SNAKE_TO_CAMEL_CASE('_user_name')).toBe('userName')
+    it.each(testCases)(
+      'FROM_SNAKE_TO_CAMEL_CASE("$input") -> "$expected"',
+      ({ input, expected }) => {
+        expect(FROM_SNAKE_TO_CAMEL_CASE(input)).toBe(expected)
       }
     )
   }

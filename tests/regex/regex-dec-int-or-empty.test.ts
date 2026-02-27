@@ -4,59 +4,33 @@ import { REGEX_DEC_INT_OR_EMPTY } from '../../ts/regex/regex-dec-int-or-empty.ut
 describe(
   'REGEX_DEC_INT_OR_EMPTY',
   () => {
-    it(
-      'should match valid decimal integer strings',
-      () => {
-        expect(REGEX_DEC_INT_OR_EMPTY.test('123')).toBe(true)
-        expect(REGEX_DEC_INT_OR_EMPTY.test('-456')).toBe(true)
-        expect(REGEX_DEC_INT_OR_EMPTY.test('0')).toBe(true)
-        expect(REGEX_DEC_INT_OR_EMPTY.test('789')).toBe(true)
+    const testCases = [
+      { input: '123', expected: true },
+      { input: '-456', expected: true },
+      { input: '0', expected: true },
+      { input: '789', expected: true },
+      { input: '', expected: true },
+      { input: '123.45', expected: false },
+      { input: '-123.45', expected: false },
+      { input: ' 123', expected: false },
+      { input: '123 ', expected: false },
+      { input: ' -123 ', expected: false },
+      { input: ' ', expected: false },
+      { input: 'abc', expected: false },
+      { input: '123abc', expected: false },
+      { input: '-123abc', expected: false },
+      { input: '+123', expected: false },
+    ]
+
+    it.each(testCases)(
+      'REGEX_DEC_INT_OR_EMPTY.test("$input") → $expected',
+      ({ input, expected }) => {
+        expect(REGEX_DEC_INT_OR_EMPTY.test(input)).toBe(expected)
       }
     )
 
     it(
-      'should match empty strings',
-      () => {
-        expect(REGEX_DEC_INT_OR_EMPTY.test('')).toBe(true)
-      }
-    )
-
-    it(
-      'should not match strings with decimal points',
-      () => {
-        expect(REGEX_DEC_INT_OR_EMPTY.test('123.45')).toBe(false)
-        expect(REGEX_DEC_INT_OR_EMPTY.test('-123.45')).toBe(false)
-      }
-    )
-
-    it(
-      'should not match strings with leading or trailing whitespace',
-      () => {
-        expect(REGEX_DEC_INT_OR_EMPTY.test(' 123')).toBe(false)
-        expect(REGEX_DEC_INT_OR_EMPTY.test('123 ')).toBe(false)
-        expect(REGEX_DEC_INT_OR_EMPTY.test(' -123 ')).toBe(false)
-        expect(REGEX_DEC_INT_OR_EMPTY.test(' ')).toBe(false)
-      }
-    )
-
-    it(
-      'should not match strings with non-numeric characters',
-      () => {
-        expect(REGEX_DEC_INT_OR_EMPTY.test('abc')).toBe(false)
-        expect(REGEX_DEC_INT_OR_EMPTY.test('123abc')).toBe(false)
-        expect(REGEX_DEC_INT_OR_EMPTY.test('-123abc')).toBe(false)
-      }
-    )
-
-    it(
-      'should not match strings with plus sign',
-      () => {
-        expect(REGEX_DEC_INT_OR_EMPTY.test('+123')).toBe(false)
-      }
-    )
-
-    it(
-      'should be a RegExp',
+      'is a RegExp',
       () => {
         expect(REGEX_DEC_INT_OR_EMPTY).toBeInstanceOf(RegExp)
       }
