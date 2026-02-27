@@ -1,6 +1,6 @@
 import { OR_WHERE } from './or-where.util.js'
 
-export const AND_WHERE_OR = (_: {
+export function AND_WHERE_OR (_: {
   qb: any
   or: Array<{
     column: string
@@ -8,7 +8,7 @@ export const AND_WHERE_OR = (_: {
     value: any
     bKeepPercentAndDash?: boolean
   }>
-}): void => {
+}): void {
   _.qb.where((_qb: any) => {
     for (const _or of _.or) {
       OR_WHERE({ qb: _qb, ..._or })

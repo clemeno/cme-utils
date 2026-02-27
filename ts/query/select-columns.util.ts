@@ -1,6 +1,6 @@
 import { GET_OBJECT_ENTRY_LIST } from '../object/get-object-entry-list.util.js'
 
-export const SELECT_COLUMNS = (aliasColumns: Record<string, string[]>): string[] => {
+export function SELECT_COLUMNS (aliasColumns: Record<string, string[]>): string[] {
   const select: string[] = []
 
   for (const [alias, columns] of GET_OBJECT_ENTRY_LIST(aliasColumns)) {

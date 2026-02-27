@@ -5,17 +5,17 @@ import { NORMALIZE_PAGE } from './normalize-page.util.js'
 import { NORMALIZE_PAGES } from './normalize-pages.util.js'
 import { NORMALIZE_PER_PAGE } from './normalize-per-page.util.js'
 
-export const NORMALIZE_PAGINATION = (_: {
+export function NORMALIZE_PAGINATION (_: {
   page: numeric
   perPage: numeric
   filteredCount: numeric
 }): {
-  normalizedPage: string
-  normalizedPerPage: string
-  normalizedPages: string
-  normalizedOffset: string
-  normalizedLimit: string
-} => {
+    normalizedPage: string
+    normalizedPerPage: string
+    normalizedPages: string
+    normalizedOffset: string
+    normalizedLimit: string
+  } {
   const { page, perPage, filteredCount } = _
   const normalizedPerPage = NORMALIZE_PER_PAGE(perPage)
   const normalizedPages = NORMALIZE_PAGES({ normalizedPerPage, filteredCount })

@@ -1,7 +1,7 @@
 import { IS_A_MAP } from '../check/is-a-map.util.js'
 import type { WhereInParams } from '../where-in-params.js'
 
-export const WHERE_IN = (_: WhereInParams): void => {
+export function WHERE_IN (_: WhereInParams): void {
   const valueList = Array.from(IS_A_MAP(_.values) ? _.values.values() : _.values)
 
   if (valueList.length === 1) {

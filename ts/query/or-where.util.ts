@@ -5,13 +5,15 @@ import { TO_STRING } from '../convert/to-string.util.js'
 import type { WhereParams } from '../where-params.js'
 import { LIKE_KEEP_PERCENT_AND_DASH } from './like-keep-percent-and-dash.util.js'
 
-export const OR_WHERE = (_: WhereParams): void => {
+export function OR_WHERE (_: WhereParams): void {
   const bBeginsWith = IS_ON(_.bBeginsWith)
   const bEndsWith = IS_ON(_.bEndsWith)
+
   const bPg = IS_ON(_.bPg)
 
   if (bBeginsWith || bEndsWith || IS_A_STRING_AND_NOT_EMPTY(_.operator)) {
     const bKeepPercentAndDash = IS_ON(_.bKeepPercentAndDash)
+
     let pattern = `${bKeepPercentAndDash ? LIKE_KEEP_PERCENT_AND_DASH({ from: _.value as string }) : TO_STRING(_.value)}`
 
     if (bBeginsWith || bEndsWith || (_.operator === 'ilike')) {

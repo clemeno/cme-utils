@@ -19,7 +19,7 @@ import type { numeric } from '../numeric.js'
  * NORMALIZE_N_1({ n: 'invalid', min: 1, max: 10, def: 5 }) // returns '5'
  * ```
  */
-export const NORMALIZE_N_1 = (_: { n?: numeric, min?: numeric, max?: numeric, def?: numeric }): string => {
+export function NORMALIZE_N_1 (_: { n?: numeric, min?: numeric, max?: numeric, def?: numeric }): string {
   const n = TO_NUMBER(_.n ?? 1)
   const min = TO_NUMBER(_.min ?? 1)
   const max = TO_NUMBER(_.max ?? 1)

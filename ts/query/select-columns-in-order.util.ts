@@ -3,7 +3,7 @@ import { TO_ANY_ARRAY } from '../convert/to-any-array.util.js'
 import { TO_STRING } from '../convert/to-string.util.js'
 import { GET_OBJECT_ENTRY_LIST } from '../object/get-object-entry-list.util.js'
 
-export const SELECT_COLUMNS_IN_ORDER = (_: { aliasColumns: Record<string, string[]>, order: string[] }): any => {
+export function SELECT_COLUMNS_IN_ORDER (_: { aliasColumns: Record<string, string[]>, order: string[] }): any {
   const aliasColumnsEntryList = GET_OBJECT_ENTRY_LIST(_.aliasColumns)
 
   const select: string[] = []
