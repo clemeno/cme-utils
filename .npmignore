@@ -35,6 +35,10 @@ speed-measure-plugin*.json
 !.vscode/extensions.json
 .history/*
 
+# agents
+.github
+SKILL.md
+
 # misc
 /.sass-cache
 /connect.lock

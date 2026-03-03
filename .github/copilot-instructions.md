@@ -7,8 +7,8 @@ bun run build          # Transpile ts/ → esm/ (tsc)
 bun run lint           # Check code style (ESLint + neostandard)
 bun run lint:fix       # Auto-fix linting issues
 bun test               # Run all tests
-bun test --watch       # Run tests in watch mode
-bun test --coverage    # Run tests with coverage
+bun test:watch         # Run tests in watch mode
+bun test:coverage      # Run tests with coverage
 ```
 
 Run a single test file:
@@ -62,15 +62,21 @@ The library has **zero runtime dependencies**. All `devDependencies` are build/t
 import { describe, expect, it } from 'bun:test'
 import { MY_UTIL } from '../../ts/category/my-util.util.js'
 
-describe('MY_UTIL', () => {
-  const testCases = [
-    { name: 'descriptive name', input: ..., expected: ... },
-  ]
+describe(
+  'MY_UTIL',
+  () => {
+    const testCases = [
+      { name: 'descriptive name', input: ..., expected: ... },
+    ]
 
-  it.each(testCases)('%s', ({ name, input, expected }) => {
-    expect(MY_UTIL(input)).toBe(expected)
-  })
-})
+    it.each(testCases)(
+      '%s',
+      ({ input, expected }) => {
+        expect(MY_UTIL(input)).toBe(expected)
+      }
+    )
+  }
+)
 ```
 All test cases must have a descriptive `name`. Tests import directly from `ts/` source, not from `esm/`.
 
