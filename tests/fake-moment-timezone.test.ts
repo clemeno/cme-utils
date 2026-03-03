@@ -13,6 +13,7 @@ function makeMockDateTime (overrides: { offset?: number; isValid?: boolean } = {
 
   const DateTime: any = {
     now: () => instance,
+    // eslint-disable-next-line max-params
     fromMillis: (ms: number, _options?: any) => ({
       offset: offset + 0,
       isValid: true,

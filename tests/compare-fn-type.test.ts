@@ -7,8 +7,11 @@ describe(
     it(
       'creates a compare function that resolves to true',
       async () => {
+        // eslint-disable-next-line max-params
         const compare: compareFnType = async (_clear: string, _hash: string) => true
+
         const result = await compare('password', 'hash')
+
         expect(result).toBe(true)
       }
     )
@@ -16,8 +19,11 @@ describe(
     it(
       'creates a compare function that resolves to false',
       async () => {
+        // eslint-disable-next-line max-params
         const compare: compareFnType = async (_clear: string, _hash: string) => false
+
         const result = await compare('wrong', 'x')
+
         expect(result).toBe(false)
       }
     )
@@ -27,12 +33,16 @@ describe(
       async () => {
         let receivedClear = ''
         let receivedHash = ''
+
+        // eslint-disable-next-line max-params
         const compare: compareFnType = async (clear: string, hash: string) => {
           receivedClear = clear
           receivedHash = hash
           return true
         }
+
         await compare('myPassword', 'myHash')
+
         expect(receivedClear).toBe('myPassword')
         expect(receivedHash).toBe('myHash')
       }

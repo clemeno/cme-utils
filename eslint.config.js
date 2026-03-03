@@ -4,7 +4,7 @@ import neostandard, { resolveIgnoresFromGitignore } from 'neostandard'
 import { MAX_RETURN_STATEMENTS_PER_FUNCTION_PLUGIN } from './esm/max-return-statements-per-function.plugin.js'
 
 const tsRules = {
-  '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
+  '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'separate-type-imports' }],
   '@typescript-eslint/no-floating-promises': 'error',
   '@typescript-eslint/strict-boolean-expressions': ['error', { allowString: false, allowNumber: false, allowNullableObject: false }],
   '@typescript-eslint/restrict-template-expressions': [
