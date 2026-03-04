@@ -94,6 +94,7 @@ The library is organized into the following categories:
 - **aes**: AES encryption utilities (e.g., `CIPHER_AES_GCM_TO_BUFFER`, `DECIPHER_AES_GCM_TO_UTF8`)
 - **array**: Array operations (e.g., `ARRAY_SUM`, `ARRAY_AVERAGE`, `ARRAY_MIN_MAX`)
 - **async**: Asynchronous utilities (e.g., `ALL_SETTLED`, `THROW_IF_ERROR`)
+- **bigint**: BigInt division operations (e.g., `BIGINT_DIV`, `BIGINT_DIV_CEIL`, `BIGINT_DIV_FLOOR`, `BIGINT_DIV_ROUND`, `BIGINT_DIV_TRUNC`)
 - **chart**: Charting helpers (e.g., time series functions)
 - **check**: Type guards and validators (e.g., `IS_A_STRING`, `IS_NUMERIC`, `IS_BOOL`)
 - **compare**: Comparison functions (e.g., `SAME_DATE`, `SAME_DATETIME`)
@@ -125,22 +126,22 @@ For full API details, see the [source code](https://github.com/clemeno/cme-utils
 ### Building
 
 ```bash
-npm run build      # Build the javascript library
+bun run build        # Transpile ts/ → esm/ (tsc)
 ```
 
 ### Linting
 
 ```bash
-npm run lint       # Check code style
-npm run lint:fix   # Fix linting issues
+bun run lint         # Check code style (ESLint + neostandard)
+bun run lint:fix     # Auto-fix linting issues
 ```
 
 ### Testing
 
 ```bash
-npm test            # Run all tests
-npm run test:coverage  # Run tests with coverage
-npm run test:watch  # Run tests in watch mode
+bun test             # Run all tests
+bun test:coverage    # Run tests with coverage
+bun test:watch       # Run tests in watch mode
 ```
 
 ## Contributing
