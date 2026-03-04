@@ -77,23 +77,13 @@ class MockDateTimeInstance extends Date {
     const month = (this.getMonth() + 1).toString().padStart(2, '0')
     const day = this.getDate().toString().padStart(2, '0')
 
-    let result: string
-    switch (format) {
-      case 'yyyy-MM-dd':
-        result = `${year}-${month}-${day}`
-        break
-      case 'MM/dd/yyyy':
-        result = `${month}/${day}/${year}`
-        break
-      case 'dd/MM/yyyy':
-        result = `${day}/${month}/${year}`
-        break
-      default:
-        // Fallback to yyyy-MM-dd for unsupported formats
-        result = `${year}-${month}-${day}`
-        break
+    const formatMap: Record<string, string> = {
+      'MM/dd/yyyy': `${month}/${day}/${year}`,
+      'dd/MM/yyyy': `${day}/${month}/${year}`,
     }
-    return result
+
+    // Fallback to yyyy-MM-dd for any other format
+    return formatMap[format] ?? `${year}-${month}-${day}`
   }
 
   valueOf () {
@@ -144,12 +134,14 @@ export class MockDateTimeClass {
 
   static fromISO (iso: string) {
     const date = new Date(iso)
+
     return mockDateTime(date.getTime())
   }
 
   // eslint-disable-next-line max-params
   static fromSQL (sql: string, options?: { zone?: string }) {
     const date = new Date(sql)
+
     return mockDateTime(date.getTime())
   }
 
