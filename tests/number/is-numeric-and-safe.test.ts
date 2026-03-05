@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { IS_NUMERIC_AND_SAFE } from '../../ts/check/is-numeric-and-safe.util.js'
+import { IS_NUMERIC_AND_SAFE } from '../../ts/number/is-numeric-and-safe.util.js'
 
 describe(
   'IS_NUMERIC_AND_SAFE',

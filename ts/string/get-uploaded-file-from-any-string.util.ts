@@ -1,4 +1,4 @@
-import { IS_A_STRING_AND_NOT_EMPTY } from '../check/is-a-string-and-not-empty.util.js'
+import { IS_A_STRING_AND_NOT_EMPTY } from './is-a-string-and-not-empty.util.js'
 import { IS_SET } from '../check/is-set.util.js'
 import { EXTRACT_UUID_FROM_STRING } from './extract-uuid-from-string.util.js'
 import { GET_UPLOADED_FILE_PATH } from './get-uploaded-file-path.util.js'

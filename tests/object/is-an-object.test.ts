@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { IS_AN_OBJECT } from '../../ts/check/is-an-object.util.js'
+import { IS_AN_OBJECT } from '../../ts/object/is-an-object.util.js'
 
 describe(
   'IS_AN_OBJECT',

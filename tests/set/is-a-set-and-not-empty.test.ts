@@ -1,14 +1,15 @@
 import { describe, expect, it } from 'bun:test'
-import { IS_A_SET_AND_EMPTY } from '../../ts/check/is-a-set-and-empty.util.js'
+import { IS_A_SET_AND_NOT_EMPTY } from '../../ts/set/is-a-set-and-not-empty.util.js'
 
 describe(
-  'IS_A_SET_AND_EMPTY',
+  'IS_A_SET_AND_NOT_EMPTY',
   () => {
     const testCases = [
-      { name: 'should return true for empty Set', input: new Set(), expected: true },
-      { name: 'should return false for Set with one element', input: new Set([1]), expected: false },
-      { name: 'should return false for Set with multiple elements', input: new Set([1, 2, 3]), expected: false },
-      { name: 'should return false for Set with string element', input: new Set(['a']), expected: false },
+      { name: 'should return true for Set with one number', input: new Set([1]), expected: true },
+      { name: 'should return true for Set with multiple numbers', input: new Set([1, 2, 3]), expected: true },
+      { name: 'should return true for Set with string', input: new Set(['a']), expected: true },
+      { name: 'should return true for Set with object', input: new Set([{}]), expected: true },
+      { name: 'should return false for empty Set', input: new Set(), expected: false },
       { name: 'should return false for []', input: [], expected: false },
       { name: 'should return false for {}', input: {}, expected: false },
       { name: 'should return false for string "hello"', input: 'hello', expected: false },
@@ -20,7 +21,7 @@ describe(
     ]
 
     it.each(testCases)('%s', ({ input, expected }) => {
-      expect(IS_A_SET_AND_EMPTY(input)).toBe(expected)
+      expect(IS_A_SET_AND_NOT_EMPTY(input)).toBe(expected)
     })
   }
 )

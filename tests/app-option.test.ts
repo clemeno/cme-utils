@@ -21,7 +21,7 @@ describe(
     )
 
     it(
-      'assigns value and label',
+      'assigns number value and label only',
       () => {
         const opt = new AppOption({ value: 1, label: 'One' })
         expect(opt.value).toBe(1)
@@ -40,6 +40,8 @@ describe(
           bHidden: true,
           bReadonly: false,
         })
+        expect(opt.value).toBe(2)
+        expect(opt.label).toBe('Two')
         expect(opt.bDisabled).toBe(true)
         expect(opt.bSelected).toBe(false)
         expect(opt.bHidden).toBe(true)
@@ -51,7 +53,18 @@ describe(
       'assigns key',
       () => {
         const opt = new AppOption({ value: 3, label: 'Three', key: 'three' })
+        expect(opt.value).toBe(3)
+        expect(opt.label).toBe('Three')
         expect(opt.key).toBe('three')
+      }
+    )
+
+    it(
+      'assigns typed string value',
+      () => {
+        const opt = new AppOption<string>({ value: 'hello', label: 'Hello' })
+        expect(opt.value).toBe('hello')
+        expect(opt.label).toBe('Hello')
       }
     )
   }

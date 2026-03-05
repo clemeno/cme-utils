@@ -1,4 +1,4 @@
-import { IS_NUMERIC } from '../check/is-numeric.util.js'
+import { IS_NUMERIC } from '../number/is-numeric.util.js'
 import { IS_SET } from '../check/is-set.util.js'
 import { TO_STRING } from './to-string.util.js'
 

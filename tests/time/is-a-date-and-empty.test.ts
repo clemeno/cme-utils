@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { IS_A_DATE_AND_EMPTY } from '../../ts/check/is-a-date-and-empty.util.js'
+import { IS_A_DATE_AND_EMPTY } from '../../ts/time/is-a-date-and-empty.util.js'
 
 describe(
   'IS_A_DATE_AND_EMPTY',

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'bun:test'
 import type { AppAbstractControl } from '../ts/app-abstract-control.js'
 import type { AppValidationErrors } from '../ts/app-validation-errors.js'
 import type { AppValidatorFn } from '../ts/app-validator-fn.js'
-import { IS_A_STRING_AND_NOT_EMPTY } from '../ts/check/is-a-string-and-not-empty.util.js'
+import { IS_A_STRING_AND_NOT_EMPTY } from '../ts/string/is-a-string-and-not-empty.util.js'
 
 describe(
   'AppValidatorFn',

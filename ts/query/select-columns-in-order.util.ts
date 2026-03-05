@@ -1,4 +1,4 @@
-import { IS_A_STRING_AND_NOT_EMPTY } from '../check/is-a-string-and-not-empty.util.js'
+import { IS_A_STRING_AND_NOT_EMPTY } from '../string/is-a-string-and-not-empty.util.js'
 import { TO_ANY_ARRAY } from '../convert/to-any-array.util.js'
 import { TO_STRING } from '../convert/to-string.util.js'
 import { GET_OBJECT_ENTRY_LIST } from '../object/get-object-entry-list.util.js'

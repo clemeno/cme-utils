@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { IS_KEY_OF_OBJECT } from '../../ts/check/is-key-of-object.util.js'
+import { IS_KEY_OF_OBJECT } from '../../ts/object/is-key-of-object.util.js'
 
 describe(
   'IS_KEY_OF_OBJECT',

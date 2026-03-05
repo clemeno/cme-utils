@@ -1,5 +1,5 @@
 import { IS_ON } from '../check/is-on.util.js'
-import { IS_A_STRING_AND_NOT_EMPTY } from '../check/is-a-string-and-not-empty.util.js'
+import { IS_A_STRING_AND_NOT_EMPTY } from '../string/is-a-string-and-not-empty.util.js'
 import { TO_STRING } from '../convert/to-string.util.js'
 import { GET_TZ } from './get-tz.util.js'
 import { LUXON_FORMAT_LOCAL_YMD_HMS_S_Z } from './luxon.util.js'

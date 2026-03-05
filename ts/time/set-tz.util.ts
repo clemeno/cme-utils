@@ -1,4 +1,4 @@
-import { IS_A_STRING_AND_NOT_EMPTY } from '../check/is-a-string-and-not-empty.util.js'
+import { IS_A_STRING_AND_NOT_EMPTY } from '../string/is-a-string-and-not-empty.util.js'
 import { SET_DOCUMENT_TZ } from './set-document-tz.util.js'
 
 /**

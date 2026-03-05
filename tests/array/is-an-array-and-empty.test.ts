@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { IS_AN_ARRAY_AND_EMPTY } from '../../ts/check/is-an-array-and-empty.util.js'
+import { IS_AN_ARRAY_AND_EMPTY } from '../../ts/array/is-an-array-and-empty.util.js'
 
 describe(
   'IS_AN_ARRAY_AND_EMPTY',

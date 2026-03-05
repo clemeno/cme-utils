@@ -1,5 +1,5 @@
 import { IS_A_NUMBER } from '../check/is-a-number.util.js'
-import { IS_A_STRING } from '../check/is-a-string.util.js'
+import { IS_A_STRING } from '../string/is-a-string.util.js'
 import { IS_SET } from '../check/is-set.util.js'
 
 /**

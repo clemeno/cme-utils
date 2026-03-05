@@ -1,4 +1,4 @@
-import { IS_A_STRING_AND_NOT_EMPTY } from '../check/is-a-string-and-not-empty.util.js'
+import { IS_A_STRING_AND_NOT_EMPTY } from '../string/is-a-string-and-not-empty.util.js'
 
 export const FROM_BASE_16_TO_CARD_SERIAL = (_: string): string => {
   let res = ''

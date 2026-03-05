@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { IS_A_SET } from '../../ts/check/is-a-set.util.js'
+import { IS_A_SET } from '../../ts/set/is-a-set.util.js'
 
 describe(
   'IS_A_SET',

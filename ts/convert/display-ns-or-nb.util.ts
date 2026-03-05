@@ -1,4 +1,4 @@
-import { IS_A_STRING_AND_NOT_EMPTY } from '../check/is-a-string-and-not-empty.util.js'
+import { IS_A_STRING_AND_NOT_EMPTY } from '../string/is-a-string-and-not-empty.util.js'
 import type { numeric } from '../numeric.js'
 import { DISPLAY_NB } from './display-nb.util.js'
 import { DISPLAY_NS } from './display-ns.util.js'

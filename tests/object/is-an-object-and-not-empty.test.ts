@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { IS_AN_OBJECT_AND_NOT_EMPTY } from '../../ts/check/is-an-object-and-not-empty.util.js'
+import { IS_AN_OBJECT_AND_NOT_EMPTY } from '../../ts/object/is-an-object-and-not-empty.util.js'
 
 describe(
   'IS_AN_OBJECT_AND_NOT_EMPTY',

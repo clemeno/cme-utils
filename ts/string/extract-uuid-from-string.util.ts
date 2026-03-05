@@ -1,4 +1,4 @@
-import { IS_AN_ARRAY_AND_NOT_EMPTY } from '../check/is-an-array-and-not-empty.util.js'
+import { IS_AN_ARRAY_AND_NOT_EMPTY } from '../array/is-an-array-and-not-empty.util.js'
 import { REGEX_UUID_MATCH_A_SUBSTRING } from '../regex/regex-uuid-match-a-substring.util.js'
 import { IS_UUID } from './is-uuid.util.js'
 

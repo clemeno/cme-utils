@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { IS_A_STRING_AND_NOT_EMPTY } from '../../ts/check/is-a-string-and-not-empty.util.js'
+import { IS_A_STRING_AND_NOT_EMPTY } from '../../ts/string/is-a-string-and-not-empty.util.js'
 
 describe(
   'IS_A_STRING_AND_NOT_EMPTY',

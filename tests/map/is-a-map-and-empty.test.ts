@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { IS_A_MAP_AND_EMPTY } from '../../ts/check/is-a-map-and-empty.util.js'
+import { IS_A_MAP_AND_EMPTY } from '../../ts/map/is-a-map-and-empty.util.js'
 
 describe(
   'IS_A_MAP_AND_EMPTY',

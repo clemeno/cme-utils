@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { IS_NUMERIC } from '../../ts/check/is-numeric.util.js'
+import { IS_NUMERIC } from '../../ts/number/is-numeric.util.js'
 
 describe(
   'IS_NUMERIC',

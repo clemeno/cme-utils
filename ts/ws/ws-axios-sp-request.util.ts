@@ -1,6 +1,6 @@
 import type { AppExceptionResult } from '../app-exception-result.js'
 import { GET_EXCEPTION_RESULT_OF } from '../async/get-exception-result-of.util.js'
-import { IS_A_STRING_AND_NOT_EMPTY } from '../check/is-a-string-and-not-empty.util.js'
+import { IS_A_STRING_AND_NOT_EMPTY } from '../string/is-a-string-and-not-empty.util.js'
 import { IS_SET } from '../check/is-set.util.js'
 import { TO_STRING } from '../convert/to-string.util.js'
 import type { numeric } from '../numeric.js'

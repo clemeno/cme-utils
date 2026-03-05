@@ -1,4 +1,4 @@
-import { IS_NUMERIC } from '../check/is-numeric.util.js'
+import { IS_NUMERIC } from '../number/is-numeric.util.js'
 import { IS_ON } from '../check/is-on.util.js'
 
 /**

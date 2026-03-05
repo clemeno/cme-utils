@@ -1,4 +1,4 @@
-import { TO_BIGINT_OR_NULL } from 'convert/to-bigint-or-null.util.js'
+import { TO_BIGINT_OR_NULL } from 'bigint/to-bigint-or-null.util.js'
 import type { int } from '../int.js'
 import { IS_NULL } from './is-null.util.js'
 

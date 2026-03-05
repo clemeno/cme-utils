@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { TO_BIGINT_OR_ZERO } from '../../ts/convert/to-bigint-or-zero.util.js'
+import { TO_BIGINT_OR_ZERO } from '../../ts/bigint/to-bigint-or-zero.util.js'
 
 describe(
   'TO_BIGINT_OR_ZERO',

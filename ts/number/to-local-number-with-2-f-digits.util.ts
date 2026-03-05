@@ -1,4 +1,4 @@
-import { IS_NUMERIC } from '../check/is-numeric.util.js'
+import { IS_NUMERIC } from './is-numeric.util.js'
 import { TO_NUMBER } from '../convert/to-number.util.js'
 import { GET_LOCALE } from '../space/index.js'
 

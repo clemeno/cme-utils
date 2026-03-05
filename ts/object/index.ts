@@ -1,3 +1,7 @@
 export { GET_OBJECT_ENTRY_LIST } from './get-object-entry-list.util.js'
 export { GET_OBJECT_KEY_LIST } from './get-object-key-list.util.js'
+export { IS_AN_OBJECT } from './is-an-object.util.js'
+export { IS_AN_OBJECT_AND_EMPTY } from './is-an-object-and-empty.util.js'
+export { IS_AN_OBJECT_AND_NOT_EMPTY } from './is-an-object-and-not-empty.util.js'
+export { IS_KEY_OF_OBJECT } from './is-key-of-object.util.js'
 export { TRIM_OBJECT } from './trim-object.util.js'

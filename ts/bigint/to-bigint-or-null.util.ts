@@ -1,4 +1,4 @@
-import { IS_NUMERIC } from 'check/is-numeric.util.js'
+import { IS_NUMERIC } from 'number/is-numeric.util.js'
 import { IS_A_BIGINT } from '../check/is-a-bigint.util.js'
 
 export function TO_BIGINT_OR_NULL (v: any): bigint | null {

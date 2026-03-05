@@ -1,6 +1,6 @@
-import { IS_A_DATE_AND_NOT_EMPTY } from './check/is-a-date-and-not-empty.util.js'
-import { IS_A_STRING_AND_NOT_EMPTY } from './check/is-a-string-and-not-empty.util.js'
-import { IS_NUMERIC } from './check/is-numeric.util.js'
+import { IS_A_DATE_AND_NOT_EMPTY } from './time/is-a-date-and-not-empty.util.js'
+import { IS_A_STRING_AND_NOT_EMPTY } from './string/is-a-string-and-not-empty.util.js'
+import { IS_NUMERIC } from './number/is-numeric.util.js'
 import { IS_ON } from './check/is-on.util.js'
 import { TO_NUMBER } from './convert/to-number.util.js'
 

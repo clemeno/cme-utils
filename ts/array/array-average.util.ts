@@ -1,4 +1,4 @@
-import { IS_NUMERIC } from '../check/is-numeric.util.js'
+import { IS_NUMERIC } from '../number/is-numeric.util.js'
 import type { numeric } from '../numeric.js'
 import { ARRAY_SUM } from './array-sum.util.js'
 

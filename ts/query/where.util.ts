@@ -1,4 +1,4 @@
-import { IS_A_STRING_AND_NOT_EMPTY } from '../check/is-a-string-and-not-empty.util.js'
+import { IS_A_STRING_AND_NOT_EMPTY } from '../string/is-a-string-and-not-empty.util.js'
 import { IS_NULL } from '../check/is-null.util.js'
 import { IS_ON } from '../check/is-on.util.js'
 import { FROM_JS_TO_SNAKE_CASE } from '../convert/from-js-to-snake-case.util.js'

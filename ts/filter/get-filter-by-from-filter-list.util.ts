@@ -1,7 +1,7 @@
 import { IS_SET } from '../check/is-set.util.js'
 import type { AppFilter } from '../app-filter.js'
 import { TO_STRING } from '../convert/to-string.util.js'
-import { IS_AN_ARRAY } from '../check/is-an-array.util.js'
+import { IS_AN_ARRAY } from '../array/is-an-array.util.js'
 
 export const GET_FILTER_BY_FROM_FILTER_LIST = (_: {
   filterList: AppFilter[]

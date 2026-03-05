@@ -1,4 +1,4 @@
-import { IS_A_MAP } from '../check/is-a-map.util.js'
+import { IS_A_MAP } from '../map/is-a-map.util.js'
 import type { WhereInParams } from '../where-in-params.js'
 
 export function WHERE_IN (_: WhereInParams): void {

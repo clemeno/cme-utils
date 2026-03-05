@@ -1,4 +1,4 @@
-import { IS_A_MAP } from '../check/is-a-map.util.js'
+import { IS_A_MAP } from '../map/is-a-map.util.js'
 import type { OrWhereInParams } from '../or-where-in-params.js'
 
 export function OR_WHERE_NOT_IN (_: OrWhereInParams): void {

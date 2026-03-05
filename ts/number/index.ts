@@ -1,4 +1,7 @@
 export { GET_RANDOM_INT_BETWEEN } from './get-random-int-between.util.js'
+export { IS_NUMERIC } from './is-numeric.util.js'
+export { IS_NUMERIC_AND_SAFE } from './is-numeric-and-safe.util.js'
+export { IS_NUMERIC_AND_UNSAFE } from './is-numeric-and-unsafe.util.js'
 export { TO_LOCAL_NUMBER_WITH_1_F_DIGIT } from './to-local-number-with-1-f-digit.util.js'
 export { TO_LOCAL_NUMBER_WITH_2_F_DIGITS } from './to-local-number-with-2-f-digits.util.js'
 export { TO_LOCAL_NUMBER } from './to-local-number.util.js'

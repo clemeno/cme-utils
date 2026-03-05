@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { IS_A_STRING } from '../../ts/check/is-a-string.util.js'
+import { IS_A_STRING } from '../../ts/string/is-a-string.util.js'
 
 describe(
   'IS_A_STRING',
