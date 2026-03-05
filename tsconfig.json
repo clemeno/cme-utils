@@ -2,7 +2,6 @@
   "compileOnSave": false,
   "compilerOptions": {
     "rootDir": "./ts",
-    "baseUrl": "./ts",
     "outDir": "./esm",
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
