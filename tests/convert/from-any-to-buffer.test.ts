@@ -35,7 +35,7 @@ describe(
     it.each(arrayBufferViewTestCases)(
       'ArrayBufferView path — $name',
       ({ input, expected }) => {
-        expect(FROM_ANY_TO_BUFFER(input)).toEqual(expected)
+        expect(FROM_ANY_TO_BUFFER<Buffer>({ Buffer, from: input })).toEqual(expected)
       }
     )
 
@@ -60,7 +60,7 @@ describe(
     it.each(fallbackTestCases)(
       'fallback path — $name',
       ({ input, expected }) => {
-        expect(FROM_ANY_TO_BUFFER(input)).toEqual(expected)
+        expect(FROM_ANY_TO_BUFFER<Buffer>({ Buffer, from: input })).toEqual(expected)
       }
     )
   }

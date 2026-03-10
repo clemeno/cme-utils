@@ -5,11 +5,15 @@ export const TO_STRING = (_: any): string => {
   let res = ''
 
   if (IS_SET(_) && !Number.isNaN(_)) {
-    if ((typeof _ === 'string')) {
+    let bBuffer = false
+
+    try { bBuffer = (typeof Buffer !== 'undefined') && (Buffer as any).isBuffer(_) } catch { }
+
+    if (typeof _ === 'string') {
       res = _
-    } else if (Buffer.isBuffer(_)) {
+    } else if (bBuffer) {
       res = _.toString()
-    } else if (typeof _ === 'object' && _ !== null) {
+    } else if (typeof _ === 'object') {
       res = JSON.stringify(_)
     } else if (IS_A_FUNCTION((_).toString)) {
       res = (_).toString()
