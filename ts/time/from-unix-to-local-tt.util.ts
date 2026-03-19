@@ -2,7 +2,7 @@ import { FROM_UNIX_TO_LOCAL_FORMAT } from './from-unix-to-local-format.util.js'
 import { LUXON_FORMAT_LOCAL_HMS } from './luxon.util.js'
 
 /**
- * * provide DateTime and Settings -> import type { DateTime, Settings } from 'luxon'
+ * * provide DateTime and Settings -> import { DateTime, Settings } from 'luxon'
  */
 export const FROM_UNIX_TO_LOCAL_TT = <TypeofDateTime = any, TypeofSettings = any> (_: {
   DateTime: TypeofDateTime

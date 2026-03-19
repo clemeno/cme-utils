@@ -1,6 +1,6 @@
 /**
  * initialize a `Highcharts`/`Highstock` `PointOptionsObject[]` data for a time serie
- * * provide DateTime and DurationObjectUnits -> import type { DateTime, DurationObjectUnits } from 'luxon'
+ * * provide DateTime and DurationObjectUnits -> import { DateTime, type DurationObjectUnits } from 'luxon'
  */
 export const INIT_TIME_NUMBER_SERIE_FUNCTION = async <DateTime = any, DurationObjectUnits = any> (_: {
   mFrom: DateTime

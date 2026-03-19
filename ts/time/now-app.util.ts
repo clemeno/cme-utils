@@ -3,7 +3,7 @@ import { NOW } from './now.util.js'
 
 /**
  * `Luxon` `DateTime` set to the global timezone using `Settings`
- * * provide DateTime and Settings -> import type { DateTime, Settings } from 'luxon'
+ * * provide DateTime and Settings -> import { DateTime, Settings } from 'luxon'
  */
 export const NOW_APP = <DateTime = any, TypeofDateTime = any, TypeofSettings = any> (_: {
   DateTime: TypeofDateTime

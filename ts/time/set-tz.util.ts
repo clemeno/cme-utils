@@ -3,7 +3,7 @@ import { SET_DOCUMENT_TZ } from './set-document-tz.util.js'
 
 /**
  * set the global timezone to `Luxon` `Settings`
- * * provide Settings -> import type { Settings } from 'luxon'
+ * * provide Settings -> import { Settings } from 'luxon'
  */
 export const SET_TZ = <TypeofSettings = any> (_: {
   Settings: TypeofSettings

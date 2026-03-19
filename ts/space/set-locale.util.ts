@@ -5,7 +5,7 @@ import { SET_DOCUMENT_LOCALE } from './set-document-locale.util.js'
 
 /**
  * set the global locale to `Luxon` `Settings`
- * * provide Settings -> import type { Settings } from 'luxon'
+ * * provide Settings -> import { Settings } from 'luxon'
  */
 export const SET_LOCALE = <TypeofSettings = any> (_: {
   Settings: TypeofSettings

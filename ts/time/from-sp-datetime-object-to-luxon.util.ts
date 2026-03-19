@@ -2,7 +2,7 @@ import { IS_SET } from '../check/is-set.util.js'
 import type { AppSpDate } from './app-sp-date.js'
 
 /**
- * * provide DateTime -> import type { DateTime } from 'luxon'
+ * * provide DateTime -> import { DateTime } from 'luxon'
  */
 export const FROM_SP_DATETIME_OBJECT_TO_LUXON = <TypeofDateTime = any, DateTime = any> (_: {
   DateTime: TypeofDateTime

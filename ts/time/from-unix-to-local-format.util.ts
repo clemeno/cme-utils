@@ -5,7 +5,7 @@ import { GET_TZ } from './get-tz.util.js'
 import { LUXON_FORMAT_LOCAL_YMD_HMS_S_Z } from './luxon.util.js'
 
 /**
- * * provide DateTime and Settings -> import type { DateTime, Settings } from 'luxon'
+ * * provide DateTime and Settings -> import { DateTime, Settings } from 'luxon'
  */
 export const FROM_UNIX_TO_LOCAL_FORMAT = <TypeofDateTime = any, TypeofSettings = any> (_: {
   DateTime: TypeofDateTime

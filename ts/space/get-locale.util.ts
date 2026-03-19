@@ -2,7 +2,7 @@ import { SET_DOCUMENT_LOCALE } from './set-document-locale.util.js'
 
 /**
  * get the global locale from `Luxon` `Settings`
- * * provide Settings -> import type { Settings } from 'luxon'
+ * * provide Settings -> import { Settings } from 'luxon'
  */
 export const GET_LOCALE = <TypeofSettings = any> (_Settings: TypeofSettings): string => {
   let documentLocale = ''

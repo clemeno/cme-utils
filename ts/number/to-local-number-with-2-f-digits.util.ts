@@ -3,7 +3,7 @@ import { TO_NUMBER } from '../convert/to-number.util.js'
 import { GET_LOCALE } from '../space/index.js'
 
 /**
- * * provide Settings -> import type { Settings } from 'luxon'
+ * * provide Settings -> import { Settings } from 'luxon'
  */
 export const TO_LOCAL_NUMBER_WITH_2_F_DIGITS = <TypeofSettings = any> (_: {
   Settings: TypeofSettings

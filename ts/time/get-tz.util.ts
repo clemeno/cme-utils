@@ -2,7 +2,7 @@ import { SET_DOCUMENT_TZ } from './set-document-tz.util.js'
 
 /**
  * get the global timezone from `Luxon` `Settings`
- * * provide `Settings` -> import type { Settings } from 'luxon'
+ * * provide `Settings` -> import { Settings } from 'luxon'
  */
 export const GET_TZ = <TypeofSettings = any> (_Settings: TypeofSettings): string => {
   // _Settings.defaultZone.name

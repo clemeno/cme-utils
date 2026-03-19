@@ -7,7 +7,7 @@ import type { AppSpDate } from './app-sp-date.js'
 import { NULL_DATE } from './null-date.util.js'
 
 /**
- * * provide DateTime -> import type { DateTime } from 'luxon'
+ * * provide DateTime -> import { DateTime } from 'luxon'
  */
 export const FROM_ANY_DB_MOMENT_TO_SP_DATETIME_OBJECT = <TypeofDateTime = any, DateTime = any> (_: {
   DateTime: TypeofDateTime
