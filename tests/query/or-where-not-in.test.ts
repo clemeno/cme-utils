@@ -1,137 +1,45 @@
 import { describe, expect, it } from 'bun:test'
 import { OR_WHERE_NOT_IN } from '../../ts/query/or-where-not-in.util.js'
 import { makeMockQb } from '../mocks/query-mocks.js'
+import type { QbCall } from '../mocks/query-mocks.js'
 
 describe(
   'OR_WHERE_NOT_IN',
   () => {
-    it(
-      'wraps in orWhere callback then calls whereNot per value',
-      () => {
+    const singleValueCases: Array<{ name: string, column: string, values: unknown, expectedCalls: QbCall[] }> = [
+      { name: 'single plain value → direct orWhereNot(col, "=", val)', column: 'role', values: ['foo'], expectedCalls: [{ method: 'orWhereNot', args: ['role', '=', 'foo'] }] },
+      { name: 'single §§not0§§ → direct orWhere(col, "=", 0)', column: 'status', values: ['§§not0§§'], expectedCalls: [{ method: 'orWhere', args: ['status', '=', 0] }] },
+      { name: 'single §§null§§ → direct orWhereNotNull(col)', column: 'deleted_at', values: ['§§null§§'], expectedCalls: [{ method: 'orWhereNotNull', args: ['deleted_at'] }] },
+      { name: 'uppercase §§NOT0§§ → orWhere(col, "=", 0) (case-insensitive)', column: 'status', values: ['§§NOT0§§'], expectedCalls: [{ method: 'orWhere', args: ['status', '=', 0] }] },
+      { name: 'uppercase §§NULL§§ → orWhereNotNull (case-insensitive)', column: 'deleted_at', values: ['§§NULL§§'], expectedCalls: [{ method: 'orWhereNotNull', args: ['deleted_at'] }] },
+      { name: 'Map with single entry → IS_A_MAP branch, direct orWhereNot', column: 'n', values: new Map([['k', 'v1']]), expectedCalls: [{ method: 'orWhereNot', args: ['n', '=', 'v1'] }] },
+    ]
+
+    it.each(singleValueCases)(
+      '$name',
+      ({ column, values, expectedCalls }) => {
         const { qb, calls } = makeMockQb()
-        OR_WHERE_NOT_IN({ qb, column: 'role', values: ['admin', 'editor'] })
+        OR_WHERE_NOT_IN({ qb, column, values: values as any })
+        expect(calls).toEqual(expectedCalls)
+      }
+    )
+
+    const multiValueCases: Array<{ name: string, column: string, values: unknown, expectedInner: QbCall[] }> = [
+      { name: '2 plain values → orWhere callback + 2 inner whereNot', column: 'role', values: ['admin', 'editor'], expectedInner: [{ method: 'whereNot', args: ['role', '=', 'admin'] }, { method: 'whereNot', args: ['role', '=', 'editor'] }] },
+      { name: '3 plain values → orWhere callback + 3 inner whereNot', column: 'col', values: ['a', 'b', 'c'], expectedInner: [{ method: 'whereNot', args: ['col', '=', 'a'] }, { method: 'whereNot', args: ['col', '=', 'b'] }, { method: 'whereNot', args: ['col', '=', 'c'] }] },
+      { name: 'empty values → orWhere callback, no inner calls', column: 'col', values: [], expectedInner: [] },
+      { name: 'Set input → orWhere callback + whereNot per entry', column: 'tag', values: new Set(['p', 'q']), expectedInner: [{ method: 'whereNot', args: ['tag', '=', 'p'] }, { method: 'whereNot', args: ['tag', '=', 'q'] }] },
+      { name: 'mixed sentinels + plain → where(0), whereNull, whereNot inside callback', column: 'col', values: ['§§not0§§', '§§null§§', 'active'], expectedInner: [{ method: 'where', args: ['col', '=', 0] }, { method: 'whereNull', args: ['col'] }, { method: 'whereNot', args: ['col', '=', 'active'] }] },
+    ]
+
+    it.each(multiValueCases)(
+      '$name',
+      ({ column, values, expectedInner }) => {
+        const { qb, calls } = makeMockQb()
+        OR_WHERE_NOT_IN({ qb, column, values: values as any })
         expect(calls[0].method).toBe('orWhere')
         expect(typeof calls[0].args[0]).toBe('function')
-        const notCalls = calls.filter(c => c.method === 'whereNot')
-        expect(notCalls).toHaveLength(2)
-        expect(notCalls[0].args).toEqual(['role', '=', 'admin'])
-        expect(notCalls[1].args).toEqual(['role', '=', 'editor'])
-      }
-    )
-
-    it(
-      '§§not0§§ inside callback → qb.where(col, "=", 0)',
-      () => {
-        const { qb, calls } = makeMockQb()
-        OR_WHERE_NOT_IN({ qb, column: 'status', values: ['§§not0§§'] })
-        const innerWhere = calls.find(c => c.method === 'where' && c.args[0] !== undefined && typeof c.args[0] !== 'function')
-        expect(innerWhere?.args).toEqual(['status', '=', 0])
-      }
-    )
-
-    it(
-      '§§null§§ inside callback → qb.whereNull(col)',
-      () => {
-        const { qb, calls } = makeMockQb()
-        OR_WHERE_NOT_IN({ qb, column: 'deleted_at', values: ['§§null§§'] })
-        const nullCalls = calls.filter(c => c.method === 'whereNull')
-        expect(nullCalls).toHaveLength(1)
-        expect(nullCalls[0].args[0]).toBe('deleted_at')
-      }
-    )
-
-    it(
-      'empty values array → one outer orWhere call, no inner calls',
-      () => {
-        const { qb, calls } = makeMockQb()
-        OR_WHERE_NOT_IN({ qb, column: 'col', values: [] })
-        expect(calls).toHaveLength(1)
-        expect(calls[0].method).toBe('orWhere')
-        expect(typeof calls[0].args[0]).toBe('function')
-      }
-    )
-
-    it(
-      'single plain value → outer orWhere callback + one inner whereNot',
-      () => {
-        const { qb, calls } = makeMockQb()
-        OR_WHERE_NOT_IN({ qb, column: 'role', values: ['foo'] })
-        expect(calls[0].method).toBe('orWhere')
-        const innerNot = calls.filter(c => c.method === 'whereNot')
-        expect(innerNot).toHaveLength(1)
-        expect(innerNot[0].args).toEqual(['role', '=', 'foo'])
-      }
-    )
-
-    it(
-      'Map input → IS_A_MAP branch iterates Map.values() inside callback',
-      () => {
-        const { qb, calls } = makeMockQb()
-        OR_WHERE_NOT_IN({ qb, column: 'n', values: new Map([['k', 'v1']]) })
-        const innerNot = calls.filter(c => c.method === 'whereNot')
-        expect(innerNot).toHaveLength(1)
-        expect(innerNot[0].args).toEqual(['n', '=', 'v1'])
-      }
-    )
-
-    it(
-      'Set input → iterates all entries inside callback',
-      () => {
-        const { qb, calls } = makeMockQb()
-        OR_WHERE_NOT_IN({ qb, column: 'tag', values: new Set(['p', 'q']) })
-        const innerNot = calls.filter(c => c.method === 'whereNot')
-        expect(innerNot).toHaveLength(2)
-        const vals = innerNot.map(c => c.args[2])
-        expect(vals).toContain('p')
-        expect(vals).toContain('q')
-      }
-    )
-
-    it(
-      'mixed sentinels + plain inside callback → correct inner call sequence',
-      () => {
-        const { qb, calls } = makeMockQb()
-        OR_WHERE_NOT_IN({ qb, column: 'col', values: ['§§not0§§', '§§null§§', 'active'] })
-        const inner = calls.filter(c => c.method !== 'orWhere')
-        expect(inner[0].method).toBe('where')
-        expect(inner[0].args).toEqual(['col', '=', 0])
-        expect(inner[1].method).toBe('whereNull')
-        expect(inner[1].args[0]).toBe('col')
-        expect(inner[2].method).toBe('whereNot')
-        expect(inner[2].args).toEqual(['col', '=', 'active'])
-      }
-    )
-
-    it(
-      'uppercase §§NOT0§§ inside callback → qb.where(col, "=", 0) (case-insensitive)',
-      () => {
-        const { qb, calls } = makeMockQb()
-        OR_WHERE_NOT_IN({ qb, column: 'status', values: ['§§NOT0§§'] })
-        const innerWhere = calls.filter(c => c.method === 'where')
-        expect(innerWhere).toHaveLength(1)
-        expect(innerWhere[0].args).toEqual(['status', '=', 0])
-      }
-    )
-
-    it(
-      'uppercase §§NULL§§ inside callback → qb.whereNull (case-insensitive)',
-      () => {
-        const { qb, calls } = makeMockQb()
-        OR_WHERE_NOT_IN({ qb, column: 'deleted_at', values: ['§§NULL§§'] })
-        const nullCalls = calls.filter(c => c.method === 'whereNull')
-        expect(nullCalls).toHaveLength(1)
-        expect(nullCalls[0].args[0]).toBe('deleted_at')
-      }
-    )
-
-    it(
-      'N plain values → N+1 total calls (1 outer orWhere + N inner whereNot)',
-      () => {
-        const { qb, calls } = makeMockQb()
-        OR_WHERE_NOT_IN({ qb, column: 'col', values: ['a', 'b', 'c'] })
-        expect(calls).toHaveLength(4)
-        expect(calls[0].method).toBe('orWhere')
-        expect(calls.filter(c => c.method === 'whereNot')).toHaveLength(3)
+        expect(calls.slice(1)).toEqual(expectedInner)
       }
     )
   }

@@ -1,7 +1,8 @@
-import { IS_A_STRING_AND_NOT_EMPTY } from '../string/is-a-string-and-not-empty.util.js'
+import { IS_NULL } from '../check/is-null.util.js'
 import { IS_ON } from '../check/is-on.util.js'
 import { FROM_JS_TO_SNAKE_CASE } from '../convert/from-js-to-snake-case.util.js'
 import { TO_STRING } from '../convert/to-string.util.js'
+import { IS_A_STRING_AND_NOT_EMPTY } from '../string/is-a-string-and-not-empty.util.js'
 import type { WhereParams } from '../where-params.js'
 import { LIKE_KEEP_PERCENT_AND_DASH } from './like-keep-percent-and-dash.util.js'
 
@@ -37,6 +38,8 @@ export function OR_WHERE (_: WhereParams): void {
     } else {
       _.qb.orWhere(_.column, _.operator, _.value)
     }
+  } else if (IS_NULL(_.value) || ('§§null§§' === _.value)) {
+    _.qb.orWhereNull(_.column)
   } else {
     _.qb.orWhere(_.column, '=', _.value)
   }

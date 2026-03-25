@@ -5,22 +5,22 @@ describe(
   'IS_AN_ARRAY_AND_NOT_EMPTY',
   () => {
     const testCases = [
-      { label: '[1]', input: [1], expected: true },
-      { label: '[1,2,3]', input: [1, 2, 3], expected: true },
-      { label: '["a"]', input: ['a'], expected: true },
-      { label: '[{}]', input: [{}], expected: true },
-      { label: '[]', input: [], expected: false },
-      { label: '"hello"', input: 'hello', expected: false },
-      { label: '123', input: 123, expected: false },
-      { label: 'null', input: null, expected: false },
-      { label: 'undefined', input: undefined, expected: false },
-      { label: 'true', input: true, expected: false },
-      { label: '{}', input: {}, expected: false },
-      { label: 'NaN', input: NaN, expected: false },
+      { name: '[1]', input: [1], expected: true },
+      { name: '[1,2,3]', input: [1, 2, 3], expected: true },
+      { name: '["a"]', input: ['a'], expected: true },
+      { name: '[{}]', input: [{}], expected: true },
+      { name: '[]', input: [], expected: false },
+      { name: '"hello"', input: 'hello', expected: false },
+      { name: '123', input: 123, expected: false },
+      { name: 'null', input: null, expected: false },
+      { name: 'undefined', input: undefined, expected: false },
+      { name: 'true', input: true, expected: false },
+      { name: '{}', input: {}, expected: false },
+      { name: 'NaN', input: NaN, expected: false },
     ]
 
     it.each(testCases)(
-      'IS_AN_ARRAY_AND_NOT_EMPTY($label) → $expected',
+      'IS_AN_ARRAY_AND_NOT_EMPTY($name) → $expected',
       ({ input, expected }) => {
         expect(IS_AN_ARRAY_AND_NOT_EMPTY(input)).toBe(expected)
       }

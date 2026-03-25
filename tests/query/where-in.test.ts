@@ -1,86 +1,41 @@
 import { describe, expect, it } from 'bun:test'
 import { WHERE_IN } from '../../ts/query/where-in.util.js'
 import { makeMockQb } from '../mocks/query-mocks.js'
+import type { QbCall } from '../mocks/query-mocks.js'
 
 describe(
   'WHERE_IN',
   () => {
-    it(
-      'single plain value → qb.where(col, "=", val)',
-      () => {
+    const singleValueCases: Array<{ name: string, column: string, values: unknown[], expectedCalls: QbCall[] }> = [
+      { name: 'single plain value → where(col, "=", val)', column: 'id', values: [42], expectedCalls: [{ method: 'where', args: ['id', '=', 42] }] },
+      { name: 'single §§not0§§ → whereNot(col, "=", 0)', column: 'status', values: ['§§not0§§'], expectedCalls: [{ method: 'whereNot', args: ['status', '=', 0] }] },
+      { name: 'single §§null§§ → whereNull(col)', column: 'deleted_at', values: ['§§null§§'], expectedCalls: [{ method: 'whereNull', args: ['deleted_at'] }] },
+    ]
+
+    it.each(singleValueCases)(
+      '$name',
+      ({ column, values, expectedCalls }) => {
         const { qb, calls } = makeMockQb()
-        WHERE_IN({ qb, column: 'id', values: [42] })
-        expect(calls[0].method).toBe('where')
-        expect(calls[0].args).toEqual(['id', '=', 42])
+        WHERE_IN({ qb, column, values })
+        expect(calls).toEqual(expectedCalls)
       }
     )
 
-    it(
-      'single §§not0§§ → qb.whereNot(col, "=", 0)',
-      () => {
-        const { qb, calls } = makeMockQb()
-        WHERE_IN({ qb, column: 'status', values: ['§§not0§§'] })
-        expect(calls[0].method).toBe('whereNot')
-        expect(calls[0].args).toEqual(['status', '=', 0])
-      }
-    )
+    const multiValueCases: Array<{ name: string, column: string, values: unknown, expectedInner: QbCall[] }> = [
+      { name: '2 plain values → orWhere for each inside callback', column: 'role', values: ['admin', 'editor'], expectedInner: [{ method: 'orWhere', args: ['role', '=', 'admin'] }, { method: 'orWhere', args: ['role', '=', 'editor'] }] },
+      { name: 'multi with §§not0§§ → orWhereNot for sentinel', column: 'status', values: ['§§not0§§', 1], expectedInner: [{ method: 'orWhereNot', args: ['status', '=', 0] }, { method: 'orWhere', args: ['status', '=', 1] }] },
+      { name: 'multi with §§null§§ → orWhereNull for sentinel', column: 'deleted_at', values: ['§§null§§', 1], expectedInner: [{ method: 'orWhereNull', args: ['deleted_at'] }, { method: 'orWhere', args: ['deleted_at', '=', 1] }] },
+      { name: 'Map values → iterates Map.values() inside callback', column: 'n', values: new Map([['a', 1], ['b', 2]]), expectedInner: [{ method: 'orWhere', args: ['n', '=', 1] }, { method: 'orWhere', args: ['n', '=', 2] }] },
+    ]
 
-    it(
-      'single §§null§§ → qb.whereNull(col)',
-      () => {
+    it.each(multiValueCases)(
+      '$name',
+      ({ column, values, expectedInner }) => {
         const { qb, calls } = makeMockQb()
-        WHERE_IN({ qb, column: 'deleted_at', values: ['§§null§§'] })
-        expect(calls[0].method).toBe('whereNull')
-        expect(calls[0].args[0]).toBe('deleted_at')
-      }
-    )
-
-    it(
-      'multiple values → qb.where callback with orWhere for each',
-      () => {
-        const { qb, calls } = makeMockQb()
-        WHERE_IN({ qb, column: 'role', values: ['admin', 'editor'] })
-        // First call is qb.where(callback)
+        WHERE_IN({ qb, column, values: values as any })
         expect(calls[0].method).toBe('where')
         expect(typeof calls[0].args[0]).toBe('function')
-        // After callback executes, orWhere calls follow
-        const orCalls = calls.filter(c => c.method === 'orWhere')
-        expect(orCalls).toHaveLength(2)
-        expect(orCalls[0].args).toEqual(['role', '=', 'admin'])
-        expect(orCalls[1].args).toEqual(['role', '=', 'editor'])
-      }
-    )
-
-    it(
-      'multiple values with §§not0§§ → orWhereNot for that value',
-      () => {
-        const { qb, calls } = makeMockQb()
-        WHERE_IN({ qb, column: 'status', values: ['§§not0§§', 1] })
-        const orNotCalls = calls.filter(c => c.method === 'orWhereNot')
-        expect(orNotCalls).toHaveLength(1)
-        expect(orNotCalls[0].args).toEqual(['status', '=', 0])
-      }
-    )
-
-    it(
-      'multiple values with §§null§§ → orWhereNull for that value',
-      () => {
-        const { qb, calls } = makeMockQb()
-        WHERE_IN({ qb, column: 'deleted_at', values: ['§§null§§', 1] })
-        const orNullCalls = calls.filter(c => c.method === 'orWhereNull')
-        expect(orNullCalls).toHaveLength(1)
-        expect(orNullCalls[0].args[0]).toBe('deleted_at')
-      }
-    )
-
-    it(
-      'Map values are iterated',
-      () => {
-        const { qb, calls } = makeMockQb()
-        const values = new Map([['a', 1], ['b', 2]])
-        WHERE_IN({ qb, column: 'n', values })
-        const whereCalls = calls.filter(c => c.method === 'orWhere')
-        expect(whereCalls).toHaveLength(2)
+        expect(calls.slice(1)).toEqual(expectedInner)
       }
     )
   }

@@ -5,14 +5,18 @@ import { makeMockQb } from '../mocks/query-mocks.js'
 describe(
   'OR_WHERE_NULL',
   () => {
-    it(
-      'calls qb.orWhereNull with the given column',
-      () => {
+    const testCases = [
+      { name: 'calls orWhereNull for a timestamp column', column: 'deleted_at' },
+      { name: 'calls orWhereNull for a foreign key column', column: 'parent_id' },
+      { name: 'calls orWhereNull for a string column', column: 'email' },
+    ]
+
+    it.each(testCases)(
+      '$name',
+      ({ column }) => {
         const { qb, calls } = makeMockQb()
-        OR_WHERE_NULL({ qb, column: 'deleted_at' })
-        expect(calls).toHaveLength(1)
-        expect(calls[0].method).toBe('orWhereNull')
-        expect(calls[0].args[0]).toBe('deleted_at')
+        OR_WHERE_NULL({ qb, column })
+        expect(calls).toEqual([{ method: 'orWhereNull', args: [column] }])
       }
     )
   }

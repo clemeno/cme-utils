@@ -4,40 +4,18 @@ import { SELECT_COLUMNS } from '../../ts/query/select-columns.util.js'
 describe(
   'SELECT_COLUMNS',
   () => {
-    it(
-      'produces alias.column pairs',
-      () => {
-        const result = SELECT_COLUMNS({ users: ['id', 'name'], posts: ['title'] })
-        expect(result).toEqual(['users.id', 'users.name', 'posts.title'])
-      }
-    )
+    const testCases: Array<{ name: string, input: Record<string, string[]>, expected: string[] }> = [
+      { name: 'multiple aliases and columns → alias.column pairs', input: { users: ['id', 'name'], posts: ['title'] }, expected: ['users.id', 'users.name', 'posts.title'] },
+      { name: 'empty object → empty array', input: {}, expected: [] },
+      { name: 'alias with no columns → empty array', input: { users: [] }, expected: [] },
+      { name: 'single alias, single column → one entry', input: { t: ['id'] }, expected: ['t.id'] },
+      { name: 'multiple aliases preserve insertion order', input: { a: ['x', 'y'], b: ['z'] }, expected: ['a.x', 'a.y', 'b.z'] },
+    ]
 
-    it(
-      'empty object returns []',
-      () => {
-        expect(SELECT_COLUMNS({})).toEqual([])
-      }
-    )
-
-    it(
-      'alias with no columns returns []',
-      () => {
-        expect(SELECT_COLUMNS({ users: [] })).toEqual([])
-      }
-    )
-
-    it(
-      'single alias single column',
-      () => {
-        expect(SELECT_COLUMNS({ t: ['id'] })).toEqual(['t.id'])
-      }
-    )
-
-    it(
-      'multiple aliases preserve insertion order',
-      () => {
-        const result = SELECT_COLUMNS({ a: ['x', 'y'], b: ['z'] })
-        expect(result).toEqual(['a.x', 'a.y', 'b.z'])
+    it.each(testCases)(
+      '$name',
+      ({ input, expected }) => {
+        expect(SELECT_COLUMNS(input)).toEqual(expected)
       }
     )
   }

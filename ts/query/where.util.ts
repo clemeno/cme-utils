@@ -22,8 +22,6 @@ export function WHERE (_: WhereParams): void {
         pattern = `${pattern}%`
       }
 
-      const bEndsWith = IS_ON(_.bEndsWith)
-
       if (bEndsWith) {
         pattern = `%${pattern}`
       }

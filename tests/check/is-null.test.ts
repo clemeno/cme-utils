@@ -5,17 +5,17 @@ describe(
   'IS_NULL',
   () => {
     const testCases = [
-      { label: 'null', input: null, expected: true },
-      { label: 'undefined', input: undefined, expected: false },
-      { label: '0', input: 0, expected: false },
-      { label: '""', input: '', expected: false },
-      { label: 'false', input: false, expected: false },
-      { label: '{}', input: {}, expected: false },
-      { label: '[]', input: [], expected: false },
+      { name: 'null', input: null, expected: true },
+      { name: 'undefined', input: undefined, expected: false },
+      { name: '0', input: 0, expected: false },
+      { name: '""', input: '', expected: false },
+      { name: 'false', input: false, expected: false },
+      { name: '{}', input: {}, expected: false },
+      { name: '[]', input: [], expected: false },
     ]
 
     it.each(testCases)(
-      'IS_NULL($label) → $expected',
+      'IS_NULL($name) → $expected',
       ({ input, expected }) => {
         expect(IS_NULL(input)).toBe(expected)
       }

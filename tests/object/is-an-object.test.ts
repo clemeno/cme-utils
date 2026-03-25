@@ -5,22 +5,22 @@ describe(
   'IS_AN_OBJECT',
   () => {
     const testCases = [
-      { label: '{}', input: {}, expected: true },
-      { label: '{ a: 1 }', input: { a: 1 }, expected: true },
-      { label: '[]', input: [], expected: true },
-      { label: 'new Date()', input: new Date(), expected: true },
-      { label: 'new Set()', input: new Set(), expected: true },
-      { label: 'new Map()', input: new Map(), expected: true },
-      { label: 'null', input: null, expected: false },
-      { label: '"hello"', input: 'hello', expected: false },
-      { label: '123', input: 123, expected: false },
-      { label: 'true', input: true, expected: false },
-      { label: 'undefined', input: undefined, expected: false },
-      { label: 'NaN', input: NaN, expected: false },
+      { name: '{}', input: {}, expected: true },
+      { name: '{ a: 1 }', input: { a: 1 }, expected: true },
+      { name: '[]', input: [], expected: true },
+      { name: 'new Date()', input: new Date(), expected: true },
+      { name: 'new Set()', input: new Set(), expected: true },
+      { name: 'new Map()', input: new Map(), expected: true },
+      { name: 'null', input: null, expected: false },
+      { name: '"hello"', input: 'hello', expected: false },
+      { name: '123', input: 123, expected: false },
+      { name: 'true', input: true, expected: false },
+      { name: 'undefined', input: undefined, expected: false },
+      { name: 'NaN', input: NaN, expected: false },
     ]
 
     it.each(testCases)(
-      'IS_AN_OBJECT($label) → $expected',
+      'IS_AN_OBJECT($name) → $expected',
       ({ input, expected }) => {
         expect(IS_AN_OBJECT(input)).toBe(expected)
       }

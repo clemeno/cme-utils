@@ -1,108 +1,59 @@
 import { describe, expect, it } from 'bun:test'
 import { WHERE } from '../../ts/query/where.util.js'
 import { makeMockQb } from '../mocks/query-mocks.js'
+import type { QbMethod } from '../mocks/query-mocks.js'
 
 describe(
   'WHERE',
   () => {
-    it(
-      'simple equality: no operator, plain value → qb.where(col, "=", val)',
-      () => {
+    const equalityCases: Array<{ name: string, params: object, expectedMethod: QbMethod, expectedArgs: unknown[] }> = [
+      { name: 'plain value, no operator → where(col, "=", val)', params: { column: 'name', value: 'Alice' }, expectedMethod: 'where', expectedArgs: ['name', '=', 'Alice'] },
+      { name: 'explicit operator > → where(col, ">", val)', params: { column: 'age', operator: '>', value: 18 }, expectedMethod: 'where', expectedArgs: ['age', '>', 18] },
+      { name: 'null value → whereNull(col)', params: { column: 'deleted_at', value: null }, expectedMethod: 'whereNull', expectedArgs: ['deleted_at'] },
+      { name: '§§null§§ value → whereNull(col)', params: { column: 'deleted_at', value: '§§null§§' }, expectedMethod: 'whereNull', expectedArgs: ['deleted_at'] },
+    ]
+
+    it.each(equalityCases)(
+      '$name',
+      ({ params, expectedMethod, expectedArgs }) => {
         const { qb, calls } = makeMockQb()
-        WHERE({ qb, column: 'name', value: 'Alice' })
+        WHERE({ qb, ...(params as any) })
+        expect(calls[0].method).toBe(expectedMethod)
+        expect(calls[0].args).toEqual(expectedArgs)
+      }
+    )
+
+    const patternCases = [
+      { name: 'ilike without bPg → like with %...%', params: { column: 'name', operator: 'ilike', value: 'alice' }, expectedOperator: 'like', expectedPattern: '%alice%' },
+      { name: 'ilike with bPg → ilike with %...%', params: { column: 'name', operator: 'ilike', value: 'alice', bPg: true }, expectedOperator: 'ilike', expectedPattern: '%alice%' },
+      { name: 'bBeginsWith → pattern ends with %', params: { column: 'name', value: 'ali', bBeginsWith: true }, expectedOperator: 'like', expectedPattern: 'ali%' },
+      { name: 'bEndsWith → pattern starts with %', params: { column: 'name', value: 'ice', bEndsWith: true }, expectedOperator: 'like', expectedPattern: '%ice' },
+      { name: 'bBeginsWith + bEndsWith → pattern wrapped with %', params: { column: 'name', value: 'bob', bBeginsWith: true, bEndsWith: true }, expectedOperator: 'like', expectedPattern: '%bob%' },
+    ]
+
+    it.each(patternCases)(
+      '$name',
+      ({ params, expectedOperator, expectedPattern }) => {
+        const { qb, calls } = makeMockQb()
+        WHERE({ qb, ...(params as any) })
         expect(calls[0].method).toBe('where')
-        expect(calls[0].args).toEqual(['name', '=', 'Alice'])
+        expect(calls[0].args[1]).toBe(expectedOperator)
+        expect(calls[0].args[2]).toBe(expectedPattern)
       }
     )
 
-    it(
-      'null value → qb.whereNull(col)',
-      () => {
-        const { qb, calls } = makeMockQb()
-        WHERE({ qb, column: 'deleted_at', value: null })
-        expect(calls[0].method).toBe('whereNull')
-        expect(calls[0].args[0]).toBe('deleted_at')
-      }
-    )
+    const rawCases = [
+      { name: 'like operator, non-pg → whereRaw with INSTR', params: { column: 'name', operator: 'like', value: 'ali' }, expectedKeyword: 'INSTR' },
+      { name: 'like operator with bPg → whereRaw with POSITION', params: { column: 'name', operator: 'like', value: 'ali', bPg: true }, expectedKeyword: 'POSITION' },
+    ]
 
-    it(
-      '§§null§§ value → qb.whereNull(col)',
-      () => {
+    it.each(rawCases)(
+      '$name',
+      ({ params, expectedKeyword }) => {
         const { qb, calls } = makeMockQb()
-        WHERE({ qb, column: 'deleted_at', value: '§§null§§' })
-        expect(calls[0].method).toBe('whereNull')
-      }
-    )
-
-    it(
-      'explicit operator (>) → qb.where(col, op, val)',
-      () => {
-        const { qb, calls } = makeMockQb()
-        WHERE({ qb, column: 'age', operator: '>', value: 18 })
-        expect(calls[0].method).toBe('where')
-        expect(calls[0].args).toEqual(['age', '>', 18])
-      }
-    )
-
-    it(
-      'ilike operator without pg → uses "like"',
-      () => {
-        const { qb, calls } = makeMockQb()
-        WHERE({ qb, column: 'name', operator: 'ilike', value: 'alice' })
-        expect(calls[0].method).toBe('where')
-        expect(calls[0].args[1]).toBe('like')
-        expect(calls[0].args[2]).toBe('%alice%')
-      }
-    )
-
-    it(
-      'ilike operator with bPg → uses "ilike"',
-      () => {
-        const { qb, calls } = makeMockQb()
-        WHERE({ qb, column: 'name', operator: 'ilike', value: 'alice', bPg: true })
-        expect(calls[0].method).toBe('where')
-        expect(calls[0].args[1]).toBe('ilike')
-        expect(calls[0].args[2]).toBe('%alice%')
-      }
-    )
-
-    it(
-      'bBeginsWith → pattern ends with %',
-      () => {
-        const { qb, calls } = makeMockQb()
-        WHERE({ qb, column: 'name', value: 'ali', bBeginsWith: true })
-        expect(calls[0].method).toBe('where')
-        expect(calls[0].args[2]).toBe('ali%')
-      }
-    )
-
-    it(
-      'bEndsWith → pattern starts with %',
-      () => {
-        const { qb, calls } = makeMockQb()
-        WHERE({ qb, column: 'name', value: 'ice', bEndsWith: true })
-        expect(calls[0].method).toBe('where')
-        expect(calls[0].args[2]).toBe('%ice')
-      }
-    )
-
-    it(
-      'like operator with column → qb.whereRaw INSTR (non-pg)',
-      () => {
-        const { qb, calls } = makeMockQb()
-        WHERE({ qb, column: 'name', operator: 'like', value: 'ali' })
+        WHERE({ qb, ...(params as any) })
         expect(calls[0].method).toBe('whereRaw')
-        expect(calls[0].args[0]).toContain('INSTR')
-      }
-    )
-
-    it(
-      'like operator with bPg → qb.whereRaw POSITION',
-      () => {
-        const { qb, calls } = makeMockQb()
-        WHERE({ qb, column: 'name', operator: 'like', value: 'ali', bPg: true })
-        expect(calls[0].method).toBe('whereRaw')
-        expect(calls[0].args[0]).toContain('POSITION')
+        expect(calls[0].args[0]).toContain(expectedKeyword)
       }
     )
   }

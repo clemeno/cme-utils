@@ -5,25 +5,25 @@ describe(
   'IS_ON',
   () => {
     const testCases = [
-      { label: 'true', input: true, expected: true },
-      { label: '1', input: 1, expected: true },
-      { label: '-1', input: -1, expected: true },
-      { label: '"hello"', input: 'hello', expected: true },
-      { label: '"0"', input: '0', expected: true },
-      { label: '"false"', input: 'false', expected: true },
-      { label: '[]', input: [], expected: true },
-      { label: '{}', input: {}, expected: true },
-      { label: 'new Date()', input: new Date(), expected: true },
-      { label: 'false', input: false, expected: false },
-      { label: '0', input: 0, expected: false },
-      { label: '""', input: '', expected: false },
-      { label: 'null', input: null, expected: false },
-      { label: 'undefined', input: undefined, expected: false },
-      { label: 'NaN', input: NaN, expected: false },
+      { name: 'true', input: true, expected: true },
+      { name: '1', input: 1, expected: true },
+      { name: '-1', input: -1, expected: true },
+      { name: '"hello"', input: 'hello', expected: true },
+      { name: '"0"', input: '0', expected: true },
+      { name: '"false"', input: 'false', expected: true },
+      { name: '[]', input: [], expected: true },
+      { name: '{}', input: {}, expected: true },
+      { name: 'new Date()', input: new Date(), expected: true },
+      { name: 'false', input: false, expected: false },
+      { name: '0', input: 0, expected: false },
+      { name: '""', input: '', expected: false },
+      { name: 'null', input: null, expected: false },
+      { name: 'undefined', input: undefined, expected: false },
+      { name: 'NaN', input: NaN, expected: false },
     ]
 
     it.each(testCases)(
-      'IS_ON($label) → $expected',
+      'IS_ON($name) → $expected',
       ({ input, expected }) => {
         expect(IS_ON(input)).toBe(expected)
       }

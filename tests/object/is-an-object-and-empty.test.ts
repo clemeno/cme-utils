@@ -5,22 +5,22 @@ describe(
   'IS_AN_OBJECT_AND_EMPTY',
   () => {
     const testCases = [
-      { label: '{}', input: {}, expected: true },
-      { label: '[] (no enumerable keys)', input: [], expected: true },
-      { label: 'new Set() (no enumerable keys)', input: new Set(), expected: true },
-      { label: 'new Map() (no enumerable keys)', input: new Map(), expected: true },
-      { label: 'new Date() (no enumerable keys)', input: new Date(), expected: true },
-      { label: '{ a: 1 }', input: { a: 1 }, expected: false },
-      { label: '{ key: "value" }', input: { key: 'value' }, expected: false },
-      { label: 'null', input: null, expected: false },
-      { label: '"hello"', input: 'hello', expected: false },
-      { label: '123', input: 123, expected: false },
-      { label: 'true', input: true, expected: false },
-      { label: 'undefined', input: undefined, expected: false },
+      { name: '{}', input: {}, expected: true },
+      { name: '[] (no enumerable keys)', input: [], expected: true },
+      { name: 'new Set() (no enumerable keys)', input: new Set(), expected: true },
+      { name: 'new Map() (no enumerable keys)', input: new Map(), expected: true },
+      { name: 'new Date() (no enumerable keys)', input: new Date(), expected: true },
+      { name: '{ a: 1 }', input: { a: 1 }, expected: false },
+      { name: '{ key: "value" }', input: { key: 'value' }, expected: false },
+      { name: 'null', input: null, expected: false },
+      { name: '"hello"', input: 'hello', expected: false },
+      { name: '123', input: 123, expected: false },
+      { name: 'true', input: true, expected: false },
+      { name: 'undefined', input: undefined, expected: false },
     ]
 
     it.each(testCases)(
-      'IS_AN_OBJECT_AND_EMPTY($label) → $expected',
+      'IS_AN_OBJECT_AND_EMPTY($name) → $expected',
       ({ input, expected }) => {
         expect(IS_AN_OBJECT_AND_EMPTY(input)).toBe(expected)
       }
