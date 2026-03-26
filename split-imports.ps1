@@ -174,7 +174,7 @@ Get-ChildItem -Path $sourceRoot -Recurse -Include *.ts, *.js -ErrorAction Stop |
 
     $reorganized = [System.Collections.Generic.List[string]]::new()
     foreach ($il in $collectedImports) { $reorganized.Add($il) }
-    if ($nonImportLines.Count -gt 0) { $reorganized.Add('') }  # one blank separator
+    if ($collectedImports.Count -gt 0 -and $nonImportLines.Count -gt 0) { $reorganized.Add('') }  # one blank separator
     foreach ($rl in $nonImportLines)  { $reorganized.Add($rl) }
 
     $p3Changed = $reorganized.Count -ne $outLines.Count
