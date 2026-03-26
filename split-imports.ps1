@@ -78,7 +78,12 @@ Get-ChildItem -Path $sourceRoot -Recurse -Include *.ts, *.js -ErrorAction Stop |
         }
 
         if ($regularItems.Count -gt 0 -and $typeItems.Count -gt 0) {
+            # Mixed import: split into a value line + a type line
             $outLines.Add("${indent}import { $($regularItems -join ', ') } from $quote$modulePath$quote;")
+            $outLines.Add("${indent}import type { $($typeItems -join ', ') } from $quote$modulePath$quote;")
+            $linesChanged++
+        } elseif ($regularItems.Count -eq 0 -and $typeItems.Count -gt 0) {
+            # All items carry inline `type` — normalise to a proper import type { }
             $outLines.Add("${indent}import type { $($typeItems -join ', ') } from $quote$modulePath$quote;")
             $linesChanged++
         } else {
@@ -86,9 +91,106 @@ Get-ChildItem -Path $sourceRoot -Recurse -Include *.ts, *.js -ErrorAction Stop |
         }
     }
 
+    # ── Phase 2: merge sibling 'import type' statements for the same module ───
+    # Recognise three single-line import-type shapes:
+    #   (c) import type Default, { A, B } from 'mod'
+    #   (a) import type Default from 'mod'
+    #   (b) import type { A, B } from 'mod'
+    $pTDN = '^(?<ind>[^\S\r\n]*)import\s+type\s+(?<def>\w+)\s*,\s*\{(?<items>[^}]*)\}\s*from\s*(?<q>[''"])(?<mod>[^''"]+)\k<q>\s*;?[^\S\r\n]*$'
+    $pTD  = '^(?<ind>[^\S\r\n]*)import\s+type\s+(?<def>\w+)\s+from\s*(?<q>[''"])(?<mod>[^''"]+)\k<q>\s*;?[^\S\r\n]*$'
+    $pTN  = '^(?<ind>[^\S\r\n]*)import\s+type\s+\{(?<items>[^}]*)\}\s*from\s*(?<q>[''"])(?<mod>[^''"]+)\k<q>\s*;?[^\S\r\n]*$'
+
+    $typeInfos = [System.Collections.Generic.List[hashtable]]::new()
+    for ($i = 0; $i -lt $outLines.Count; $i++) {
+        $l = $outLines[$i]
+        $mDN = [regex]::Match($l, $pTDN)
+        $mDO = [regex]::Match($l, $pTD)
+        $mNO = [regex]::Match($l, $pTN)
+        if ($mDN.Success) {
+            $named = @($mDN.Groups['items'].Value -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' })
+            $typeInfos.Add(@{ Idx = $i; Mod = $mDN.Groups['mod'].Value; Q = $mDN.Groups['q'].Value; Ind = $mDN.Groups['ind'].Value; Def = $mDN.Groups['def'].Value; Named = $named })
+        } elseif ($mDO.Success) {
+            $typeInfos.Add(@{ Idx = $i; Mod = $mDO.Groups['mod'].Value; Q = $mDO.Groups['q'].Value; Ind = $mDO.Groups['ind'].Value; Def = $mDO.Groups['def'].Value; Named = @() })
+        } elseif ($mNO.Success) {
+            $named = @($mNO.Groups['items'].Value -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' })
+            $typeInfos.Add(@{ Idx = $i; Mod = $mNO.Groups['mod'].Value; Q = $mNO.Groups['q'].Value; Ind = $mNO.Groups['ind'].Value; Def = $null; Named = $named })
+        }
+    }
+
+    $typeByMod = @{}
+    foreach ($info in $typeInfos) {
+        if (-not $typeByMod.ContainsKey($info.Mod)) { $typeByMod[$info.Mod] = [System.Collections.Generic.List[hashtable]]::new() }
+        $typeByMod[$info.Mod].Add($info)
+    }
+
+    $toRemove = [System.Collections.Generic.HashSet[int]]::new()
+    foreach ($grp in $typeByMod.Values) {
+        if ($grp.Count -lt 2) { continue }
+
+        $mergedDef   = $null
+        $mergedNamed = [System.Collections.Generic.List[string]]::new()
+        foreach ($info in $grp) {
+            if ($null -ne $info.Def -and $null -eq $mergedDef) { $mergedDef = $info.Def }
+            foreach ($n in $info.Named) { if (-not $mergedNamed.Contains($n)) { $mergedNamed.Add($n) } }
+        }
+
+        $namedPart = if ($mergedNamed.Count -gt 0) { "{ $($mergedNamed -join ', ') }" } else { $null }
+        $binding   = if ($null -ne $mergedDef -and $null -ne $namedPart) { "$mergedDef, $namedPart" }
+                     elseif ($null -ne $mergedDef) { $mergedDef }
+                     else { $namedPart }
+        $outLines[$grp[0].Idx] = "$($grp[0].Ind)import type $binding from $($grp[0].Q)$($grp[0].Mod)$($grp[0].Q);"
+
+        for ($j = 1; $j -lt $grp.Count; $j++) { [void]$toRemove.Add($grp[$j].Idx) }
+        $linesChanged++
+    }
+
+    if ($toRemove.Count -gt 0) {
+        $tmp = [System.Collections.Generic.List[string]]::new()
+        for ($i = 0; $i -lt $outLines.Count; $i++) {
+            if (-not $toRemove.Contains($i)) { $tmp.Add($outLines[$i]) }
+        }
+        $outLines = $tmp
+    }
+
+    # ── Phase 3: hoist all import lines to the top, compact (no blank lines between) ──
+    # Matches any single-line top-level ESM import/import-type statement
+    $importLinePattern = '^import\b[^\r\n]*from\s+[''"][^''"\r\n]+[''"]\s*;?\s*$'
+
+    $collectedImports = [System.Collections.Generic.List[string]]::new()
+    $nonImportLines   = [System.Collections.Generic.List[string]]::new()
+
+    foreach ($l in $outLines) {
+        if ([regex]::IsMatch($l, $importLinePattern)) {
+            $collectedImports.Add($l)
+        } else {
+            $nonImportLines.Add($l)
+        }
+    }
+
+    # Strip leading blank lines from the non-import body
+    while ($nonImportLines.Count -gt 0 -and $nonImportLines[0] -match '^\s*$') {
+        $nonImportLines.RemoveAt(0)
+    }
+
+    $reorganized = [System.Collections.Generic.List[string]]::new()
+    foreach ($il in $collectedImports) { $reorganized.Add($il) }
+    if ($nonImportLines.Count -gt 0) { $reorganized.Add('') }  # one blank separator
+    foreach ($rl in $nonImportLines)  { $reorganized.Add($rl) }
+
+    $p3Changed = $reorganized.Count -ne $outLines.Count
+    if (-not $p3Changed) {
+        for ($i = 0; $i -lt $reorganized.Count; $i++) {
+            if ($reorganized[$i] -ne $outLines[$i]) { $p3Changed = $true; break }
+        }
+    }
+    if ($p3Changed) {
+        $outLines = $reorganized
+        $linesChanged++
+    }
+
     if ($linesChanged -gt 0) {
         $label = if ($DryRun) { '[DRY RUN] ' } else { '' }
-        Write-Host "${label}$file  ($linesChanged line(s) split)"
+        Write-Host "${label}$file  ($linesChanged line(s) split/merged)"
         if (-not $DryRun) {
             $newContent = $outLines -join $lineEnding
             [System.IO.File]::WriteAllText($file, $newContent, $utf8NoBom)

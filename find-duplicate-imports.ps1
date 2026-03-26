@@ -8,9 +8,17 @@ $ErrorActionPreference = 'Stop'
 # Resolve to absolute path
 $resolvedSrc = (Resolve-Path $SrcPath).Path
 
-# ─── Helper: determine import kind (type vs value) ───────────────────────────
-function Get-ImportKind ([string]$stmt) {
+# ─── Helper: determine effective import kind (type vs value) ────────────────
+# 'type' when: top-level 'import type', OR every named binding carries inline 'type'
+# 'value' when: at least one binding has no inline 'type' modifier
+function Get-EffectiveImportKind ([string]$stmt) {
     if ($stmt -match '^\s*import\s+type\b') { return 'type' }
+    if ($stmt -match '\{([^}]+)\}') {
+        $items = @($Matches[1] -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' })
+        if ($items.Count -gt 0 -and ($items | Where-Object { $_ -notmatch '^\s*type\s+\w' }).Count -eq 0) {
+            return 'type'
+        }
+    }
     return 'value'
 }
 
@@ -82,10 +90,10 @@ foreach ($file in $files) {
             # Statement is complete when it contains:  from 'module'  or  from "module"
             if ($stmt -match "from\s+['""]([^'""]+)['""]") {
                 $imports.Add(@{
-                    StartLine  = $lineNum - $stmtLines.Count + 1  # = $stmtStart
-                    Kind       = Get-ImportKind $stmt
-                    ModulePath = $Matches[1]
-                    Bindings   = [string[]]@(Get-ImportBindings $stmt)
+                    StartLine     = $lineNum - $stmtLines.Count + 1  # = $stmtStart
+                    EffectiveKind = Get-EffectiveImportKind $stmt
+                    ModulePath    = $Matches[1]
+                    Bindings      = [string[]]@(Get-ImportBindings $stmt)
                 })
                 $accumulating = $false
                 $stmtLines.Clear()
@@ -93,11 +101,13 @@ foreach ($file in $files) {
         }
     }
 
-    # ── Detect duplicate module paths (per kind: 'type' and 'value' are independent) ──
-    # Key: "$kind|$modulePath"  →  list of line numbers
+    # ── Detect duplicate module paths (same effective kind: value+value or type+type) ──
+    # Key: "$effectiveKind|$modulePath"  →  list of line numbers
+    # Rationale: 'import { A }' (value) + 'import type { B }' (type) is intentional — not a duplicate.
+    #            'import type X' + 'import { type Y }' are both type-only — flagged.
     $moduleMap = [System.Collections.Generic.Dictionary[string, System.Collections.Generic.List[int]]]::new([System.StringComparer]::Ordinal)
     foreach ($imp in $imports) {
-        $key = "$($imp.Kind)|$($imp.ModulePath)"
+        $key = "$($imp.EffectiveKind)|$($imp.ModulePath)"
         if (-not $moduleMap.ContainsKey($key)) { $moduleMap[$key] = [System.Collections.Generic.List[int]]::new() }
         $moduleMap[$key].Add($imp.StartLine)
     }
