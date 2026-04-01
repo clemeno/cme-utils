@@ -8,6 +8,11 @@
     import { raw } from 'objection'
     import type { QueryBuilder } from 'objection'
 
+  Special case: when the same module already has a default type import in the file,
+  e.g. `import type Objection from 'objection'`, the type items are dropped from the
+  braces import and every occurrence of `QueryBuilder` in the file is rewritten to
+  `Objection.QueryBuilder` instead of adding a redundant `import type { QueryBuilder }`.
+
   Files that have no mixed imports are left untouched.
   Encoding (UTF-8 no BOM) and original line endings (\r\n or \n) are preserved.
 .PARAMETER Path
@@ -27,7 +32,7 @@ if ($Path -ne '') {
     $sourceRoot = $Path
 } else {
     $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-    $sourceRoot = Join-Path $scriptDir 'ts'
+    $sourceRoot = Join-Path $scriptDir 'src'
 }
 
 if (-not (Test-Path $sourceRoot)) {
@@ -36,21 +41,38 @@ if (-not (Test-Path $sourceRoot)) {
 
 $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
 
-# Regex: match a named-import line (single line only, braces must be on same line as from)
-$importPattern = '(?m)^(?<indent>[^\S\r\n]*)import\s*\{(?<items>[^}]*)\}\s*from\s*(?<q>[''"])(?<module>[^''"]+)\k<q>\s*;?[^\S\r\n]*$'
+# Regex: match a named-import line (single line only — braces must be on same line as 'from';
+# note: import type { } is NOT matched because 'type' between 'import' and '{' is not whitespace)
+$importPattern = '^(?<indent>[^\S\r\n]*)import\s*\{(?<items>[^}]*)\}\s*from\s*(?<q>[''"])(?<module>[^''"]+)\k<q>\s*;?[^\S\r\n]*$'
+
+# Regex: match a default type import — import type Alias from 'module'
+$defaultTypeImportPattern = '^(?:[^\S\r\n]*)import\s+type\s+(?<alias>\w+)\s+from\s+(?<q>[''"])(?<module>[^''"]+)\k<q>\s*;?[^\S\r\n]*$'
 
 $changedFiles = [System.Collections.Generic.List[string]]::new()
 
 Get-ChildItem -Path $sourceRoot -Recurse -Include *.ts, *.js -ErrorAction Stop | ForEach-Object {
     $file = $_.FullName
-    $raw = [System.IO.File]::ReadAllText($file, $utf8NoBom)
+    $fileContent = [System.IO.File]::ReadAllText($file, $utf8NoBom)
 
     # Detect line ending used in this file
-    $lineEnding = if ($raw -match '\r\n') { "`r`n" } else { "`n" }
-    $lines = $raw -split '\r?\n'
+    $lineEnding = if ($fileContent -match '\r\n') { "`r`n" } else { "`n" }
+    $lines = $fileContent -split '\r?\n'
+
+    # --- First pass: collect default type aliases per module ---
+    # e.g.  import type Objection from 'objection'  =>  'objection' -> 'Objection'
+    $defaultTypeAliases = @{}
+    foreach ($line in $lines) {
+        $dm = [System.Text.RegularExpressions.Regex]::Match($line, $defaultTypeImportPattern)
+        if ($dm.Success) {
+            $defaultTypeAliases[$dm.Groups['module'].Value] = $dm.Groups['alias'].Value
+        }
+    }
 
     $outLines = [System.Collections.Generic.List[string]]::new()
     $linesChanged = 0
+    # Collect type-name replacements to apply after building outLines:
+    #   @{ From = 'QueryBuilder'; To = 'Objection.QueryBuilder' }
+    $typeReplacements = [System.Collections.Generic.List[hashtable]]::new()
 
     foreach ($line in $lines) {
         $m = [System.Text.RegularExpressions.Regex]::Match($line, $importPattern)
@@ -66,133 +88,53 @@ Get-ChildItem -Path $sourceRoot -Recurse -Include *.ts, *.js -ErrorAction Stop |
 
         $items = $itemsRaw -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' }
 
-        $regularItems = [System.Collections.Generic.List[string]]::new()
-        $typeItems    = [System.Collections.Generic.List[string]]::new()
+        $regularItems = @($items | Where-Object { $_ -notmatch '^type\s' })
+        $typeItems    = @($items | Where-Object { $_ -match '^type\s+(.+)$' } |
+                            ForEach-Object { $Matches[1].Trim() })
 
-        foreach ($item in $items) {
-            if ($item -match '^type\s+(.+)$') {
-                $typeItems.Add($Matches[1].Trim())
-            } else {
-                $regularItems.Add($item)
+        if ($typeItems.Count -gt 0 -and $defaultTypeAliases.ContainsKey($modulePath)) {
+            # A default type alias already covers this module — use it instead of a
+            # separate `import type { ... }` line.
+            $alias = $defaultTypeAliases[$modulePath]
+
+            if ($regularItems.Count -gt 0) {
+                $outLines.Add("${indent}import { $($regularItems -join ', ') } from $quote$modulePath$quote;")
             }
-        }
+            # else: the whole import was type-only — drop the line entirely
 
-        if ($regularItems.Count -gt 0 -and $typeItems.Count -gt 0) {
-            # Mixed import: split into a value line + a type line
+            foreach ($typeName in $typeItems) {
+                $typeReplacements.Add(@{ From = $typeName; To = "$alias.$typeName" })
+            }
+            $linesChanged++
+
+        } elseif ($regularItems.Count -gt 0 -and $typeItems.Count -gt 0) {
+            # Standard split: emit a value import and a type import
             $outLines.Add("${indent}import { $($regularItems -join ', ') } from $quote$modulePath$quote;")
             $outLines.Add("${indent}import type { $($typeItems -join ', ') } from $quote$modulePath$quote;")
             $linesChanged++
-        } elseif ($regularItems.Count -eq 0 -and $typeItems.Count -gt 0) {
-            # All items carry inline `type` — normalise to a proper import type { }
-            $outLines.Add("${indent}import type { $($typeItems -join ', ') } from $quote$modulePath$quote;")
-            $linesChanged++
+
         } else {
             $outLines.Add($line)
         }
     }
 
-    # ── Phase 2: merge sibling 'import type' statements for the same module ───
-    # Recognise three single-line import-type shapes:
-    #   (c) import type Default, { A, B } from 'mod'
-    #   (a) import type Default from 'mod'
-    #   (b) import type { A, B } from 'mod'
-    $pTDN = '^(?<ind>[^\S\r\n]*)import\s+type\s+(?<def>\w+)\s*,\s*\{(?<items>[^}]*)\}\s*from\s*(?<q>[''"])(?<mod>[^''"]+)\k<q>\s*;?[^\S\r\n]*$'
-    $pTD  = '^(?<ind>[^\S\r\n]*)import\s+type\s+(?<def>\w+)\s+from\s*(?<q>[''"])(?<mod>[^''"]+)\k<q>\s*;?[^\S\r\n]*$'
-    $pTN  = '^(?<ind>[^\S\r\n]*)import\s+type\s+\{(?<items>[^}]*)\}\s*from\s*(?<q>[''"])(?<mod>[^''"]+)\k<q>\s*;?[^\S\r\n]*$'
-
-    $typeInfos = [System.Collections.Generic.List[hashtable]]::new()
-    for ($i = 0; $i -lt $outLines.Count; $i++) {
-        $l = $outLines[$i]
-        $mDN = [regex]::Match($l, $pTDN)
-        $mDO = [regex]::Match($l, $pTD)
-        $mNO = [regex]::Match($l, $pTN)
-        if ($mDN.Success) {
-            $named = @($mDN.Groups['items'].Value -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' })
-            $typeInfos.Add(@{ Idx = $i; Mod = $mDN.Groups['mod'].Value; Q = $mDN.Groups['q'].Value; Ind = $mDN.Groups['ind'].Value; Def = $mDN.Groups['def'].Value; Named = $named })
-        } elseif ($mDO.Success) {
-            $typeInfos.Add(@{ Idx = $i; Mod = $mDO.Groups['mod'].Value; Q = $mDO.Groups['q'].Value; Ind = $mDO.Groups['ind'].Value; Def = $mDO.Groups['def'].Value; Named = @() })
-        } elseif ($mNO.Success) {
-            $named = @($mNO.Groups['items'].Value -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' })
-            $typeInfos.Add(@{ Idx = $i; Mod = $mNO.Groups['mod'].Value; Q = $mNO.Groups['q'].Value; Ind = $mNO.Groups['ind'].Value; Def = $null; Named = $named })
-        }
-    }
-
-    $typeByMod = @{}
-    foreach ($info in $typeInfos) {
-        if (-not $typeByMod.ContainsKey($info.Mod)) { $typeByMod[$info.Mod] = [System.Collections.Generic.List[hashtable]]::new() }
-        $typeByMod[$info.Mod].Add($info)
-    }
-
-    $toRemove = [System.Collections.Generic.HashSet[int]]::new()
-    foreach ($grp in $typeByMod.Values) {
-        if ($grp.Count -lt 2) { continue }
-
-        $mergedDef   = $null
-        $mergedNamed = [System.Collections.Generic.List[string]]::new()
-        foreach ($info in $grp) {
-            if ($null -ne $info.Def -and $null -eq $mergedDef) { $mergedDef = $info.Def }
-            foreach ($n in $info.Named) { if (-not $mergedNamed.Contains($n)) { $mergedNamed.Add($n) } }
-        }
-
-        $namedPart = if ($mergedNamed.Count -gt 0) { "{ $($mergedNamed -join ', ') }" } else { $null }
-        $binding   = if ($null -ne $mergedDef -and $null -ne $namedPart) { "$mergedDef, $namedPart" }
-                     elseif ($null -ne $mergedDef) { $mergedDef }
-                     else { $namedPart }
-        $outLines[$grp[0].Idx] = "$($grp[0].Ind)import type $binding from $($grp[0].Q)$($grp[0].Mod)$($grp[0].Q);"
-
-        for ($j = 1; $j -lt $grp.Count; $j++) { [void]$toRemove.Add($grp[$j].Idx) }
-        $linesChanged++
-    }
-
-    if ($toRemove.Count -gt 0) {
-        $tmp = [System.Collections.Generic.List[string]]::new()
-        for ($i = 0; $i -lt $outLines.Count; $i++) {
-            if (-not $toRemove.Contains($i)) { $tmp.Add($outLines[$i]) }
-        }
-        $outLines = $tmp
-    }
-
-    # ── Phase 3: hoist all import lines to the top, compact (no blank lines between) ──
-    # Matches any single-line top-level ESM import/import-type statement
-    $importLinePattern = '^import\b[^\r\n]*from\s+[''"][^''"\r\n]+[''"]\s*;?\s*$'
-
-    $collectedImports = [System.Collections.Generic.List[string]]::new()
-    $nonImportLines   = [System.Collections.Generic.List[string]]::new()
-
-    foreach ($l in $outLines) {
-        if ([regex]::IsMatch($l, $importLinePattern)) {
-            $collectedImports.Add($l)
-        } else {
-            $nonImportLines.Add($l)
-        }
-    }
-
-    # Strip leading blank lines from the non-import body
-    while ($nonImportLines.Count -gt 0 -and $nonImportLines[0] -match '^\s*$') {
-        $nonImportLines.RemoveAt(0)
-    }
-
-    $reorganized = [System.Collections.Generic.List[string]]::new()
-    foreach ($il in $collectedImports) { $reorganized.Add($il) }
-    if ($collectedImports.Count -gt 0 -and $nonImportLines.Count -gt 0) { $reorganized.Add('') }  # one blank separator
-    foreach ($rl in $nonImportLines)  { $reorganized.Add($rl) }
-
-    $p3Changed = $reorganized.Count -ne $outLines.Count
-    if (-not $p3Changed) {
-        for ($i = 0; $i -lt $reorganized.Count; $i++) {
-            if ($reorganized[$i] -ne $outLines[$i]) { $p3Changed = $true; break }
-        }
-    }
-    if ($p3Changed) {
-        $outLines = $reorganized
-        $linesChanged++
-    }
-
     if ($linesChanged -gt 0) {
+        $newContent = $outLines -join $lineEnding
+
+        # Apply word-boundary replacements collected during the default-alias pass
+        foreach ($repl in $typeReplacements) {
+            $escaped = [System.Text.RegularExpressions.Regex]::Escape($repl.From)
+            # Lookbehind: '.' is a literal dot inside [...], so Alias.TypeName is not re-matched
+            $newContent = [System.Text.RegularExpressions.Regex]::Replace(
+                $newContent,
+                "(?<![.\w])$escaped(?!\w)",
+                $repl.To
+            )
+        }
+
         $label = if ($DryRun) { '[DRY RUN] ' } else { '' }
-        Write-Host "${label}$file  ($linesChanged line(s) split/merged)"
+        Write-Host "${label}$file  ($linesChanged line(s) split)"
         if (-not $DryRun) {
-            $newContent = $outLines -join $lineEnding
             [System.IO.File]::WriteAllText($file, $newContent, $utf8NoBom)
         }
         $changedFiles.Add($file)
