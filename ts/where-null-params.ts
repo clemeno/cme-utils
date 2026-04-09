@@ -1,4 +1,4 @@
 export interface WhereNullParams {
   qb: any
-  column: string
+  column: any
 }

@@ -8,6 +8,20 @@
     import { raw } from 'objection'
     import type { QueryBuilder } from 'objection'
 
+  Also rewrites type-only inline imports like:
+    import { type Paginated } from '../type/paginated.js'
+  into:
+    import type { Paginated } from '../type/paginated.js'
+
+  Multi-line brace imports that contain type-qualified items are collapsed to a
+  single line before the split logic runs:
+    import {
+      type Foo,
+      Bar,
+    } from './module.js'
+  is treated as if it were written on one line.  Multi-line imports with no type
+  items are left untouched (their formatting is preserved).
+
   Special case: when the same module already has a default type import in the file,
   e.g. `import type Objection from 'objection'`, the type items are dropped from the
   braces import and every occurrence of `QueryBuilder` in the file is rewritten to
@@ -32,7 +46,7 @@ if ($Path -ne '') {
     $sourceRoot = $Path
 } else {
     $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-    $sourceRoot = Join-Path $scriptDir 'src'
+    $sourceRoot = Join-Path $scriptDir 'ts'
 }
 
 if (-not (Test-Path $sourceRoot)) {
@@ -57,6 +71,54 @@ Get-ChildItem -Path $sourceRoot -Recurse -Include *.ts, *.js -ErrorAction Stop |
     # Detect line ending used in this file
     $lineEnding = if ($fileContent -match '\r\n') { "`r`n" } else { "`n" }
     $lines = $fileContent -split '\r?\n'
+
+    # --- Pre-pass: collapse multi-line brace imports that contain type items ---
+    # Only imports that have at least one `type Foo` item are collapsed; pure-value
+    # multi-line imports are left alone so their formatting is not disturbed.
+    #
+    # Detection: a line matching  ^<ws>import\s*{  with no closing }  on the same
+    # line (and NOT  import type {  which is already correct form) starts a block.
+    # Lines are accumulated until a line containing } is found.
+    $multiLineOpenPattern  = '^(?<ind>[^\S\r\n]*)import\s*\{'
+    $multiLineTypeExclPat  = '^[^\S\r\n]*import\s+type\s*\{'
+    $collapsed = [System.Collections.Generic.List[string]]::new()
+    $ci = 0
+    while ($ci -lt $lines.Count) {
+        $cl = $lines[$ci]
+        if ($cl -match $multiLineOpenPattern -and
+            $cl -notmatch $multiLineTypeExclPat -and
+            $cl -notmatch '\}') {
+
+            $ind   = $Matches['ind']
+            $parts = [System.Collections.Generic.List[string]]::new()
+            $parts.Add($cl)
+            $cj = $ci + 1
+            while ($cj -lt $lines.Count -and $parts[$parts.Count - 1] -notmatch '\}') {
+                $parts.Add($lines[$cj])
+                $cj++
+            }
+
+            if ($cj -lt $lines.Count -or $parts[$parts.Count - 1] -match '\}') {
+                # Successfully reached closing brace – check for type items
+                $blockText = $parts -join ' '
+                if ($blockText -match '\btype\s+\w') {
+                    # Collapse: join trimmed pieces, normalise whitespace, re-indent
+                    $joined = ($parts | ForEach-Object { $_.Trim() }) -join ' '
+                    $joined = [System.Text.RegularExpressions.Regex]::Replace($joined, '\s+', ' ')
+                    $collapsed.Add($ind + $joined.TrimStart())
+                    $ci = $cj + 1
+                    continue
+                }
+            }
+            # No type items or unclosed block — emit original lines unchanged
+            foreach ($p in $parts) { $collapsed.Add($p) }
+            $ci = $cj + 1
+        } else {
+            $collapsed.Add($cl)
+            $ci++
+        }
+    }
+    $lines = $collapsed.ToArray()
 
     # --- First pass: collect default type aliases per module ---
     # e.g.  import type Objection from 'objection'  =>  'objection' -> 'Objection'
@@ -105,6 +167,11 @@ Get-ChildItem -Path $sourceRoot -Recurse -Include *.ts, *.js -ErrorAction Stop |
             foreach ($typeName in $typeItems) {
                 $typeReplacements.Add(@{ From = $typeName; To = "$alias.$typeName" })
             }
+            $linesChanged++
+
+        } elseif ($typeItems.Count -gt 0 -and $regularItems.Count -eq 0) {
+            # All items are inline-typed — collapse to a pure import type
+            $outLines.Add("${indent}import type { $($typeItems -join ', ') } from $quote$modulePath$quote;")
             $linesChanged++
 
         } elseif ($regularItems.Count -gt 0 -and $typeItems.Count -gt 0) {

@@ -1,6 +1,6 @@
 export interface WhereParams {
   qb: any
-  column: string
+  column: any
   operator?: string
   value: unknown
   bKeepPercentAndDash?: boolean
