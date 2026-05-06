@@ -6,16 +6,16 @@
  * @param todoInParallel - An array of tasks to be executed in parallel.
  * @returns A promise that resolves to an object containing the `fulfilled` and `rejected` results clearly separated.
  */
-export const ALL_SETTLED = async <const T extends readonly unknown[], Reason = any> (todoInParallel: T): Promise<{
-  fulfilled: { [K in keyof T]?: Awaited<T[K]> }
+export async function ALL_SETTLED<const T extends readonly unknown[], Reason = any> (todoInParallel: T): Promise<{
+  fulfilled: { [K in keyof T]: Awaited<T[K]> | undefined }
   rejected: { [K in keyof T]?: Reason }
   fulfilledSize: number
   rejectedSize: number
   size: number
-}> => {
+}> {
   const allSettledList = await Promise.allSettled(todoInParallel)
 
-  const fulfilled: { [K in keyof T]?: Awaited<T[K]> } = {}
+  const fulfilled: { [K in keyof T]: Awaited<T[K]> | undefined } = [] as unknown as { [K in keyof T]: Awaited<T[K]> | undefined }
   let fulfilledSize = 0
 
   const rejected: { [K in keyof T]?: Reason } = {}
