@@ -22,6 +22,9 @@
     ],
     "useDefineForClassFields": false
   },
+  "include": [
+    "ts/**/*.ts"
+  ],
   "exclude": [
     "node_modules",
     "esm",

@@ -14,8 +14,8 @@
 
 # if ($bAll -or $bEsm) {
 #   # default build to esm
-  rm esm
-  npm run build
+  Remove-Item -Recurse -Force esm
+  bun run build
 # }
 
 # if ($bAll -or $bCjs) {

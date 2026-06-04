@@ -10,7 +10,11 @@
     ".": "./esm/index.js",
     "./ts": "./ts/index.ts",
     "./cjs/max-return-statements-per-function.rule.cjs": "./cjs/max-return-statements-per-function.rule.cjs",
-    "./cjs/max-return-statements-per-function.plugin.cjs": "./cjs/max-return-statements-per-function.plugin.cjs"
+    "./cjs/max-return-statements-per-function.plugin.cjs": "./cjs/max-return-statements-per-function.plugin.cjs",
+    "./esm/max-return-statements-per-function.rule.js": "./esm/max-return-statements-per-function.rule.js",
+    "./esm/max-return-statements-per-function.plugin.js": "./esm/max-return-statements-per-function.plugin.js",
+    "./ts/max-return-statements-per-function.rule.ts": "./ts/max-return-statements-per-function.rule.ts",
+    "./ts/max-return-statements-per-function.plugin.ts": "./ts/max-return-statements-per-function.plugin.ts"
   },
   "keywords": [
     "util",
