@@ -32,6 +32,22 @@ const optionList = [
       'no-plusplus': 'error',
       'no-dupe-else-if': 'error',
       'no-lonely-if': 'error',
+      'no-continue': 'error',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'BreakStatement',
+          message: 'break is forbidden — refactor with if or array methods (find/some/every/findIndex). For a justified case use // eslint-disable-next-line no-restricted-syntax with a comment explaining why.',
+        },
+        {
+          selector: 'SwitchStatement',
+          message: 'switch is forbidden — use an if/else-if chain or a key→handler lookup map. For a justified case use // eslint-disable-next-line no-restricted-syntax with a comment explaining why.',
+        },
+        {
+          selector: 'TSEnumDeclaration',
+          message: 'TypeScript enum is forbidden — use export const values instead. No magic numbers or strings, just named constants.',
+        },
+      ],
       yoda: 0,
       'max-params': ['warn', 1],
       '@stylistic/arrow-parens': ['error', 'as-needed'],
