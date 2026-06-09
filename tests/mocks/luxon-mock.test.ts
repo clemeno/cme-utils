@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { mockDateTime, MockDateTime, createMockSettings, type DurationObjectUnits } from './luxon-mock.js'
+import { mockDateTime, MockDateTime, MockDateTimeClass, createMockSettings, type DurationObjectUnits } from './luxon-mock.js'
 
 // Fixed UTC timestamp: 2022-01-01T00:00:00.000Z
 const BASE_MS = 1640995200000
@@ -434,6 +434,38 @@ describe(
             const settings = createMockSettings({ initialZone: 'Asia/Tokyo' })
             expect(settings.defaultZone.name).toBe('Asia/Tokyo')
             expect(settings.defaultLocale).toBe('en')
+          }
+        )
+      }
+    )
+
+    describe(
+      'MockDateTimeClass constructor',
+      () => {
+        it(
+          'can be instantiated directly',
+          () => {
+            const instance = new MockDateTimeClass()
+            expect(instance).toBeInstanceOf(MockDateTimeClass)
+          }
+        )
+      }
+    )
+
+    describe(
+      'instance getters via dot notation',
+      () => {
+        // Explicitly invoke each getter via dot notation to ensure function coverage
+        it(
+          'all getters return numbers',
+          () => {
+            const m = mockDateTime(BASE_MS)
+            expect(m.year).toBe(2022)
+            expect(m.month).toBe(1)
+            expect(m.day).toBe(1)
+            expect(m.hour).toBe(0)
+            expect(m.minute).toBe(0)
+            expect(m.second).toBe(0)
           }
         )
       }

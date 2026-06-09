@@ -13,6 +13,10 @@ export interface DurationObjectUnits {
 
 // Mock DateTime instance class extending Date
 class MockDateTimeInstance extends Date {
+  constructor (millis: number) {
+    super(millis)
+  }
+
   toMillis () {
     return this.getTime()
   }
@@ -124,6 +128,8 @@ export const mockDateTime = (millis: number) => new MockDateTimeInstance(millis)
 
 // Mock DateTime class with static methods
 export class MockDateTimeClass {
+  constructor () {}
+
   static invalid (reason: string) {
     return null
   }

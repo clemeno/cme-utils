@@ -22,6 +22,9 @@ describe(
       { name: 'boxed boolean', input: new Boolean(true), expected: 'b:1;' },
       // eslint-disable-next-line no-new-wrappers
       { name: 'boxed number', input: new Number(7), expected: 'i:7;' },
+      { name: 'string with 2-byte UTF-8 char', input: 'é', expected: 's:2:"é";' },
+      { name: 'string with 3-byte UTF-8 char', input: '€', expected: 's:3:"€";' },
+      { name: 'function', input: Number.isNaN, expected: ';' },
     ]
 
     it.each(testCases)(
@@ -30,6 +33,12 @@ describe(
         expect(TO_PHP_SERIALIZE(input)).toBe(expected)
       }
     )
+
+    it('object without constructor (Object.create(null))', () => {
+      const nullObj = Object.create(null) as Record<string, unknown>
+      nullObj['x'] = 1
+      expect(TO_PHP_SERIALIZE(nullObj)).toBe('a:1:{s:1:"x";i:1;}')
+    })
   }
 )
 
@@ -64,6 +73,24 @@ describe(
     it('throws on unknown type token', () => {
       expect(() => FROM_PHP_UNSERIALIZE('x:1;')).toThrow()
     })
+
+    it('object with string key', () => {
+      const result = FROM_PHP_UNSERIALIZE('a:1:{s:3:"foo";i:42;}')
+      const resultObj = result as Record<string, unknown>
+      expect(resultObj['foo']).toBe(42)
+    })
+
+    it('nested array', () => {
+      const result = FROM_PHP_UNSERIALIZE('a:1:{i:0;a:2:{i:0;i:1;i:1;i:2;}}')
+      const resultObj = result as Record<string, unknown>
+      const inner = resultObj['0'] as Record<string, unknown>
+      expect(inner['0']).toBe(1)
+      expect(inner['1']).toBe(2)
+    })
+
+    it('throws on unexpected end of data', () => {
+      expect(() => FROM_PHP_UNSERIALIZE('i:42')).toThrow()
+    })
   }
 )
 
@@ -95,6 +122,8 @@ describe(
     const testCases: Array<{ name: string, input: string, expected: string }> = [
       { name: 'empty string', input: '', expected: '' },
       { name: 'ascii only', input: 'hello', expected: 'hello' },
+      { name: '2-byte UTF-8 sequence (é)', input: String.fromCharCode(0xC3, 0xA9), expected: 'é' },
+      { name: '3-byte UTF-8 sequence (€)', input: String.fromCharCode(0xE2, 0x82, 0xAC), expected: '€' },
     ]
 
     it.each(testCases)(
