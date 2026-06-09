@@ -5,12 +5,23 @@ describe(
   'PERIOD_EXPORT',
   () => {
     it(
-      'serialises min, max and label into _§§_ delimited string',
+      'serialises min, max and label using toISOString (JS Date)',
       () => {
         const min = { toISOString: () => '2024-01-01T00:00:00.000Z' }
         const max = { toISOString: () => '2024-12-31T23:59:59.999Z' }
         expect(PERIOD_EXPORT({ min, max, label: 'test' })).toBe(
           '2024-01-01T00:00:00.000Z_§§_2024-12-31T23:59:59.999Z_§§_test'
+        )
+      }
+    )
+
+    it(
+      'serialises min, max and label using toISO (Luxon DateTime)',
+      () => {
+        const min = { toISO: () => '2024-01-01T00:00:00.000+00:00' }
+        const max = { toISO: () => '2024-12-31T23:59:59.999+00:00' }
+        expect(PERIOD_EXPORT({ min, max, label: 'luxon' })).toBe(
+          '2024-01-01T00:00:00.000+00:00_§§_2024-12-31T23:59:59.999+00:00_§§_luxon'
         )
       }
     )

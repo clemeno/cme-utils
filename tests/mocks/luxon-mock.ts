@@ -13,6 +13,7 @@ export interface DurationObjectUnits {
 
 // Mock DateTime instance class extending Date
 class MockDateTimeInstance extends Date {
+  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
   constructor (millis: number) {
     super(millis)
   }
@@ -128,6 +129,7 @@ export const mockDateTime = (millis: number) => new MockDateTimeInstance(millis)
 
 // Mock DateTime class with static methods
 export class MockDateTimeClass {
+  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
   constructor () {}
 
   static invalid (reason: string) {
