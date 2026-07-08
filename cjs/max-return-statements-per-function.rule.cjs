@@ -7,7 +7,129 @@
 /** @type {number} */
 const DEFAULT_MAX_COUNT = 1
 
-const { getFunctionNameWithKind } = require('eslint-utils')
+/**
+ * Get the property name from a MemberExpression, Property, MethodDefinition or
+ * PropertyDefinition node.
+ * Ported from eslint-utils so this library stays dependency-free.
+ * @param {any} node The AST node to read
+ * @returns {string | null} The property name, or null when it cannot be resolved
+ */
+function getPropertyName (node) {
+  let result = null
+
+  if (node.type === 'MemberExpression') {
+    if (node.computed) {
+      // ponytail: literal computed keys only; full constant-folding (getStaticValue) dropped to stay zero-dep. Restore the port if computed constant-expression keys matter.
+      result = node.property.type === 'Literal' ? String(node.property.value) : null
+    } else if (node.property.type === 'PrivateIdentifier') {
+      result = null
+    } else {
+      result = node.property.name
+    }
+  } else if (
+    node.type === 'Property' ||
+    node.type === 'MethodDefinition' ||
+    node.type === 'PropertyDefinition'
+  ) {
+    if (node.computed) {
+      result = node.key.type === 'Literal' ? String(node.key.value) : null
+    } else if (node.key.type === 'Literal') {
+      result = String(node.key.value)
+    } else if (node.key.type === 'PrivateIdentifier') {
+      result = null
+    } else {
+      result = node.key.name
+    }
+  }
+
+  return result
+}
+
+/**
+ * Get the name and kind of the given function node (e.g. "async method 'foo'").
+ * Ported from eslint-utils so this library stays dependency-free.
+ * @param {{ node: any, sourceCode?: any }} _ The function node to describe, plus an optional ESLint source code used to render computed property keys
+ * @returns {string} The name and kind of the function node
+ */
+function getFunctionNameWithKind (_) {
+  const parent = _.node.parent
+  const tokens = []
+  const isObjectMethod = parent.type === 'Property' && parent.value === _.node
+  const isClassMethod = parent.type === 'MethodDefinition' && parent.value === _.node
+  const isClassFieldMethod = parent.type === 'PropertyDefinition' && parent.value === _.node
+  const isMethodLike = isObjectMethod || isClassMethod
+  const isNamedByParentKey = isObjectMethod || isClassMethod || isClassFieldMethod
+  const isConstructor = isMethodLike && parent.kind === 'constructor'
+
+  if (isConstructor) {
+    tokens.push('constructor')
+  } else {
+    // Modifiers.
+    if ((isClassMethod || isClassFieldMethod) && parent.static) {
+      tokens.push('static')
+    }
+    if ((isClassMethod || isClassFieldMethod) && parent.key.type === 'PrivateIdentifier') {
+      tokens.push('private')
+    }
+    if (_.node.async) {
+      tokens.push('async')
+    }
+    if (_.node.generator) {
+      tokens.push('generator')
+    }
+
+    // Kinds.
+    if (isMethodLike) {
+      if (parent.kind === 'get') {
+        tokens.push('getter')
+      } else if (parent.kind === 'set') {
+        tokens.push('setter')
+      } else {
+        tokens.push('method')
+      }
+    } else if (isClassFieldMethod) {
+      tokens.push('method')
+    } else {
+      if (_.node.type === 'ArrowFunctionExpression') {
+        tokens.push('arrow')
+      }
+      tokens.push('function')
+    }
+
+    // Names.
+    if (isNamedByParentKey) {
+      if (parent.key.type === 'PrivateIdentifier') {
+        tokens.push(`#${parent.key.name}`)
+      } else {
+        const name = getPropertyName(parent)
+        if (name) {
+          tokens.push(`'${name}'`)
+        } else if (_.sourceCode) {
+          const keyText = _.sourceCode.getText(parent.key)
+          if (!keyText.includes('\n')) {
+            tokens.push(`[${keyText}]`)
+          }
+        }
+      }
+    } else if (_.node.id) {
+      tokens.push(`'${_.node.id.name}'`)
+    } else if (
+      parent.type === 'VariableDeclarator' &&
+      parent.id &&
+      parent.id.type === 'Identifier'
+    ) {
+      tokens.push(`'${parent.id.name}'`)
+    } else if (
+      (parent.type === 'AssignmentExpression' || parent.type === 'AssignmentPattern') &&
+      parent.left &&
+      parent.left.type === 'Identifier'
+    ) {
+      tokens.push(`'${parent.left.name}'`)
+    }
+  }
+
+  return tokens.join(' ')
+}
 
 /**
  * Converts the first letter of a string to uppercase.
@@ -63,7 +185,7 @@ module.exports = {
     // eslint-disable-next-line max-params
     function reportIfTooManyStatements (node, count, max) {
       if (count > max) {
-        const name = upperCaseFirst(getFunctionNameWithKind(node))
+        const name = upperCaseFirst(getFunctionNameWithKind({ node }))
 
         context.report({
           node,

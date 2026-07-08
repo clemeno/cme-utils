@@ -100,6 +100,7 @@ The library is organized into the following categories:
 - **compare**: Comparison functions (e.g., `SAME_DATE`, `SAME_DATETIME`)
 - **constant**: Constants (e.g., `MAX_SAFE_INTEGER`, `SYMBOLS`)
 - **convert**: Conversion utilities (e.g., `TO_NUMBER`, `STRING_TO_UUID`, `BASE64_TO_HEX`)
+- **eslint**: ESLint rule authoring helpers (e.g., `GET_FUNCTION_NAME_WITH_KIND`, `GET_PROPERTY_NAME`)
 - **factory**: Object factories (e.g., `GET_ANY_ARRAY`)
 - **file**: File operations (e.g., `DOWNLOAD_FILE`, `GET_FILE_FULL_TEXT_CONTENT`)
 - **filter**: Filtering helpers (e.g., `GET_FILTER_BY_FROM_FILTER_LIST`)

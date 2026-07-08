@@ -1,32 +1,48 @@
 {
   "name": "cme-utils",
-  "version": "5.6.4",
+  "version": "6.0.0",
   "type": "module",
+  "sideEffects": false,
   "license": "MIT",
   "description": "A collection of utility functions for TypeScript/JavaScript",
   "author": "CME",
   "main": "./esm/index.js",
+  "types": "./esm/index.d.ts",
   "exports": {
-    ".": "./esm/index.js",
+    ".": {
+      "types": "./esm/index.d.ts",
+      "default": "./esm/index.js"
+    },
     "./ts": "./ts/index.ts",
     "./cjs/max-return-statements-per-function.rule.cjs": "./cjs/max-return-statements-per-function.rule.cjs",
     "./cjs/max-return-statements-per-function.plugin.cjs": "./cjs/max-return-statements-per-function.plugin.cjs",
-    "./esm/max-return-statements-per-function.rule.js": "./esm/max-return-statements-per-function.rule.js",
-    "./esm/max-return-statements-per-function.plugin.js": "./esm/max-return-statements-per-function.plugin.js",
     "./ts/max-return-statements-per-function.rule.ts": "./ts/max-return-statements-per-function.rule.ts",
-    "./ts/max-return-statements-per-function.plugin.ts": "./ts/max-return-statements-per-function.plugin.ts"
+    "./ts/max-return-statements-per-function.plugin.ts": "./ts/max-return-statements-per-function.plugin.ts",
+    "./esm/*.js": {
+      "types": "./esm/*.d.ts",
+      "default": "./esm/*.js"
+    }
   },
+  "files": [
+    "esm",
+    "cjs",
+    "ts"
+  ],
   "keywords": [
     "util",
     "utils",
     "typescript",
-    "javascript"
+    "javascript",
+    "esm",
+    "tree-shaking",
+    "eslint"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/clemeno/cme-utils.git"
   },
   "scripts": {
+    "prepare": "tsc -p tsconfig.json",
     "build": "tsc -p tsconfig.json",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
@@ -34,13 +50,14 @@
     "test:coverage": "bun test --coverage",
     "test:watch": "bun test --watch"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {},
   "devDependencies": {
     "@types/bun": "^1.3.11",
-    "@types/eslint-utils": "^3.0.5",
     "@typescript-eslint/eslint-plugin": "^8.58.1",
     "@typescript-eslint/parser": "^8.58.1",
-    "eslint-utils": "^3.0.0",
     "eslint": "^9.39.4",
     "neostandard": "^0.13.0",
     "typedoc": "^0.28.18",

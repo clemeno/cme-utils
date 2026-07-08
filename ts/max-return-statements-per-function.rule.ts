@@ -1,4 +1,4 @@
-import { getFunctionNameWithKind } from 'eslint-utils'
+import { GET_FUNCTION_NAME_WITH_KIND } from './eslint/get-function-name-with-kind.util.js'
 
 /**
  * @fileoverview A rule to set the maximum number of return statements in a function.
@@ -59,7 +59,7 @@ export const MAX_RETURN_STATEMENTS_PER_FUNCTION_RULE = {
     // eslint-disable-next-line max-params
     function reportIfTooManyStatements (node: any, count: any, max: any) {
       if (count > max) {
-        const name = upperCaseFirst(getFunctionNameWithKind(node))
+        const name = upperCaseFirst(GET_FUNCTION_NAME_WITH_KIND({ node }))
 
         context.report({
           node,
