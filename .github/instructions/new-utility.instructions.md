@@ -84,7 +84,7 @@ describe(
 ```
 
 Rules:
-- Import from `../../ts/` source, **not** `../../esm/`
+- Import from `../../ts/` source, **not** `../../m/`
 - Every test case must have a descriptive `name` string
 - Use `$name` (not `%s`) as the test title template
 - Split into separate `testCases` arrays when grouping by logical scenario helps clarity

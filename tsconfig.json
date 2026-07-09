@@ -2,7 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "rootDir": "./ts",
-    "outDir": "./esm",
+    "outDir": "./m",
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -27,7 +27,7 @@
   ],
   "exclude": [
     "node_modules",
-    "esm",
+    "m",
     "tests",
     "examples"
   ]

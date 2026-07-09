@@ -6,25 +6,25 @@
   "license": "MIT",
   "description": "A collection of utility functions for TypeScript/JavaScript",
   "author": "CME",
-  "main": "./esm/index.js",
-  "types": "./esm/index.d.ts",
+  "main": "./m/index.js",
+  "types": "./m/index.d.ts",
   "exports": {
     ".": {
-      "types": "./esm/index.d.ts",
-      "default": "./esm/index.js"
+      "types": "./m/index.d.ts",
+      "default": "./m/index.js"
     },
     "./ts": "./ts/index.ts",
     "./cjs/max-return-statements-per-function.rule.cjs": "./cjs/max-return-statements-per-function.rule.cjs",
     "./cjs/max-return-statements-per-function.plugin.cjs": "./cjs/max-return-statements-per-function.plugin.cjs",
     "./ts/max-return-statements-per-function.rule.ts": "./ts/max-return-statements-per-function.rule.ts",
     "./ts/max-return-statements-per-function.plugin.ts": "./ts/max-return-statements-per-function.plugin.ts",
-    "./esm/*.js": {
-      "types": "./esm/*.d.ts",
-      "default": "./esm/*.js"
+    "./m/*.js": {
+      "types": "./m/*.d.ts",
+      "default": "./m/*.js"
     }
   },
   "files": [
-    "esm",
+    "m",
     "cjs",
     "ts"
   ],
@@ -42,7 +42,8 @@
     "url": "git+https://github.com/clemeno/cme-utils.git"
   },
   "scripts": {
-    "prepare": "tsc -p tsconfig.json",
+    "prepare": "bun run build",
+    "build": "tsc -p tsconfig.json",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "test": "bun test",
@@ -50,7 +51,7 @@
     "test:watch": "bun test --watch"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=16"
   },
   "dependencies": {},
   "devDependencies": {

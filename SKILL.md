@@ -25,7 +25,7 @@ Use this skill when:
 ### 1. Project Structure & Setup
 - Maintain TypeScript library projects with proper folder structure
   - ./ts is the main source folder
-  - ./esm is the main transpilation target folder
+  - ./m is the main transpilation target folder (ESM output)
 - Maintain package.json with appropriate scripts and dependencies
 - Set up tsconfig.json for optimal settings between the lib to deliver as esm modules and the tests
 - Create proper .gitignore and other config files

@@ -3,7 +3,7 @@
 ## Commands
 
 ```bash
-bun run prepare        # Transpile ts/ → esm/ (tsc)
+bun run prepare        # Transpile ts/ → m/ (tsc)
 bun run lint           # Check code style (ESLint + neostandard)
 bun run lint:fix       # Auto-fix linting issues
 bun test               # Run all tests
@@ -21,7 +21,7 @@ bun test tests/array/array-sum.test.ts
 ## Architecture
 
 - `ts/` — TypeScript source (the only place to edit)
-- `esm/` — Build output (auto-generated, never edit manually)
+- `m/` — Build output (auto-generated ESM, never edit manually)
 - `cjs/` — Hand-maintained CJS files for the ESLint plugin only (`max-return-statements-per-function`)
 - `tests/` — Bun test files, mirroring the `ts/` folder structure
 - `ts/index.ts` — Single barrel re-export for the entire public API
@@ -78,7 +78,7 @@ describe(
   }
 )
 ```
-All test cases must have a descriptive `name`. Tests import directly from `ts/` source, not from `esm/`.
+All test cases must have a descriptive `name`. Tests import directly from `ts/` source, not from `m/`.
 
 ### ESLint Config
 `eslint.config.js` is authoritative — do not modify it unless explicitly instructed. Key rules in effect:

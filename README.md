@@ -6,11 +6,12 @@ A comprehensive collection of utility functions for TypeScript and JavaScript pr
 
 ## Features
 
-- **Type Safety**: Fully typed with TypeScript for better development experience.
-- **Zero Dependencies**: No runtime dependencies, keeping your bundle size minimal.
-- **Modular Exports**: Organized by categories for easy importing.
-- **ES Modules & CommonJS**: Supports both ESM and CJS builds.
-- **Custom ESLint Plugins**: Includes plugins for code quality (e.g., max return statements per function).
+- **Type Safety**: Fully typed, with a declaration file for every export.
+- **Zero Dependencies**: No runtime dependencies.
+- **Tree-Shakable**: ESM output, one file per utility, `sideEffects: false` — bundlers drop whatever you do not import.
+- **Modular Exports**: Import from the root barrel, or deep-import a single utility for the shortest path.
+- **ESM-First**: Ships ES Modules; a CommonJS build is provided for the ESLint plugin entries.
+- **Custom ESLint Plugin**: `max-return-statements-per-function`, usable from flat or legacy config.
 
 ## Installation
 
@@ -22,12 +23,22 @@ bun i cme-utils
 
 ## Usage
 
-Import specific utilities as needed:
+Import from the root barrel:
 
 ```typescript
 import { UUID_V7 } from 'cme-utils'
 const id = UUID_V7()
 ```
+
+Or deep-import a single module directly (same value, shortest path):
+
+```typescript
+import { UUID_V7 } from 'cme-utils/m/uuid/uuid-v7.util.js'
+```
+
+Requires **Node >= 16**. The package is ESM-first — use `import` or a bundler. CommonJS `require()` is supported only for the ESLint plugin entries (see below).
+
+> On Node without a global Web Crypto (Node < 19 by default), `UUID_V4` / `UUID_V7` fall back to `Math.random()` — non-cryptographic. Under bun, browsers, and Node 19+ they use secure Web Crypto.
 
 ## Quick Examples
 
@@ -87,6 +98,31 @@ TO_CSV_VALUE('Hello, World')  // '"Hello, World"' (quoted)
 TO_CSV_VALUE(null)            // '' (empty)
 ```
 
+## ESLint Plugin
+
+`max-return-statements-per-function` flags functions with more return statements than allowed (default 1).
+
+Flat config (`eslint.config.mjs`):
+
+```javascript
+import { MAX_RETURN_STATEMENTS_PER_FUNCTION_PLUGIN } from 'cme-utils/m/max-return-statements-per-function.plugin.js'
+
+export default [
+  {
+    plugins: { 'max-return-statements-per-function': MAX_RETURN_STATEMENTS_PER_FUNCTION_PLUGIN },
+    rules: { 'max-return-statements-per-function/max-return-statements-per-function': ['error', 1] },
+  },
+]
+```
+
+Legacy config (CommonJS):
+
+```javascript
+const plugin = require('cme-utils/cjs/max-return-statements-per-function.plugin.cjs')
+```
+
+The rule is also exported on its own — `cme-utils/m/max-return-statements-per-function.rule.js` (ESM) or `cme-utils/cjs/max-return-statements-per-function.rule.cjs` (CJS). The `GET_FUNCTION_NAME_WITH_KIND` and `GET_PROPERTY_NAME` AST helpers it relies on are exported from the root barrel for authoring your own rules.
+
 ## API Overview
 
 The library is organized into the following categories:
@@ -127,7 +163,7 @@ For full API details, see the [source code](https://github.com/clemeno/cme-utils
 ### Building
 
 ```bash
-bun run prepare      # Transpile ts/ → esm/ (tsc)
+bun run prepare      # Transpile ts/ → m/ (tsc)
 ```
 
 ### Linting
