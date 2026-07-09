@@ -96,5 +96,5 @@ Run in order and fix every error before committing:
 ```bash
 bun run lint
 bun test
-bun run build
+bun run prepare
 ```

@@ -3,7 +3,7 @@
 ## Commands
 
 ```bash
-bun run build          # Transpile ts/ → esm/ (tsc)
+bun run prepare        # Transpile ts/ → esm/ (tsc)
 bun run lint           # Check code style (ESLint + neostandard)
 bun run lint:fix       # Auto-fix linting issues
 bun test               # Run all tests
@@ -16,7 +16,7 @@ Run a single test file:
 bun test tests/array/array-sum.test.ts
 ```
 
-**After any file change:** always run `bun run lint`, `bun test`, and `bun run build` and resolve all errors/warnings.
+**After any file change:** always run `bun run lint`, `bun test`, and `bun run prepare` and resolve all errors/warnings.
 
 ## Architecture
 

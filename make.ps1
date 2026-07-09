@@ -15,7 +15,7 @@
 # if ($bAll -or $bEsm) {
 #   # default build to esm
   Remove-Item -Recurse -Force esm
-  bun run build
+  bun run prepare
 # }
 
 # if ($bAll -or $bCjs) {

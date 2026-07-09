@@ -127,7 +127,7 @@ For full API details, see the [source code](https://github.com/clemeno/cme-utils
 ### Building
 
 ```bash
-bun run build        # Transpile ts/ → esm/ (tsc)
+bun run prepare      # Transpile ts/ → esm/ (tsc)
 ```
 
 ### Linting
