@@ -31,22 +31,7 @@ const _DTYPE_CONVERTERS: Partial<Record<string, (x: string) => unknown>> = {
  * ```
  */
 export function TO_PHP_SERIALIZE (mixedValue: unknown): string {
-  const _utf8Size = (str: string): number => {
-    let size = 0
-
-    for (let i = 0; i < str.length; i += 1) {
-      const code = str.charCodeAt(i)
-      if (code < 0x0080) {
-        size += 1
-      } else if (code < 0x0800) {
-        size += 2
-      } else {
-        size += 3
-      }
-    }
-
-    return size
-  }
+  const _utf8Size = (str: string): number => new TextEncoder().encode(str).length
 
   const _getType = (inp: unknown): string => {
     let type: string = IS_NULL(inp) ? 'null' : typeof inp
@@ -134,46 +119,7 @@ export function TO_PHP_SERIALIZE (mixedValue: unknown): string {
  * ```
  */
 export function TO_UTF8_DECODED (strData: unknown): string {
-  const tmpArr: string[] = []
-
-  let i = 0
-  let ac = 0
-  let c1 = 0
-  let c2 = 0
-  let c3 = 0
-
-  const data = TO_STRING(strData)
-
-  while (i < data.length) {
-    c1 = data.charCodeAt(i)
-
-    if (c1 < 128) {
-      tmpArr[ac] = String.fromCharCode(c1)
-
-      ac += 1
-
-      i += 1
-    } else if ((c1 > 191) && (c1 < 224)) {
-      c2 = data.charCodeAt(i + 1)
-
-      tmpArr[ac] = String.fromCharCode(((c1 & 31) << 6) | (c2 & 63))
-
-      ac += 1
-
-      i += 2
-    } else {
-      c2 = data.charCodeAt(i + 1)
-      c3 = data.charCodeAt(i + 2)
-
-      tmpArr[ac] = String.fromCharCode(((c1 & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63))
-
-      ac += 1
-
-      i += 3
-    }
-  }
-
-  return tmpArr.join('')
+  return new TextDecoder().decode(Uint8Array.from(TO_STRING(strData), (c: string): number => c.charCodeAt(0)))
 }
 
 /**
@@ -181,6 +127,9 @@ export function TO_UTF8_DECODED (strData: unknown): string {
  * Supports null (`N`), boolean (`b`), integer (`i`), float (`d`), string (`s`),
  * and array/object (`a`) types.
  * Throws on malformed input or unsupported type tokens.
+ * String lengths are read as UTF-8 byte counts, like PHP writes them.
+ * The input must be a decoded JavaScript string (as returned by TO_PHP_SERIALIZE or a UTF-8 text column);
+ * decode a raw UTF-8 byte-string with TO_UTF8_DECODED first.
  * @param _data - A PHP-serialized string
  * @returns The deserialized JavaScript value
  * @example
@@ -193,9 +142,11 @@ export function TO_UTF8_DECODED (strData: unknown): string {
  * ```
  */
 export function FROM_PHP_UNSERIALIZE (_data: string): unknown {
+  // extra UTF-8 bytes beyond 1 per UTF-16 code unit; each surrogate half is 2 of the pair's 4 bytes
   const utf8Overhead = (chr: string): number => {
     const code = chr.charCodeAt(0)
-    return (code < 0x0080) ? 0 : ((code < 0x0800) ? 1 : 2)
+    const bSurrogate = (code >= 0xD800) && (code <= 0xDFFF)
+    return (code < 0x0080) ? 0 : (((code < 0x0800) || bSurrogate) ? 1 : 2)
   }
 
   function readUntil (_: { data: string, offset: number, stopchr: string }): [number, string] {
@@ -283,8 +234,6 @@ export function FROM_PHP_UNSERIALIZE (_data: string): unknown {
       if ((chrs !== parseInt(stringlength, 10)) && (chrs !== (readdata as string).length)) {
         throw new Error('PHP unserialize: string length mismatch')
       }
-
-      readdata = TO_UTF8_DECODED(readdata)
     } else if ('a' === dtype) {
       const readRecord: Record<string, unknown> = {}
 

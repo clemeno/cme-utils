@@ -24,7 +24,9 @@ describe(
       { name: 'boxed number', input: new Number(7), expected: 'i:7;' },
       { name: 'string with 2-byte UTF-8 char', input: 'é', expected: 's:2:"é";' },
       { name: 'string with 3-byte UTF-8 char', input: '€', expected: 's:3:"€";' },
+      { name: 'string with 4-byte UTF-8 char (surrogate pair counts 4 bytes)', input: 'a😀b', expected: 's:6:"a😀b";' },
       { name: 'function', input: Number.isNaN, expected: ';' },
+      { name: 'object without constructor (Object.create(null))', input: Object.assign(Object.create(null) as object, { x: 1 }), expected: 'a:1:{s:1:"x";i:1;}' },
     ]
 
     it.each(testCases)(
@@ -33,12 +35,6 @@ describe(
         expect(TO_PHP_SERIALIZE(input)).toBe(expected)
       }
     )
-
-    it('object without constructor (Object.create(null))', () => {
-      const nullObj = Object.create(null) as Record<string, unknown>
-      nullObj['x'] = 1
-      expect(TO_PHP_SERIALIZE(nullObj)).toBe('a:1:{s:1:"x";i:1;}')
-    })
   }
 )
 
@@ -54,43 +50,34 @@ describe(
       { name: 'float', input: 'd:3.14;', expected: 3.14 },
       { name: 'empty string', input: 's:0:"";', expected: '' },
       { name: 'ascii string', input: 's:5:"hello";', expected: 'hello' },
+      { name: 'string with 2-byte UTF-8 char', input: 's:2:"é";', expected: 'é' },
+      { name: 'string with 3-byte UTF-8 char', input: 's:3:"€";', expected: '€' },
+      { name: 'string with 4-byte UTF-8 char (surrogate pair)', input: 's:6:"a😀b";', expected: 'a😀b' },
+      { name: 'indexed array', input: 'a:2:{i:0;i:1;i:1;s:3:"two";}', expected: { 0: 1, 1: 'two' } },
+      { name: 'object with string key', input: 'a:1:{s:3:"foo";i:42;}', expected: { foo: 42 } },
+      { name: 'nested array', input: 'a:1:{i:0;a:2:{i:0;i:1;i:1;i:2;}}', expected: { 0: { 0: 1, 1: 2 } } },
+      { name: 'non-ASCII string inside array keeps the next entry offset right', input: 'a:2:{i:0;s:5:"café";i:1;i:2;}', expected: { 0: 'café', 1: 2 } },
     ]
 
     it.each(testCases)(
       '$name',
       ({ input, expected }) => {
-        expect(FROM_PHP_UNSERIALIZE(input)).toBe(expected)
+        expect(FROM_PHP_UNSERIALIZE(input)).toEqual(expected)
       }
     )
 
-    it('indexed array', () => {
-      const result = FROM_PHP_UNSERIALIZE('a:2:{i:0;i:1;i:1;s:3:"two";}')
-      const resultObj = result as Record<number, unknown>
-      expect(resultObj[0]).toBe(1)
-      expect(resultObj[1]).toBe('two')
-    })
+    const errorCases: Array<{ name: string, input: string, expectedMessage: string }> = [
+      { name: 'unknown type token', input: 'x:1;', expectedMessage: 'PHP unserialize: unknown data type \'x\'' },
+      { name: 'unexpected end of data', input: 'i:42', expectedMessage: 'PHP unserialize: unexpected end of data' },
+      { name: 'declared string length longer than the data', input: 's:10:"abc";', expectedMessage: 'PHP unserialize: string length mismatch' },
+    ]
 
-    it('throws on unknown type token', () => {
-      expect(() => FROM_PHP_UNSERIALIZE('x:1;')).toThrow()
-    })
-
-    it('object with string key', () => {
-      const result = FROM_PHP_UNSERIALIZE('a:1:{s:3:"foo";i:42;}')
-      const resultObj = result as Record<string, unknown>
-      expect(resultObj['foo']).toBe(42)
-    })
-
-    it('nested array', () => {
-      const result = FROM_PHP_UNSERIALIZE('a:1:{i:0;a:2:{i:0;i:1;i:1;i:2;}}')
-      const resultObj = result as Record<string, unknown>
-      const inner = resultObj['0'] as Record<string, unknown>
-      expect(inner['0']).toBe(1)
-      expect(inner['1']).toBe(2)
-    })
-
-    it('throws on unexpected end of data', () => {
-      expect(() => FROM_PHP_UNSERIALIZE('i:42')).toThrow()
-    })
+    it.each(errorCases)(
+      'throws on $name',
+      ({ input, expectedMessage }) => {
+        expect(() => FROM_PHP_UNSERIALIZE(input)).toThrow(expectedMessage)
+      }
+    )
   }
 )
 
@@ -105,6 +92,9 @@ describe(
       { name: 'float', input: 1.5 },
       { name: 'empty string', input: '' },
       { name: 'ascii string', input: 'hello world' },
+      { name: '2-byte UTF-8 string', input: 'café' },
+      { name: '3-byte UTF-8 string', input: '10 €, 日本' },
+      { name: '4-byte UTF-8 string', input: 'a😀b' },
     ]
 
     it.each(roundTripCases)(
@@ -124,6 +114,8 @@ describe(
       { name: 'ascii only', input: 'hello', expected: 'hello' },
       { name: '2-byte UTF-8 sequence (é)', input: String.fromCharCode(0xC3, 0xA9), expected: 'é' },
       { name: '3-byte UTF-8 sequence (€)', input: String.fromCharCode(0xE2, 0x82, 0xAC), expected: '€' },
+      { name: '4-byte UTF-8 sequence (😀)', input: String.fromCharCode(0xF0, 0x9F, 0x98, 0x80), expected: '😀' },
+      { name: 'byte-string of a whole serialized value → decoded input for FROM_PHP_UNSERIALIZE', input: Buffer.from('s:5:"café";', 'utf8').toString('latin1'), expected: 's:5:"café";' },
     ]
 
     it.each(testCases)(
