@@ -5,27 +5,17 @@ import { SYMBOLS } from '../../ts/constant/symbols.util.js'
 describe(
   'SYMBOLS_BASE_256',
   () => {
-    it(
-      'should be the first 256 characters of SYMBOLS',
-      () => {
-        expect(SYMBOLS_BASE_256).toBe(SYMBOLS.slice(0, 256))
-        expect(SYMBOLS_BASE_256.length).toBe(256)
-      }
-    )
-
-    it(
-      'should be a string',
-      () => {
-        expect(typeof SYMBOLS_BASE_256).toBe('string')
-        expect(SYMBOLS_BASE_256).toBeTruthy()
-      }
-    )
-
-    it(
-      'should start with the same characters as SYMBOLS',
-      () => {
-        expect(SYMBOLS_BASE_256).toBe(SYMBOLS.substring(0, 256))
-        expect(SYMBOLS.startsWith(SYMBOLS_BASE_256)).toBe(true)
+    it.each<{ name: string, input: unknown, expected: unknown }>([
+      { name: 'is the first 256 characters of SYMBOLS (slice)', input: SYMBOLS_BASE_256, expected: SYMBOLS.slice(0, 256) },
+      { name: 'is the first 256 characters of SYMBOLS (substring)', input: SYMBOLS_BASE_256, expected: SYMBOLS.substring(0, 256) },
+      { name: 'is 256 characters long', input: SYMBOLS_BASE_256.length, expected: 256 },
+      { name: 'is a prefix of SYMBOLS', input: SYMBOLS.startsWith(SYMBOLS_BASE_256), expected: true },
+      { name: 'is a string', input: typeof SYMBOLS_BASE_256, expected: 'string' },
+      { name: 'is truthy', input: Boolean(SYMBOLS_BASE_256), expected: true },
+    ])(
+      '$name',
+      ({ input, expected }) => {
+        expect(input).toBe(expected)
       }
     )
   }

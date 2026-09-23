@@ -1,59 +1,41 @@
 import { describe, expect, it } from 'bun:test'
 import { TO_UNIQUE_ARRAY } from '../../ts/convert/to-unique-array.util.js'
 
+/** builds `[inItem, a distinct but structurally equal copy, inItem again]` to exercise reference equality */
+function withRepeatedReference (inItem: Record<string, unknown>): Array<Record<string, unknown>> {
+  return [inItem, { ...inItem }, inItem]
+}
+
 describe(
   'TO_UNIQUE_ARRAY',
   () => {
-    it(
-      'should remove duplicate primitive values',
-      () => {
-        expect(TO_UNIQUE_ARRAY({ from: [1, 2, 2, 3, 1] })).toEqual([1, 2, 3])
-        expect(TO_UNIQUE_ARRAY({ from: ['a', 'b', 'a', 'c'] })).toEqual(['a', 'b', 'c'])
-        expect(TO_UNIQUE_ARRAY({ from: [true, false, true] })).toEqual([true, false])
-      }
-    )
-
-    it(
-      'should handle arrays with no duplicates',
-      () => {
-        expect(TO_UNIQUE_ARRAY({ from: [1, 2, 3] })).toEqual([1, 2, 3])
-        expect(TO_UNIQUE_ARRAY({ from: [] })).toEqual([])
-      }
-    )
-
-    it(
-      'should remove duplicates based on custom function',
-      () => {
-        const array = [
-          { id: 1, name: 'John' },
-          { id: 2, name: 'Jane' },
-          { id: 1, name: 'Johnny' },
-        ]
-        const result = TO_UNIQUE_ARRAY({
-          from: array,
+    it.each<{ name: string, input: { from: unknown[], on?: (inElement: any) => unknown }, expected: unknown[] }>([
+      { name: 'removes duplicate numbers', input: { from: [1, 2, 2, 3, 1] }, expected: [1, 2, 3] },
+      { name: 'removes duplicate strings', input: { from: ['a', 'b', 'a', 'c'] }, expected: ['a', 'b', 'c'] },
+      { name: 'removes duplicate booleans', input: { from: [true, false, true] }, expected: [true, false] },
+      { name: 'keeps an array with no duplicates', input: { from: [1, 2, 3] }, expected: [1, 2, 3] },
+      { name: 'keeps an empty array', input: { from: [] }, expected: [] },
+      {
+        name: 'removes duplicates based on custom function',
+        input: {
+          from: [
+            { id: 1, name: 'John' },
+            { id: 2, name: 'Jane' },
+            { id: 1, name: 'Johnny' },
+          ],
           on: item => item.id,
-        })
-        expect(result).toEqual([
+        },
+        expected: [
           { id: 1, name: 'John' },
           { id: 2, name: 'Jane' },
-        ])
-      }
-    )
-
-    it(
-      'should handle objects with reference equality',
-      () => {
-        const obj1 = { a: 1 }
-        const obj2 = { a: 1 }
-        const obj3 = obj1
-        expect(TO_UNIQUE_ARRAY({ from: [obj1, obj2, obj3] })).toEqual([obj1, obj2])
-      }
-    )
-
-    it(
-      'should handle mixed types',
-      () => {
-        expect(TO_UNIQUE_ARRAY({ from: [1, '1', 1, '1'] })).toEqual([1, '1'])
+        ],
+      },
+      { name: 'handles objects with reference equality', input: { from: withRepeatedReference({ a: 1 }) }, expected: [{ a: 1 }, { a: 1 }] },
+      { name: 'handles mixed types', input: { from: [1, '1', 1, '1'] }, expected: [1, '1'] },
+    ])(
+      '$name',
+      ({ input, expected }) => {
+        expect(TO_UNIQUE_ARRAY(input)).toEqual(expected)
       }
     )
   }

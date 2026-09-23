@@ -4,92 +4,53 @@ import { GET_EXCEPTION_RESULT_OF } from '../../ts/async/get-exception-result-of.
 describe(
   'GET_EXCEPTION_RESULT_OF',
   () => {
-    it(
-      'should return result and undefined exception for successful promise',
-      async () => {
-        const result = await GET_EXCEPTION_RESULT_OF(Promise.resolve('success'))
-        expect(result.exception).toBeUndefined()
-        expect(result.result).toBe('success')
-      }
-    )
-
-    it(
-      'should return exception and undefined result for rejected promise',
-      async () => {
-        const error = new Error('test error')
-        const result = await GET_EXCEPTION_RESULT_OF(Promise.reject(error))
-        expect(result.exception).toBe(error)
-        expect(result.result).toBeUndefined()
-      }
-    )
-
-    it(
-      'should handle promises that resolve with different types',
-      async () => {
-        const result1 = await GET_EXCEPTION_RESULT_OF(Promise.resolve(42))
-        expect(result1.exception).toBeUndefined()
-        expect(result1.result).toBe(42)
-
-        const result2 = await GET_EXCEPTION_RESULT_OF(Promise.resolve({ key: 'value' }))
-        expect(result2.exception).toBeUndefined()
-        expect(result2.result).toStrictEqual({ key: 'value' })
-
-        const result3 = await GET_EXCEPTION_RESULT_OF(Promise.resolve(null))
-        expect(result3.exception).toBeUndefined()
-        expect(result3.result).toBe(null)
-
-        const result4 = await GET_EXCEPTION_RESULT_OF(Promise.resolve(undefined))
-        expect(result4.exception).toBeUndefined()
-        expect(result4.result).toBeUndefined()
-      }
-    )
-
-    it(
-      'should handle promises that reject with different error types',
-      async () => {
-        const stringError = await GET_EXCEPTION_RESULT_OF(Promise.reject(new Error('string error')))
-        expect(stringError.exception).toBeInstanceOf(Error)
-        expect((stringError.exception as Error).message).toBe('string error')
-        expect(stringError.result).toBeUndefined()
-
-        const errorObj = new Error('object error')
-        const objError = await GET_EXCEPTION_RESULT_OF(Promise.reject(errorObj))
-        expect(objError.exception).toBe(errorObj)
-        expect(objError.result).toBeUndefined()
-      }
-    )
-
-    it(
-      'should handle async operations that resolve',
-      async () => {
-        const result = await GET_EXCEPTION_RESULT_OF(new Promise(
+    it.each<{ name: string, input: () => Promise<unknown>, expected: unknown }>([
+      { name: 'a successful promise', input: () => Promise.resolve('success'), expected: 'success' },
+      { name: 'a number', input: () => Promise.resolve(42), expected: 42 },
+      { name: 'an object', input: () => Promise.resolve({ key: 'value' }), expected: { key: 'value' } },
+      { name: 'null', input: () => Promise.resolve(null), expected: null },
+      { name: 'undefined', input: () => Promise.resolve(undefined), expected: undefined },
+      {
+        name: 'an async operation that resolves',
+        input: () => new Promise(
           resolve => {
             setTimeout(() => {
               resolve('delayed success')
             }, 10)
           }
-        ))
-
-        expect(result.exception).toBeUndefined()
-        expect(result.result).toBe('delayed success')
+        ),
+        expected: 'delayed success',
+      },
+    ])(
+      'should return result and undefined exception for $name',
+      async ({ input, expected }) => {
+        expect(await GET_EXCEPTION_RESULT_OF(input())).toStrictEqual({ exception: undefined, result: expected })
       }
     )
 
-    it(
-      'should handle async operations that reject',
-      async () => {
-        const result = await GET_EXCEPTION_RESULT_OF(new Promise(
-          // eslint-disable-next-line max-params
+    it.each<{ name: string, error: Error, input: (inError: Error) => Promise<unknown> }>([
+      { name: 'a rejected promise', error: new Error('test error'), input: inError => Promise.reject(inError) },
+      { name: 'an Error built from a string message', error: new Error('string error'), input: inError => Promise.reject(inError) },
+      { name: 'an Error object', error: new Error('object error'), input: inError => Promise.reject(inError) },
+      {
+        name: 'an async operation that rejects',
+        error: new Error('delayed error'),
+        input: inError => new Promise(
+          // eslint-disable-next-line max-params -- mirrors the Promise executor (resolve, reject) signature
           (resolve, reject) => {
             setTimeout(() => {
-              reject(new Error('delayed error'))
+              reject(inError)
             }, 10)
           }
-        ))
+        ),
+      },
+    ])(
+      'should return exception and undefined result for $name',
+      async ({ error, input }) => {
+        const result = await GET_EXCEPTION_RESULT_OF(input(error))
 
-        expect(result.result).toBeUndefined()
-        expect(result.exception).toBeInstanceOf(Error)
-        expect(result.exception?.message).toBe('delayed error')
+        expect(result.exception).toBe(error)
+        expect(result).toStrictEqual({ exception: error, result: undefined })
       }
     )
 
@@ -97,8 +58,7 @@ describe(
       'should work with generic types',
       async () => {
         const result = await GET_EXCEPTION_RESULT_OF<string, number>(Promise.resolve(42))
-        expect(result.exception).toBeUndefined()
-        expect(result.result).toBe(42)
+        expect(result).toStrictEqual({ exception: undefined, result: 42 })
       }
     )
   }

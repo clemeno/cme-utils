@@ -5,108 +5,25 @@ import { createMockCompareFn } from '../mocks/password-mocks.js'
 describe(
   'COMPARE_PASSWORD',
   () => {
-    const matchTestCases = [
-      { name: 'passwords match', clear: 'password123', hash: 'hashed_password', mockReturn: true, expected: true, expectedCalls: [['password123', 'hashed_password']] as [string, string][] },
-      { name: 'passwords do not match', clear: 'wrongpassword', hash: 'hashed_password', mockReturn: false, expected: false, expectedCalls: [['wrongpassword', 'hashed_password']] as [string, string][] },
-    ]
+    it.each<{ name: string, input: { clear: unknown, hash: string }, expected: boolean, expectedCalls: Array<[string, string]> }>([
+      { name: 'should return true when passwords match', input: { clear: 'password123', hash: 'hashed_password' }, expected: true, expectedCalls: [['password123', 'hashed_password']] },
+      { name: 'should return false when passwords do not match', input: { clear: 'wrongpassword', hash: 'hashed_password' }, expected: false, expectedCalls: [['wrongpassword', 'hashed_password']] },
+      { name: 'should convert number to string', input: { clear: 123, hash: 'hashed_password' }, expected: true, expectedCalls: [['123', 'hashed_password']] },
+      { name: 'should convert boolean true to string', input: { clear: true, hash: 'hashed_password' }, expected: true, expectedCalls: [['true', 'hashed_password']] },
+      { name: 'should convert boolean false to string', input: { clear: false, hash: 'hashed_password' }, expected: true, expectedCalls: [['false', 'hashed_password']] },
+      { name: 'should handle empty string passwords', input: { clear: '', hash: 'hashed_empty' }, expected: true, expectedCalls: [['', 'hashed_empty']] },
+      { name: 'should handle null clear passwords', input: { clear: null, hash: 'hash' }, expected: true, expectedCalls: [['', 'hash']] },
+      { name: 'should handle undefined clear passwords', input: { clear: undefined, hash: 'hash' }, expected: true, expectedCalls: [['', 'hash']] },
+      { name: 'should return a boolean', input: { clear: 'password', hash: 'hash' }, expected: true, expectedCalls: [['password', 'hash']] },
+    ])(
+      '$name',
+      async ({ input, expected, expectedCalls }) => {
+        const mockCompareFn = createMockCompareFn({ returnValue: expected })
 
-    it.each(matchTestCases)(
-      'should return $expected when $name',
-      async ({ clear, hash, mockReturn, expected, expectedCalls }) => {
-        const mockCompareFn = createMockCompareFn({ returnValue: mockReturn })
-
-        const result = await COMPARE_PASSWORD({
-          clear,
-          hash,
-          compareFn: mockCompareFn,
-        })
+        const result = await COMPARE_PASSWORD({ ...input, compareFn: mockCompareFn })
 
         expect(result).toBe(expected)
         expect(mockCompareFn.getCalls()).toEqual(expectedCalls)
-      }
-    )
-
-    const convertToStringTestCases = [
-      { name: 'number to string', clear: 123, expectedClear: '123' },
-      { name: 'boolean true to string', clear: true, expectedClear: 'true' },
-      { name: 'boolean false to string', clear: false, expectedClear: 'false' },
-    ]
-
-    it.each(convertToStringTestCases)(
-      'should convert $name',
-      async ({ clear, expectedClear }) => {
-        const mockCompareFn = createMockCompareFn({ returnValue: true })
-
-        const result = await COMPARE_PASSWORD({
-          clear,
-          hash: 'hashed_password',
-          compareFn: mockCompareFn,
-        })
-
-        expect(result).toBe(true)
-        expect(mockCompareFn.getCalls()).toEqual([[expectedClear, 'hashed_password']] as [string, string][])
-      }
-    )
-
-    const emptyPasswordTestCases = [
-      { name: 'empty string', clear: '', hash: 'hashed_empty' },
-    ]
-
-    it.each(emptyPasswordTestCases)(
-      'should handle $name passwords',
-      async ({ clear, hash }) => {
-        // eslint-disable-next-line max-params
-        const mockCompareFn = async (clearParam: string, hashParam: string) => {
-          expect(clearParam).toBe('')
-          return true
-        }
-
-        const result = await COMPARE_PASSWORD({
-          clear,
-          hash,
-          compareFn: mockCompareFn,
-        })
-
-        expect(result).toBe(true)
-      }
-    )
-
-    const nullUndefinedTestCases = [
-      { name: 'null', clear: null as any, hash: 'hash' },
-      { name: 'undefined', clear: undefined as any, hash: 'hash' },
-    ]
-
-    it.each(nullUndefinedTestCases)(
-      'should handle $name clear passwords',
-      async ({ clear, hash }) => {
-        // eslint-disable-next-line max-params
-        const mockCompareFn = async (clearParam: string, hashParam: string) => {
-          expect(clearParam).toBe('')
-          return true
-        }
-
-        const result = await COMPARE_PASSWORD({
-          clear,
-          hash,
-          compareFn: mockCompareFn,
-        })
-
-        expect(result).toBe(true)
-      }
-    )
-
-    it(
-      'should return a boolean',
-      async () => {
-        const mockCompareFn = async () => true
-
-        const result = await COMPARE_PASSWORD({
-          clear: 'password',
-          hash: 'hash',
-          compareFn: mockCompareFn,
-        })
-
-        expect(typeof result).toBe('boolean')
       }
     )
 
