@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { DATE_TO_SP_DATETIME_MAPPER } from '../../ts/time/date-to-sp-datetime-mapper.util.ts'
+import { DATE_TO_SP_DATETIME_MAPPER } from '../../ts/time/date-to-sp-datetime-mapper.util.js'
 import { MockDateTime } from '../mocks/luxon-mock.js'
 
 describe(

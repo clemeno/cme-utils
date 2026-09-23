@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { UUID_V7_TO_0XHEX } from '../../ts/uuid/uuid-v7-to-0xhex.util.ts'
+import { UUID_V7_TO_0XHEX } from '../../ts/uuid/uuid-v7-to-0xhex.util.js'
 
 describe(
   'UUID_V7_TO_0XHEX',

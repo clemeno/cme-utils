@@ -4,7 +4,7 @@ import { TO_CSV_VALUE } from '../../ts/convert/to-csv-value.util.js'
 describe(
   'TO_CSV_VALUE',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: unknown, expected: string }> = [
       { label: '123', input: 123, expected: '123' },
       { label: '123.45', input: 123.45, expected: '123.45' },
       { label: '0', input: 0, expected: '0' },

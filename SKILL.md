@@ -44,7 +44,7 @@ Use this skill when:
 - Write comprehensive test suites with edge cases
 - Implement property-based testing where applicable
 - Configure test coverage reporting
-- **Après toute modification de fichiers par l'agent :** Toujours lancer le linting (`bun run lint`), exécuter les tests (`bun test`), et vérifier qu'il n'y a pas d'erreurs ou d'avertissements TypeScript (`bun run build`). Résoudre immédiatement toute erreur ou avertissement détecté.
+- **Après toute modification de fichiers par l'agent :** Toujours lancer le linting (`bun run lint`), exécuter les tests (`bun test`), et vérifier qu'il n'y a pas d'erreurs ou d'avertissements TypeScript (`bun run build` pour les sources, `bun run test:types` pour les tests). Résoudre immédiatement toute erreur ou avertissement détecté.
 
 ### 4. Build & Distribution
 - Support continuous ESM transpilation without warning or error

@@ -48,7 +48,8 @@
     "lint:fix": "eslint --fix",
     "test": "bun test",
     "test:coverage": "bun test --coverage",
-    "test:watch": "bun test --watch"
+    "test:watch": "bun test --watch",
+    "test:types": "tsc -p tsconfig.tests.json --noEmit"
   },
   "engines": {
     "node": ">=16"

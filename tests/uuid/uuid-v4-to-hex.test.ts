@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { UUID_V4_TO_HEX } from '../../ts/uuid/uuid-v4-to-hex.util.ts'
+import { UUID_V4_TO_HEX } from '../../ts/uuid/uuid-v4-to-hex.util.js'
 
 describe(
   'UUID_V4_TO_HEX',

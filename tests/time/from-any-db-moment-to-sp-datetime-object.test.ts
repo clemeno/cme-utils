@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { FROM_ANY_DB_MOMENT_TO_SP_DATETIME_OBJECT } from '../../ts/time/from-any-db-moment-to-sp-datetime-object.util.ts'
+import { FROM_ANY_DB_MOMENT_TO_SP_DATETIME_OBJECT } from '../../ts/time/from-any-db-moment-to-sp-datetime-object.util.js'
 import { MockDateTime } from '../mocks/luxon-mock.js'
 import { NULL_DATE } from '../../ts/time/null-date.util.js'
 

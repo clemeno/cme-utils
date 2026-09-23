@@ -1,61 +1,35 @@
-import { describe, expect, it, mock } from 'bun:test'
+import { afterEach, describe, expect, it, mock } from 'bun:test'
 import { UUID_V4 } from '../../ts/uuid/uuid-v4.util.js'
 
 describe(
   'UUID_V4',
   () => {
-    const validUUIDTestCases = [
-      { name: 'generate a valid UUID v4', setup: () => {}, expected: /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i },
+    const uuidV4Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+
+    const originalRandomUUID = crypto.randomUUID
+    const originalGetRandomValues = crypto.getRandomValues
+
+    // restore even when an assertion fails, so a broken case can't leak mocks into other tests
+    afterEach(() => {
+      crypto.randomUUID = originalRandomUUID
+      crypto.getRandomValues = originalGetRandomValues
+    })
+
+    const notSupported = (): never => {
+      throw new Error('Not supported')
+    }
+
+    const testCases: Array<{ name: string, setup: () => void }> = [
+      { name: 'generate a valid UUID v4 with crypto.randomUUID', setup: () => {} },
+      { name: 'fallback to getRandomValues when randomUUID fails', setup: () => { crypto.randomUUID = mock(notSupported) } },
+      { name: 'fallback to Math.random when getRandomValues fails', setup: () => { crypto.randomUUID = mock(notSupported); crypto.getRandomValues = mock(notSupported) } },
     ]
 
-    it.each(validUUIDTestCases)(
+    it.each(testCases)(
       'should $name',
-      ({ setup, expected }) => {
+      ({ setup }) => {
         setup()
-        const result = UUID_V4()
-        expect(result).toMatch(expected)
-      }
-    )
-
-    const fallbackTestCases = [
-      {
-        name: 'fallback to getRandomValues when randomUUID fails',
-        setup: () => {
-          const originalRandomUUID = crypto.randomUUID
-          crypto.randomUUID = mock(() => { throw new Error('Not supported') })
-          return { originalRandomUUID }
-        },
-        cleanup: (context: { originalRandomUUID: any }) => {
-          crypto.randomUUID = context.originalRandomUUID
-        },
-        expected: /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
-      },
-      {
-        name: 'fallback to Math.random when getRandomValues fails',
-        setup: () => {
-          const originalRandomUUID = crypto.randomUUID
-          const originalGetRandomValues = crypto.getRandomValues
-
-          crypto.randomUUID = mock(() => { throw new Error('Not supported') })
-          crypto.getRandomValues = mock(() => { throw new Error('Not supported') })
-
-          return { originalRandomUUID, originalGetRandomValues }
-        },
-        cleanup: (context: { originalRandomUUID: any, originalGetRandomValues: any }) => {
-          crypto.randomUUID = context.originalRandomUUID
-          crypto.getRandomValues = context.originalGetRandomValues
-        },
-        expected: /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
-      },
-    ]
-
-    it.each(fallbackTestCases)(
-      'should $name',
-      ({ setup, cleanup, expected }) => {
-        const context = setup()
-        const result = UUID_V4()
-        expect(result).toMatch(expected)
-        cleanup(context)
+        expect(UUID_V4()).toMatch(uuidV4Regex)
       }
     )
   }

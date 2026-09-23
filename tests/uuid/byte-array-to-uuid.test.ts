@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { BYTE_ARRAY_TO_UUID } from '../../ts/uuid/byte-array-to-uuid.util.ts'
+import { BYTE_ARRAY_TO_UUID } from '../../ts/uuid/byte-array-to-uuid.util.js'
 
 describe(
   'BYTE_ARRAY_TO_UUID',

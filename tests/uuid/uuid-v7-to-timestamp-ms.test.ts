@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { UUID_V7_TO_TIMESTAMP_MS } from '../../ts/uuid/uuid-v7-to-timestamp-ms.util.ts'
+import { UUID_V7_TO_TIMESTAMP_MS } from '../../ts/uuid/uuid-v7-to-timestamp-ms.util.js'
 
 describe(
   'UUID_V7_TO_TIMESTAMP_MS',

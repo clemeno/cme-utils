@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { FROM_BUFFER_TO_UUID_ALWAYS } from '../../ts/uuid/from-buffer-to-uuid-always.util.ts'
+import { FROM_BUFFER_TO_UUID_ALWAYS } from '../../ts/uuid/from-buffer-to-uuid-always.util.js'
 
 describe(
   'FROM_BUFFER_TO_UUID_ALWAYS',
