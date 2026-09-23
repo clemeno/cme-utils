@@ -17,6 +17,7 @@ describe(
       { name: 'null returns empty string', input: null, expected: '' },
       { name: 'undefined returns empty string', input: undefined, expected: '' },
       { name: 'NaN-like "NaN" string returns empty string', input: 'NaN', expected: '' },
+      { name: 'numeric NaN returns empty string', input: NaN, expected: '' },
     ]
 
     it.each(testCases)(
