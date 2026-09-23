@@ -24,7 +24,7 @@ describe(
       { name: 'should return false for private with query', input: '/private/path?query=value', expected: false },
     ]
 
-    it.each(testCases)('%s', ({ input, expected }) => {
+    it.each(testCases)('$name', ({ input, expected }) => {
       expect(IS_A_PUBLIC_URL(input)).toBe(expected)
     })
   }

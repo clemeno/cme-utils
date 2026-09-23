@@ -19,7 +19,7 @@ describe(
       { name: 'should return false for new Set()', input: new Set(), expected: false },
     ]
 
-    it.each(testCases)('%s', ({ input, expected }) => {
+    it.each(testCases)('$name', ({ input, expected }) => {
       expect(IS_A_MAP_AND_NOT_EMPTY(input)).toBe(expected)
     })
   }

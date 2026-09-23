@@ -18,7 +18,7 @@ describe(
         ]
 
         it.each(testCases)(
-          '%s',
+          '$name',
           ({ millis }) => {
             const mock = mockDateTime(millis)
             expect(mock.toMillis()).toBe(millis)
@@ -52,7 +52,7 @@ describe(
         ]
 
         it.each(testCases)(
-          '%s',
+          '$name',
           ({ startMs, duration, expected }) => {
             expect(mockDateTime(startMs).plus(duration).toMillis()).toBe(expected)
           }
@@ -84,7 +84,7 @@ describe(
         ]
 
         it.each(testCases)(
-          '%s',
+          '$name',
           ({ startMs, duration, expected }) => {
             expect(mockDateTime(startMs).minus(duration).toMillis()).toBe(expected)
           }
@@ -193,7 +193,7 @@ describe(
         ]
 
         it.each(testCases)(
-          '%s',
+          '$name',
           ({ millis, format, expected }) => {
             expect(mockDateTime(millis).setZone('UTC').toFormat(format)).toBe(expected)
           }
@@ -226,7 +226,7 @@ describe(
         ]
 
         it.each(testCases)(
-          '%s',
+          '$name',
           ({ millis, expected }) => {
             expect(mockDateTime(millis).toUnixInteger()).toBe(expected)
           }
@@ -254,7 +254,7 @@ describe(
         ]
 
         it.each(testCases)(
-          '%s',
+          '$name',
           ({ millis, getter, expected }) => {
             expect(mockDateTime(millis)[getter]).toBe(expected)
           }

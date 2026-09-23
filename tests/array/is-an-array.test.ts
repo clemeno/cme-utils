@@ -19,7 +19,7 @@ describe(
     ]
 
     it.each(testCases)(
-      '%s',
+      '$name',
       ({ name, input, expected }) => {
         expect(IS_AN_ARRAY(input)).toBe(expected)
       }

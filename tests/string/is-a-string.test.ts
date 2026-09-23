@@ -19,7 +19,7 @@ describe(
     ]
 
     it.each(testCases)(
-      '%s',
+      '$name',
       ({ name, input, expected }) => {
         expect(IS_A_STRING(input)).toBe(expected)
       }

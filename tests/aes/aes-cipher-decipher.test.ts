@@ -17,7 +17,7 @@ describe(
         ]
 
         it.each(testCases)(
-          '%s',
+          '$name',
           testCase => {
             const input = testCase.input
             const keyBuffer = randomBytes(16)

@@ -20,7 +20,7 @@ describe(
     ]
 
     it.each(testCases)(
-      '%s',
+      '$name',
       ({ name, input, expected }) => {
         expect(IS_A_DATE(input)).toBe(expected)
       }

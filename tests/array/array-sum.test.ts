@@ -16,7 +16,7 @@ describe(
     ]
 
     it.each(testCases)(
-      '%s',
+      '$name',
       ({ name, input, expected, isNaN }) => {
         const result = ARRAY_SUM(input)
         if (isNaN) {

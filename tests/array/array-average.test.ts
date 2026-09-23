@@ -22,7 +22,7 @@ describe(
     ]
 
     it.each(testCases)(
-      '%s',
+      '$name',
       ({ name, input, expected, isNaN }) => {
         const result = ARRAY_AVERAGE(input)
         if (isNaN) {

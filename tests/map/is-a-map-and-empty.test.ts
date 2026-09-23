@@ -19,7 +19,7 @@ describe(
     ]
 
     it.each(testCases)(
-      '%s',
+      '$name',
       ({ name, input, expected }) => {
         expect(IS_A_MAP_AND_EMPTY(input)).toBe(expected)
       }

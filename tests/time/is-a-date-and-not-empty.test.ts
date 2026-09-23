@@ -20,7 +20,7 @@ describe(
       { name: 'should return false for true', input: true, expected: false },
     ]
 
-    it.each(testCases)('%s', ({ input, expected }) => {
+    it.each(testCases)('$name', ({ input, expected }) => {
       expect(IS_A_DATE_AND_NOT_EMPTY(input)).toBe(expected)
     })
   }

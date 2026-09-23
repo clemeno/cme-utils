@@ -29,7 +29,7 @@ describe(
     ]
 
     it.each(testCases)(
-      '%s',
+      '$name',
       async testCase => {
         const mockReadStream = {
           async * [Symbol.asyncIterator] () {

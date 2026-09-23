@@ -36,7 +36,7 @@ describe(
     ]
 
     it.each(testCases)(
-      '%s',
+      '$name',
       ({ name, input, expected }) => {
         expect(IS_EVEN(input)).toBe(expected)
       }

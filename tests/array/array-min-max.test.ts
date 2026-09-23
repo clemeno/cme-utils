@@ -22,7 +22,7 @@ describe(
     ]
 
     it.each(testCases)(
-      '%s',
+      '$name',
       ({ name, input, expected, minUndefined, maxUndefined }) => {
         const result = ARRAY_MIN_MAX(input)
         if (minUndefined) {

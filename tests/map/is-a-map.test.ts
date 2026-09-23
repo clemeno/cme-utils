@@ -19,7 +19,7 @@ describe(
       { name: 'should return false for new Date()', input: new Date(), expected: false },
     ]
 
-    it.each(testCases)('%s', ({ input, expected }) => {
+    it.each(testCases)('$name', ({ input, expected }) => {
       expect(IS_A_MAP(input)).toBe(expected)
     })
   }
