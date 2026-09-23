@@ -4,18 +4,14 @@ import { MAX_INT64 } from '../../ts/constant/max-int64.util.js'
 describe(
   'MAX_INT64',
   () => {
-    it(
-      'should be the maximum value for a 64-bit signed integer',
-      () => {
-        expect(MAX_INT64).toBe(9223372036854775807n)
-        expect(MAX_INT64).toBe(2n ** 63n - 1n)
-      }
-    )
-
-    it(
-      'should be a bigint',
-      () => {
-        expect(typeof MAX_INT64).toBe('bigint')
+    it.each<{ name: string, actual: unknown, expected: unknown }>([
+      { name: 'is 9223372036854775807n', actual: MAX_INT64, expected: 9223372036854775807n },
+      { name: 'is the maximum value for a 64-bit signed integer (2n ** 63n - 1n)', actual: MAX_INT64, expected: 2n ** 63n - 1n },
+      { name: 'is a bigint', actual: typeof MAX_INT64, expected: 'bigint' },
+    ])(
+      '$name',
+      ({ actual, expected }) => {
+        expect(actual).toBe(expected)
       }
     )
   }

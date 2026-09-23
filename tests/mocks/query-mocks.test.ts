@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test'
 import { makeMockQb } from './query-mocks.js'
+import type { QbCall, QbMethod } from './query-mocks.js'
 
 describe(
   'Query Mocks',
@@ -7,27 +8,28 @@ describe(
     describe(
       'makeMockQb',
       () => {
-        it(
-          'should record a simple method call',
-          () => {
+        it.each<{ name: string, act: (inQb: any) => void, expected: QbCall[] }>([
+          { name: 'should start with an empty calls array', act: () => {}, expected: [] },
+          { name: 'should record a simple method call', act: inQb => { inQb.where('name', '=', 'Alice') }, expected: [{ method: 'where', args: ['name', '=', 'Alice'] }] },
+          {
+            name: 'should record multiple method calls in order',
+            act: inQb => {
+              inQb.where('a', '=', 1)
+              inQb.orWhere('b', '=', 2)
+              inQb.whereNull('c')
+            },
+            expected: [
+              { method: 'where', args: ['a', '=', 1] },
+              { method: 'orWhere', args: ['b', '=', 2] },
+              { method: 'whereNull', args: ['c'] },
+            ],
+          },
+        ])(
+          '$name',
+          ({ act, expected }) => {
             const { qb, calls } = makeMockQb()
-            qb.where('name', '=', 'Alice')
-            expect(calls).toHaveLength(1)
-            expect(calls[0]).toEqual({ method: 'where', args: ['name', '=', 'Alice'] })
-          }
-        )
-
-        it(
-          'should record multiple method calls in order',
-          () => {
-            const { qb, calls } = makeMockQb()
-            qb.where('a', '=', 1)
-            qb.orWhere('b', '=', 2)
-            qb.whereNull('c')
-            expect(calls).toHaveLength(3)
-            expect(calls[0].method).toBe('where')
-            expect(calls[1].method).toBe('orWhere')
-            expect(calls[2].method).toBe('whereNull')
+            act(qb)
+            expect(calls).toEqual(expected)
           }
         )
 
@@ -36,34 +38,36 @@ describe(
           () => {
             const { qb, calls } = makeMockQb()
             let callbackCalledWith: any = null
-            qb.where((innerQb: any) => {
+            const vCallback = (innerQb: any): void => {
               callbackCalledWith = innerQb
               innerQb.orWhere('x', '=', 1)
-            })
-            expect(calls[0].method).toBe('where')
-            expect(callbackCalledWith).toBe(qb)
-            expect(calls[1].method).toBe('orWhere')
-          }
-        )
-
-        it(
-          'should start with an empty calls array',
-          () => {
-            const { calls } = makeMockQb()
-            expect(calls).toHaveLength(0)
-          }
-        )
-
-        it(
-          'should stub all QB methods',
-          () => {
-            const { qb } = makeMockQb()
-            for (const m of [
-              'where', 'orWhere', 'whereNull', 'whereNotNull', 'whereNot',
-              'orWhereNot', 'whereRaw', 'orWhereRaw', 'orWhereNull', 'orWhereNotNull',
-            ]) {
-              expect(typeof qb[m]).toBe('function')
             }
+            qb.where(vCallback)
+            expect(callbackCalledWith).toBe(qb)
+            expect(calls).toEqual([
+              { method: 'where', args: [vCallback] },
+              { method: 'orWhere', args: ['x', '=', 1] },
+            ])
+          }
+        )
+
+        it.each<{ name: string, method: QbMethod }>([
+          { name: 'where', method: 'where' },
+          { name: 'orWhere', method: 'orWhere' },
+          { name: 'whereNull', method: 'whereNull' },
+          { name: 'whereNotNull', method: 'whereNotNull' },
+          { name: 'whereNot', method: 'whereNot' },
+          { name: 'orWhereNot', method: 'orWhereNot' },
+          { name: 'whereRaw', method: 'whereRaw' },
+          { name: 'orWhereRaw', method: 'orWhereRaw' },
+          { name: 'orWhereNull', method: 'orWhereNull' },
+          { name: 'orWhereNotNull', method: 'orWhereNotNull' },
+        ])(
+          'should stub the QB method $name and record its call',
+          ({ method }) => {
+            const { qb, calls } = makeMockQb()
+            qb[method]('column', '=', 1)
+            expect(calls).toEqual([{ method, args: ['column', '=', 1] }])
           }
         )
       }

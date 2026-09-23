@@ -4,57 +4,36 @@ import { GET_EXCEPTION_ONLY } from '../../ts/async/get-exception-only.util.js'
 describe(
   'GET_EXCEPTION_ONLY',
   () => {
-    it(
-      'should return undefined exception for successful promise',
-      async () => {
-        const result = await GET_EXCEPTION_ONLY(Promise.resolve('success'))
-        expect(result.exception).toBeUndefined()
-      }
-    )
-
-    it(
-      'should return exception for rejected promise',
-      async () => {
-        const error = new Error('test error')
-        const result = await GET_EXCEPTION_ONLY(Promise.reject(error))
-        expect(result.exception).toBe(error)
-      }
-    )
-
-    it(
-      'should handle promises that resolve with different types',
-      async () => {
-        const result1 = await GET_EXCEPTION_ONLY(Promise.resolve(42))
-        expect(result1.exception).toBeUndefined()
-
-        const result2 = await GET_EXCEPTION_ONLY(Promise.resolve({ key: 'value' }))
-        expect(result2.exception).toBeUndefined()
-
-        const result3 = await GET_EXCEPTION_ONLY(Promise.resolve(null))
-        expect(result3.exception).toBeUndefined()
-      }
-    )
-
-    it(
-      'should handle promises that reject with different error types',
-      async () => {
-        const stringError = await GET_EXCEPTION_ONLY(Promise.reject(new Error('string error')))
-        expect(stringError.exception).toBeInstanceOf(Error)
-        expect((stringError.exception as Error).message).toBe('string error')
-
-        const errorObj = new Error('object error')
-        const objError = await GET_EXCEPTION_ONLY(Promise.reject(errorObj))
-        expect(objError.exception).toBe(errorObj)
-      }
-    )
-
-    it(
-      'should handle async operations',
-      async () => {
-        const result = await GET_EXCEPTION_ONLY(new Promise(resolve => {
+    it.each<{ name: string, input: () => Promise<unknown> }>([
+      { name: 'successful promise', input: async () => await Promise.resolve('success') },
+      { name: 'promise resolving a number', input: async () => await Promise.resolve(42) },
+      { name: 'promise resolving an object', input: async () => await Promise.resolve({ key: 'value' }) },
+      { name: 'promise resolving null', input: async () => await Promise.resolve(null) },
+      {
+        name: 'delayed async operation',
+        input: async () => await new Promise(resolve => {
           setTimeout(() => resolve('delayed success'), 10)
-        }))
-        expect(result.exception).toBeUndefined()
+        }),
+      },
+    ])(
+      'should return undefined exception for $name',
+      async ({ input }) => {
+        expect(await GET_EXCEPTION_ONLY(input())).toStrictEqual({ exception: undefined })
+      }
+    )
+
+    it.each<{ name: string, input: unknown }>([
+      { name: 'an Error', input: new Error('test error') },
+      { name: 'an Error with a string message', input: new Error('string error') },
+      { name: 'an Error object', input: new Error('object error') },
+      { name: 'a non-Error string reason', input: 'string reason' },
+      { name: 'a non-Error object reason', input: { code: 'E_REASON' } },
+    ])(
+      'should return the exact rejection reason as exception for $name',
+      async ({ input }) => {
+        const result = await GET_EXCEPTION_ONLY(Promise.reject(input))
+        expect(result).toStrictEqual({ exception: input })
+        expect(result.exception).toBe(input)
       }
     )
   }

@@ -5,86 +5,37 @@ import { createMockReadStream } from '../mocks/file-mocks.js'
 describe(
   'GET_FILE_FULL_TEXT_CONTENT',
   () => {
-    it(
-      'should read text file content',
-      async () => {
-        const mockReadStream = createMockReadStream([Buffer.from('Hello '), Buffer.from('world!')])
-
-        const mockCreateReadStream = (filePath: string) => {
-          expect(filePath).toBe('/tmp/test.txt')
-          return mockReadStream
+    it.each<{ name: string, openStream: () => AsyncIterable<Buffer>, filePath: string, expected: string }>([
+      { name: 'should read text file content', openStream: () => createMockReadStream([Buffer.from('Hello '), Buffer.from('world!')]), filePath: '/tmp/test.txt', expected: 'Helloworld!' },
+      { name: 'should handle single chunk', openStream: () => createMockReadStream([Buffer.from('Single chunk content')]), filePath: '/tmp/single.txt', expected: 'Single chunk content' },
+      { name: 'should handle empty file', openStream: () => createMockReadStream([]), filePath: '/tmp/empty.txt', expected: '' },
+      { name: 'should trim whitespace from chunks', openStream: () => createMockReadStream([Buffer.from('  line 1  \n'), Buffer.from('  line 2  ')]), filePath: '/tmp/spaces.txt', expected: 'line 1line 2' },
+      { name: 'should handle file read errors gracefully', openStream: () => { throw new Error('File not found') }, filePath: '/tmp/nonexistent.txt', expected: '' },
+      {
+        name: 'should keep the chunks read before an error in the middle of the stream',
+        openStream: async function * () {
+          yield Buffer.from('partial ')
+          throw new Error('Read error')
+        },
+        filePath: '/tmp/partial.txt',
+        expected: 'partial',
+      },
+    ])(
+      '$name',
+      async ({ openStream, filePath, expected }) => {
+        const vPathList: string[] = []
+        const mockCreateReadStream = (inFilePath: string): AsyncIterable<Buffer> => {
+          vPathList.push(inFilePath)
+          return openStream()
         }
 
         const result = await GET_FILE_FULL_TEXT_CONTENT({
           createReadStream: mockCreateReadStream,
-          filePath: '/tmp/test.txt',
+          filePath,
         })
 
-        expect(result).toBe('Helloworld!')
-      }
-    )
-
-    it(
-      'should handle single chunk',
-      async () => {
-        const mockReadStream = createMockReadStream([Buffer.from('Single chunk content')])
-
-        const mockCreateReadStream = () => mockReadStream
-
-        const result = await GET_FILE_FULL_TEXT_CONTENT({
-          createReadStream: mockCreateReadStream,
-          filePath: '/tmp/single.txt',
-        })
-
-        expect(result).toBe('Single chunk content')
-      }
-    )
-
-    it(
-      'should handle empty file',
-      async () => {
-        const mockReadStream = createMockReadStream([])
-
-        const mockCreateReadStream = () => mockReadStream
-
-        const result = await GET_FILE_FULL_TEXT_CONTENT({
-          createReadStream: mockCreateReadStream,
-          filePath: '/tmp/empty.txt',
-        })
-
-        expect(result).toBe('')
-      }
-    )
-
-    it(
-      'should handle file read errors gracefully',
-      async () => {
-        const mockCreateReadStream = () => {
-          throw new Error('File not found')
-        }
-
-        const result = await GET_FILE_FULL_TEXT_CONTENT({
-          createReadStream: mockCreateReadStream,
-          filePath: '/tmp/nonexistent.txt',
-        })
-
-        expect(result).toBe('')
-      }
-    )
-
-    it(
-      'should trim whitespace from chunks',
-      async () => {
-        const mockReadStream = createMockReadStream([Buffer.from('  line 1  \n'), Buffer.from('  line 2  ')])
-
-        const mockCreateReadStream = () => mockReadStream
-
-        const result = await GET_FILE_FULL_TEXT_CONTENT({
-          createReadStream: mockCreateReadStream,
-          filePath: '/tmp/spaces.txt',
-        })
-
-        expect(result).toBe('line 1line 2')
+        expect(result).toBe(expected)
+        expect(vPathList).toEqual([filePath])
       }
     )
   }

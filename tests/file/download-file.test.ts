@@ -5,72 +5,52 @@ import { createMockAxios, createMockWriteFile } from '../mocks/file-mocks.js'
 describe(
   'DOWNLOAD_FILE',
   () => {
-    it(
-      'should download a file and save it to disk',
-      async () => {
-        const mockAxios = createMockAxios({ data: Buffer.from('file content') })
+    it.each<{ name: string, data: Buffer, srcUrl: string, destPath: string }>([
+      { name: 'should download a file and save it to disk', data: Buffer.from('file content'), srcUrl: 'https://example.com/file.txt', destPath: '/tmp/test.txt' },
+      // JPEG header
+      { name: 'should handle different file types', data: Buffer.from([0xFF, 0xD8, 0xFF, 0xE0]), srcUrl: 'https://example.com/image.jpg', destPath: '/tmp/image.jpg' },
+    ])(
+      '$name',
+      async ({ data, srcUrl, destPath }) => {
+        const mockAxios = createMockAxios({ data })
         const mockWriteFile = createMockWriteFile()
 
         await DOWNLOAD_FILE({
           axios: mockAxios,
           writeFile: mockWriteFile,
+          srcUrl,
+          destPath,
+        })
+
+        expect(mockAxios.getCalls()).toEqual([[srcUrl, { responseType: 'arraybuffer' }]])
+        expect(mockWriteFile.getCalls()).toEqual([[destPath, data]])
+      }
+    )
+
+    it.each<{
+      name: string
+      axiosOptions: Parameters<typeof createMockAxios>[0]
+      writeFileOptions: Parameters<typeof createMockWriteFile>[0]
+      expected: string
+      expectedWriteFileCalls: Array<[string, Buffer]>
+    }>([
+      { name: 'should propagate axios errors', axiosOptions: { shouldThrow: true, errorMessage: 'Network error' }, writeFileOptions: {}, expected: 'Network error', expectedWriteFileCalls: [] },
+      { name: 'should propagate writeFile errors', axiosOptions: { data: Buffer.from('content') }, writeFileOptions: { shouldThrow: true, errorMessage: 'Disk full' }, expected: 'Disk full', expectedWriteFileCalls: [['/tmp/test.txt', Buffer.from('content')]] },
+    ])(
+      '$name',
+      async ({ axiosOptions, writeFileOptions, expected, expectedWriteFileCalls }) => {
+        const mockAxios = createMockAxios(axiosOptions)
+        const mockWriteFile = createMockWriteFile(writeFileOptions)
+
+        await expect(DOWNLOAD_FILE({
+          axios: mockAxios,
+          writeFile: mockWriteFile,
           srcUrl: 'https://example.com/file.txt',
           destPath: '/tmp/test.txt',
-        })
+        })).rejects.toThrow(new Error(expected))
 
         expect(mockAxios.getCalls()).toEqual([['https://example.com/file.txt', { responseType: 'arraybuffer' }]])
-        expect(mockWriteFile.getCalls()).toEqual([['/tmp/test.txt', Buffer.from('file content')]])
-      }
-    )
-
-    it(
-      'should handle different file types',
-      async () => {
-        const binaryData = Buffer.from([0xFF, 0xD8, 0xFF, 0xE0]) // JPEG header
-
-        const mockAxios = createMockAxios({ data: binaryData })
-        const mockWriteFile = createMockWriteFile()
-
-        await DOWNLOAD_FILE({
-          axios: mockAxios,
-          writeFile: mockWriteFile,
-          srcUrl: 'https://example.com/image.jpg',
-          destPath: '/tmp/image.jpg',
-        })
-
-        expect(mockWriteFile.getCalls()).toEqual([['/tmp/image.jpg', binaryData]])
-      }
-    )
-
-    it(
-      'should propagate axios errors',
-      async () => {
-        const mockAxios = createMockAxios({ shouldThrow: true, errorMessage: 'Network error' })
-        const mockWriteFile = createMockWriteFile()
-
-        await expect(DOWNLOAD_FILE({
-          axios: mockAxios,
-          writeFile: mockWriteFile,
-          srcUrl: 'https://example.com/file.txt',
-          destPath: '/tmp/test.txt',
-        })).rejects.toThrow('Network error')
-
-        expect(mockWriteFile.getCalls()).toEqual([])
-      }
-    )
-
-    it(
-      'should propagate writeFile errors',
-      async () => {
-        const mockAxios = createMockAxios({ data: Buffer.from('content') })
-        const mockWriteFile = createMockWriteFile({ shouldThrow: true, errorMessage: 'Disk full' })
-
-        await expect(DOWNLOAD_FILE({
-          axios: mockAxios,
-          writeFile: mockWriteFile,
-          srcUrl: 'https://example.com/file.txt',
-          destPath: '/tmp/test.txt',
-        })).rejects.toThrow('Disk full')
+        expect(mockWriteFile.getCalls()).toEqual(expectedWriteFileCalls)
       }
     )
   }

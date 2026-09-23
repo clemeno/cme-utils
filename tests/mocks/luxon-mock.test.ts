@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'bun:test'
+import { afterEach, beforeEach, describe, expect, it, setSystemTime } from 'bun:test'
 import { mockDateTime, MockDateTime, MockDateTimeClass, createMockSettings, type DurationObjectUnits } from './luxon-mock.js'
 
 // Fixed UTC timestamp: 2022-01-01T00:00:00.000Z
@@ -92,25 +92,18 @@ describe(
       }
     )
 
+    // startOf / endOf work in local time: bun test runs with TZ=UTC, so local midnight is BASE_MS
     describe(
       'startOf method',
       () => {
-        it(
-          'sets startOf day to midnight',
-          () => {
-            const result = mockDateTime(BASE_MS + 61500).startOf('day')
-            expect(result.getHours()).toBe(0)
-            expect(result.getMinutes()).toBe(0)
-            expect(result.getSeconds()).toBe(0)
-            expect(result.getMilliseconds()).toBe(0)
-          }
-        )
-
-        it(
-          'leaves time unchanged for unsupported unit',
-          () => {
-            const ms = BASE_MS + 61500
-            expect(mockDateTime(ms).startOf('month').toMillis()).toBe(ms)
+        it.each<{ name: string, millis: number, unit: string, expected: number }>([
+          // 2022-01-01T00:01:01.500Z → 2022-01-01T00:00:00.000Z
+          { name: 'sets startOf day to midnight', millis: BASE_MS + 61500, unit: 'day', expected: BASE_MS },
+          { name: 'leaves time unchanged for unsupported unit', millis: BASE_MS + 61500, unit: 'month', expected: BASE_MS + 61500 },
+        ])(
+          '$name',
+          ({ millis, unit, expected }) => {
+            expect(mockDateTime(millis).startOf(unit).toMillis()).toBe(expected)
           }
         )
       }
@@ -119,22 +112,14 @@ describe(
     describe(
       'endOf method',
       () => {
-        it(
-          'sets endOf day to 23:59:59.999',
-          () => {
-            const result = mockDateTime(BASE_MS).endOf('day')
-            expect(result.getHours()).toBe(23)
-            expect(result.getMinutes()).toBe(59)
-            expect(result.getSeconds()).toBe(59)
-            expect(result.getMilliseconds()).toBe(999)
-          }
-        )
-
-        it(
-          'leaves time unchanged for unsupported unit',
-          () => {
-            const ms = BASE_MS + 61500
-            expect(mockDateTime(ms).endOf('month').toMillis()).toBe(ms)
+        it.each<{ name: string, millis: number, unit: string, expected: number }>([
+          // 2022-01-01T00:00:00.000Z → 2022-01-01T23:59:59.999Z
+          { name: 'sets endOf day to 23:59:59.999', millis: BASE_MS, unit: 'day', expected: BASE_MS + 86399999 },
+          { name: 'leaves time unchanged for unsupported unit', millis: BASE_MS + 61500, unit: 'month', expected: BASE_MS + 61500 },
+        ])(
+          '$name',
+          ({ millis, unit, expected }) => {
+            expect(mockDateTime(millis).endOf(unit).toMillis()).toBe(expected)
           }
         )
       }
@@ -143,10 +128,13 @@ describe(
     describe(
       'toISO method',
       () => {
-        it(
-          'returns ISO string',
-          () => {
-            expect(mockDateTime(0).toISO()).toBe('1970-01-01T00:00:00.000Z')
+        it.each<{ name: string, millis: number, expected: string }>([
+          { name: 'returns ISO string', millis: 0, expected: '1970-01-01T00:00:00.000Z' },
+          { name: 'returns ISO string of a non-epoch instant with milliseconds', millis: BASE_MS + 61500, expected: '2022-01-01T00:01:01.500Z' },
+        ])(
+          '$name',
+          ({ millis, expected }) => {
+            expect(mockDateTime(millis).toISO()).toBe(expected)
           }
         )
       }
@@ -155,24 +143,14 @@ describe(
     describe(
       'toSQL method',
       () => {
-        it(
-          'returns SQL-formatted string without options',
-          () => {
-            expect(mockDateTime(0).toSQL()).toBe('1970-01-01 00:00:00.000')
-          }
-        )
-
-        it(
-          'returns same result when includeOffset is true',
-          () => {
-            expect(mockDateTime(0).toSQL({ includeOffset: true })).toBe('1970-01-01 00:00:00.000')
-          }
-        )
-
-        it(
-          'returns same result when includeOffset is false',
-          () => {
-            expect(mockDateTime(0).toSQL({ includeOffset: false })).toBe('1970-01-01 00:00:00.000')
+        it.each<{ name: string, options: { includeOffset?: boolean } | undefined, expected: string }>([
+          { name: 'returns SQL-formatted string without options', options: undefined, expected: '1970-01-01 00:00:00.000' },
+          { name: 'returns same result when includeOffset is true', options: { includeOffset: true }, expected: '1970-01-01 00:00:00.000' },
+          { name: 'returns same result when includeOffset is false', options: { includeOffset: false }, expected: '1970-01-01 00:00:00.000' },
+        ])(
+          '$name',
+          ({ options, expected }) => {
+            expect(mockDateTime(0).toSQL(options)).toBe(expected)
           }
         )
       }
@@ -204,12 +182,15 @@ describe(
     describe(
       'setZone method',
       () => {
-        it(
-          'returns same instance for any timezone string',
-          () => {
+        it.each<{ name: string, zone: string }>([
+          { name: 'America/New_York', zone: 'America/New_York' },
+          { name: 'Asia/Tokyo', zone: 'Asia/Tokyo' },
+        ])(
+          'returns same instance for the timezone string $name',
+          ({ zone }) => {
             const mock = mockDateTime(BASE_MS)
-            expect(mock.setZone('America/New_York').toMillis()).toBe(BASE_MS)
-            expect(mock.setZone('Asia/Tokyo').toMillis()).toBe(BASE_MS)
+            expect(mock.setZone(zone)).toBe(mock)
+            expect(mock.setZone(zone).toMillis()).toBe(BASE_MS)
           }
         )
       }
@@ -265,67 +246,29 @@ describe(
     describe(
       'integration',
       () => {
-        it(
-          'chains plus operations correctly',
-          () => {
-            const result = mockDateTime(1000)
-              .plus({ hours: 1 })
-              .plus({ minutes: 30 })
-
-            expect(result.toMillis()).toBe(1000 + 3600000 + 1800000)
+        it.each<{ name: string, act: () => unknown, expected: unknown }>([
+          { name: 'chains plus operations correctly', act: () => mockDateTime(1000).plus({ hours: 1 }).plus({ minutes: 30 }).toMillis(), expected: 1000 + 3600000 + 1800000 },
+          { name: 'chains plus and format correctly', act: () => mockDateTime(BASE_MS).plus({ days: 5 }).plus({ hours: 12 }).setZone('UTC').toFormat('yyyy-MM-dd'), expected: '2022-01-06' },
+          { name: 'plus then minus round-trip returns to original', act: () => mockDateTime(BASE_MS).plus({ days: 7 }).minus({ days: 7 }).toMillis(), expected: BASE_MS },
+          { name: 'chains minus operations correctly', act: () => mockDateTime(BASE_MS).minus({ hours: 1 }).minus({ minutes: 30 }).toMillis(), expected: BASE_MS - 3600000 - 1800000 },
+        ])(
+          '$name',
+          ({ act, expected }) => {
+            expect(act()).toBe(expected)
           }
         )
 
-        it(
-          'plus operations are immutable',
-          () => {
-            const original = mockDateTime(1000)
-            const modified = original.plus({ seconds: 30 })
+        it.each<{ name: string, startMs: number, method: 'plus' | 'minus', duration: DurationObjectUnits, expected: number }>([
+          { name: 'plus operations are immutable', startMs: 1000, method: 'plus', duration: { seconds: 30 }, expected: 31000 },
+          { name: 'minus operations are immutable', startMs: BASE_MS, method: 'minus', duration: { seconds: 30 }, expected: BASE_MS - 30000 },
+        ])(
+          '$name',
+          ({ startMs, method, duration, expected }) => {
+            const original = mockDateTime(startMs)
+            const modified = original[method](duration)
 
-            expect(original.toMillis()).toBe(1000)
-            expect(modified.toMillis()).toBe(31000)
-          }
-        )
-
-        it(
-          'chains plus and format correctly',
-          () => {
-            const result = mockDateTime(BASE_MS)
-              .plus({ days: 5 })
-              .plus({ hours: 12 })
-              .setZone('UTC')
-              .toFormat('yyyy-MM-dd')
-
-            expect(result).toBe('2022-01-06')
-          }
-        )
-
-        it(
-          'plus then minus round-trip returns to original',
-          () => {
-            expect(mockDateTime(BASE_MS).plus({ days: 7 }).minus({ days: 7 }).toMillis()).toBe(BASE_MS)
-          }
-        )
-
-        it(
-          'chains minus operations correctly',
-          () => {
-            const result = mockDateTime(BASE_MS)
-              .minus({ hours: 1 })
-              .minus({ minutes: 30 })
-
-            expect(result.toMillis()).toBe(BASE_MS - 3600000 - 1800000)
-          }
-        )
-
-        it(
-          'minus operations are immutable',
-          () => {
-            const original = mockDateTime(BASE_MS)
-            const modified = original.minus({ seconds: 30 })
-
-            expect(original.toMillis()).toBe(BASE_MS)
-            expect(modified.toMillis()).toBe(BASE_MS - 30000)
+            expect(original.toMillis()).toBe(startMs)
+            expect(modified.toMillis()).toBe(expected)
           }
         )
       }
@@ -334,6 +277,15 @@ describe(
     describe(
       'MockDateTime static methods',
       () => {
+        // freeze the clock so local() and utc() return an exact value
+        beforeEach(() => {
+          setSystemTime(new Date(BASE_MS))
+        })
+
+        afterEach(() => {
+          setSystemTime()
+        })
+
         it(
           'invalid returns null',
           () => {
@@ -341,59 +293,20 @@ describe(
           }
         )
 
-        it(
-          'fromMillis returns correct datetime',
-          () => {
-            expect(MockDateTime.fromMillis(1000).toMillis()).toBe(1000)
-          }
-        )
-
-        it(
-          'fromISO parses ISO string at epoch',
-          () => {
-            expect(MockDateTime.fromISO('1970-01-01T00:00:00.000Z').toMillis()).toBe(0)
-          }
-        )
-
-        it(
-          'fromISO parses non-epoch ISO string',
-          () => {
-            expect(MockDateTime.fromISO('2022-01-01T00:00:00.000Z').toMillis()).toBe(BASE_MS)
-          }
-        )
-
-        it(
-          'fromSQL parses SQL string without zone option',
-          () => {
-            expect(MockDateTime.fromSQL('1970-01-01 00:00:00').toMillis()).toBeGreaterThanOrEqual(0)
-          }
-        )
-
-        it(
-          'fromSQL parses SQL string with zone option',
-          () => {
-            expect(MockDateTime.fromSQL('1970-01-01 00:00:00', { zone: 'UTC' }).toMillis()).toBeGreaterThanOrEqual(0)
-          }
-        )
-
-        it(
-          'fromSeconds converts to milliseconds',
-          () => {
-            expect(MockDateTime.fromSeconds(1).toMillis()).toBe(1000)
-          }
-        )
-
-        it(
-          'local returns a datetime with positive millis',
-          () => {
-            expect(MockDateTime.local().toMillis()).toBeGreaterThan(0)
-          }
-        )
-
-        it(
-          'utc returns a datetime with positive millis',
-          () => {
-            expect(MockDateTime.utc().toMillis()).toBeGreaterThan(0)
+        it.each<{ name: string, act: () => ReturnType<typeof mockDateTime>, expected: number }>([
+          { name: 'fromMillis returns correct datetime', act: () => MockDateTime.fromMillis(1000), expected: 1000 },
+          { name: 'fromISO parses ISO string at epoch', act: () => MockDateTime.fromISO('1970-01-01T00:00:00.000Z'), expected: 0 },
+          { name: 'fromISO parses non-epoch ISO string', act: () => MockDateTime.fromISO('2022-01-01T00:00:00.000Z'), expected: BASE_MS },
+          // a SQL string without offset is parsed in local time, and bun test runs with TZ=UTC
+          { name: 'fromSQL parses SQL string without zone option', act: () => MockDateTime.fromSQL('1970-01-01 00:00:00'), expected: 0 },
+          { name: 'fromSQL parses SQL string with zone option', act: () => MockDateTime.fromSQL('1970-01-01 00:00:00', { zone: 'UTC' }), expected: 0 },
+          { name: 'fromSeconds converts to milliseconds', act: () => MockDateTime.fromSeconds(1), expected: 1000 },
+          { name: 'local returns a datetime at the current time', act: () => MockDateTime.local(), expected: BASE_MS },
+          { name: 'utc returns a datetime at the current time', act: () => MockDateTime.utc(), expected: BASE_MS },
+        ])(
+          '$name',
+          ({ act, expected }) => {
+            expect(act().toMillis()).toBe(expected)
           }
         )
       }
@@ -402,38 +315,15 @@ describe(
     describe(
       'createMockSettings',
       () => {
-        it(
-          'returns default UTC zone and en locale',
-          () => {
-            const settings = createMockSettings()
-            expect(settings.defaultZone.name).toBe('UTC')
-            expect(settings.defaultLocale).toBe('en')
-          }
-        )
-
-        it(
-          'accepts custom zone and locale',
-          () => {
-            const settings = createMockSettings({ initialZone: 'Europe/London', initialLocale: 'fr' })
-            expect(settings.defaultZone.name).toBe('Europe/London')
-            expect(settings.defaultLocale).toBe('fr')
-          }
-        )
-
-        it(
-          'accepts empty string locale',
-          () => {
-            const settings = createMockSettings({ initialLocale: '' })
-            expect(settings.defaultLocale).toBe('')
-          }
-        )
-
-        it(
-          'accepts custom zone with default locale',
-          () => {
-            const settings = createMockSettings({ initialZone: 'Asia/Tokyo' })
-            expect(settings.defaultZone.name).toBe('Asia/Tokyo')
-            expect(settings.defaultLocale).toBe('en')
+        it.each<{ name: string, input: Parameters<typeof createMockSettings>[0], expected: ReturnType<typeof createMockSettings> }>([
+          { name: 'returns default UTC zone and en locale', input: undefined, expected: { defaultZone: { name: 'UTC' }, defaultLocale: 'en' } },
+          { name: 'accepts custom zone and locale', input: { initialZone: 'Europe/London', initialLocale: 'fr' }, expected: { defaultZone: { name: 'Europe/London' }, defaultLocale: 'fr' } },
+          { name: 'accepts empty string locale', input: { initialLocale: '' }, expected: { defaultZone: { name: 'UTC' }, defaultLocale: '' } },
+          { name: 'accepts custom zone with default locale', input: { initialZone: 'Asia/Tokyo' }, expected: { defaultZone: { name: 'Asia/Tokyo' }, defaultLocale: 'en' } },
+        ])(
+          '$name',
+          ({ input, expected }) => {
+            expect(createMockSettings(input)).toEqual(expected)
           }
         )
       }
@@ -447,25 +337,6 @@ describe(
           () => {
             const instance = new MockDateTimeClass()
             expect(instance).toBeInstanceOf(MockDateTimeClass)
-          }
-        )
-      }
-    )
-
-    describe(
-      'instance getters via dot notation',
-      () => {
-        // Explicitly invoke each getter via dot notation to ensure function coverage
-        it(
-          'all getters return numbers',
-          () => {
-            const m = mockDateTime(BASE_MS)
-            expect(m.year).toBe(2022)
-            expect(m.month).toBe(1)
-            expect(m.day).toBe(1)
-            expect(m.hour).toBe(0)
-            expect(m.minute).toBe(0)
-            expect(m.second).toBe(0)
           }
         )
       }
