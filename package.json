@@ -49,7 +49,7 @@
     "test": "bun test",
     "test:coverage": "bun test --coverage",
     "test:watch": "bun test --watch",
-    "test:types": "tsc -p tsconfig.tests.json --noEmit"
+    "test:types": "tsc -p tsconfig.tests.json --noEmit && tsc -p tsconfig.examples.json --noEmit"
   },
   "engines": {
     "node": ">=16"
