@@ -67,8 +67,7 @@ describe(
         expected: {},
       },
       {
-        // AppFilter defaults column to '', which IS_SET accepts: the filter is kept under the '' key
-        name: 'group filters without column under the empty column name',
+        name: 'skip filters without column (AppFilter defaults column to \'\')',
         input: {
           filterList: [
             new AppFilter({ operator: '=', value: 'John' }),
@@ -76,13 +75,19 @@ describe(
           ],
         },
         expected: {
-          '': [
-            new AppFilter({ operator: '=', value: 'John' }),
-          ],
           name: [
             new AppFilter({ column: 'name', operator: '=', value: 'Jane' }),
           ],
         },
+      },
+      {
+        name: 'skip filters whose column is empty once sanitized',
+        input: {
+          filterList: [
+            new AppFilter({ column: '\'";--', operator: '=', value: 'x' }),
+          ],
+        },
+        expected: {},
       },
       {
         name: 'handle array filters',
