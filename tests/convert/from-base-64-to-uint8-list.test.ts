@@ -36,6 +36,8 @@ describe(
       { name: 'single zero byte', base64: 'AA==', expected: [0] },
       { name: 'single 0xff byte', base64: '/w==', expected: [255] },
       { name: 'three zero bytes', base64: 'AAAA', expected: [0, 0, 0] },
+      // '###' contains '#' which is outside the base64 alphabet — atob throws per spec
+      { name: 'invalid base64 chars (atob throws) give empty array', base64: '###', expected: [] },
     ]
 
     it.each(testCases)(
@@ -44,10 +46,5 @@ describe(
         expect(FROM_BASE_64_TO_UINT8_LIST({ Buffer: undefined, base64 })).toEqual(expected)
       }
     )
-
-    it('returns empty array when atob throws on invalid base64 chars', () => {
-      // '###' contains '#' which is outside the base64 alphabet — atob throws per spec
-      expect(FROM_BASE_64_TO_UINT8_LIST({ Buffer: undefined, base64: '###' })).toEqual([])
-    })
   }
 )

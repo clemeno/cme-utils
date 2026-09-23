@@ -4,19 +4,13 @@ import { MAX_INT16 } from '../../ts/constant/max-int16.util.js'
 describe(
   'MAX_INT16',
   () => {
-    it(
-      'should be the maximum value for a 16-bit signed integer',
-      () => {
-        expect(MAX_INT16).toBe(32767)
-        expect(MAX_INT16).toBe(2 ** 15 - 1)
-      }
-    )
-
-    it(
-      'should be a number',
-      () => {
-        expect(typeof MAX_INT16).toBe('number')
-        expect(Number.isInteger(MAX_INT16)).toBe(true)
+    it.each<{ name: string, expected: number }>([
+      { name: 'the literal 32767', expected: 32767 },
+      { name: '2 ** 15 - 1, the maximum value for a 16-bit signed integer', expected: 2 ** 15 - 1 },
+    ])(
+      'should equal $name',
+      ({ expected }) => {
+        expect(MAX_INT16).toBe(expected)
       }
     )
   }

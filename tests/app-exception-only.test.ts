@@ -4,43 +4,17 @@ import { AppExceptionOnly } from '../ts/app-exception-only.js'
 describe(
   'AppExceptionOnly',
   () => {
-    it(
-      'default constructor creates instance with undefined exception',
-      () => {
-        const instance = new AppExceptionOnly()
-        expect(instance.exception).toBeUndefined()
-      }
-    )
-
-    it(
-      'constructor with undefined argument',
-      () => {
-        const instance = new AppExceptionOnly(undefined)
-        expect(instance.exception).toBeUndefined()
-      }
-    )
-
-    it(
-      'constructor assigns string exception',
-      () => {
-        const instance = new AppExceptionOnly({ exception: 'err' })
-        expect(instance.exception).toBe('err')
-      }
-    )
-
-    it(
-      'constructor assigns typed exception',
-      () => {
-        const instance = new AppExceptionOnly<Error>({ exception: new Error('oops') })
-        expect(instance.exception?.message).toBe('oops')
-      }
-    )
-
-    it(
-      'constructor assigns number exception',
-      () => {
-        const instance = new AppExceptionOnly<number>({ exception: 404 })
-        expect(instance.exception).toBe(404)
+    it.each<{ name: string, args: ConstructorParameters<typeof AppExceptionOnly>, expected: unknown }>([
+      { name: 'default constructor creates instance with undefined exception', args: [], expected: undefined },
+      { name: 'constructor with undefined argument', args: [undefined], expected: undefined },
+      { name: 'constructor assigns string exception', args: [{ exception: 'err' }], expected: 'err' },
+      { name: 'constructor assigns typed exception', args: [{ exception: new Error('oops') }], expected: new Error('oops') },
+      { name: 'constructor assigns number exception', args: [{ exception: 404 }], expected: 404 },
+    ])(
+      '$name',
+      ({ args, expected }) => {
+        const instance = new AppExceptionOnly(...args)
+        expect(instance.exception).toEqual(expected)
       }
     )
   }

@@ -48,39 +48,20 @@ describe(
     )
 
     describe(
-      'error cases return empty string',
+      'invalid symbol or base returns empty string',
       () => {
-        it(
-          'symbol not found (invalid char) returns empty string',
-          () => {
-            expect(BASE_CONVERT_BBSN({ n: '$', from: 16, to: 10 })).toBe('')
-          }
-        )
-
-        it(
-          'digit out of range for base returns empty string',
-          () => {
-            // 'a' (index 10) is not valid in base 8
-            expect(BASE_CONVERT_BBSN({ n: 'a', from: 8, to: 10 })).toBe('')
-          }
-        )
-      }
-    )
-
-    describe(
-      'invalid base returns empty string',
-      () => {
-        it(
-          'base from <= 0 returns empty string',
-          () => {
-            expect(BASE_CONVERT_BBSN({ n: '10', from: 0, to: 16 })).toBe('')
-          }
-        )
-
-        it(
-          'base to <= 0 returns empty string',
-          () => {
-            expect(BASE_CONVERT_BBSN({ n: '10', from: 10, to: 0 })).toBe('')
+        it.each<{ name: string, n: string, from: number, to: number }>([
+          { name: 'symbol not found (invalid char)', n: '$', from: 16, to: 10 },
+          // 'a' (index 10) is not valid in base 8
+          { name: 'digit out of range for base', n: 'a', from: 8, to: 10 },
+          { name: 'base from <= 0', n: '10', from: 0, to: 16 },
+          { name: 'base from > 256 (SYMBOLS_LENGTH)', n: '10', from: 257, to: 16 },
+          { name: 'base to <= 0', n: '10', from: 10, to: 0 },
+          { name: 'base to > 256 (SYMBOLS_LENGTH)', n: '10', from: 10, to: 257 },
+        ])(
+          '$name returns empty string',
+          ({ n, from, to }) => {
+            expect(BASE_CONVERT_BBSN({ n, from, to })).toBe('')
           }
         )
       }

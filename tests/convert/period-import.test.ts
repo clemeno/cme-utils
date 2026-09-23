@@ -12,71 +12,36 @@ const makeMockDateTime = (validPrefixes: string[] = []) => ({
 describe(
   'PERIOD_IMPORT',
   () => {
-    it(
-      'parses valid ISO string into { min, max, label }',
-      () => {
-        const DateTime = makeMockDateTime()
-        const result = PERIOD_IMPORT({
-          DateTime,
-          input: '2024-01-01T00:00:00.000Z_§§_2024-12-31T23:59:59.999Z_§§_myLabel',
-        })
-        expect(result.label).toBe('myLabel')
-        expect((result.min as any).isValid).toBe(true)
-        expect((result.max as any).isValid).toBe(true)
-      }
-    )
-
-    it(
-      'falls back to raw ISO string when fromISO produces invalid DateTime for min',
-      () => {
-        const DateTime = makeMockDateTime()
-        const result = PERIOD_IMPORT({
-          DateTime,
-          input: 'invalidDate_§§_2024-01-01T00:00:00.000Z_§§_test',
-        })
-        expect(result.min).toBe('invalidDate')
-        expect((result.max as any).isValid).toBe(true)
-        expect(result.label).toBe('test')
-      }
-    )
-
-    it(
-      'label is correctly extracted as third segment',
-      () => {
-        const DateTime = makeMockDateTime()
-        const result = PERIOD_IMPORT({
-          DateTime,
-          input: '2025-01-01T00:00:00.000Z_§§_2025-06-30T23:59:59.999Z_§§_June 2025',
-        })
-        expect(result.label).toBe('June 2025')
-      }
-    )
-
-    it(
-      'falls back to raw ISO string when fromISO produces invalid DateTime for max',
-      () => {
-        const DateTime = makeMockDateTime()
-        const result = PERIOD_IMPORT({
-          DateTime,
-          input: '2024-01-01T00:00:00.000Z_§§_invalidDate_§§_test',
-        })
-        expect((result.min as any).isValid).toBe(true)
-        expect(result.max).toBe('invalidDate')
-        expect(result.label).toBe('test')
-      }
-    )
-
-    it(
-      'both min and max fall back to raw strings when both invalid',
-      () => {
-        const DateTime = makeMockDateTime()
-        const result = PERIOD_IMPORT({
-          DateTime,
-          input: 'invalidMin_§§_invalidMax_§§_label',
-        })
-        expect(result.min).toBe('invalidMin')
-        expect(result.max).toBe('invalidMax')
-        expect(result.label).toBe('label')
+    it.each<{ name: string, input: string, expected: ReturnType<typeof PERIOD_IMPORT> }>([
+      {
+        name: 'parses valid ISO string into { min, max, label }',
+        input: '2024-01-01T00:00:00.000Z_§§_2024-12-31T23:59:59.999Z_§§_myLabel',
+        expected: { min: { isValid: true, _iso: '2024-01-01T00:00:00.000Z' }, max: { isValid: true, _iso: '2024-12-31T23:59:59.999Z' }, label: 'myLabel' },
+      },
+      {
+        name: 'falls back to raw ISO string when fromISO produces invalid DateTime for min',
+        input: 'invalidDate_§§_2024-01-01T00:00:00.000Z_§§_test',
+        expected: { min: 'invalidDate', max: { isValid: true, _iso: '2024-01-01T00:00:00.000Z' }, label: 'test' },
+      },
+      {
+        name: 'label is correctly extracted as third segment',
+        input: '2025-01-01T00:00:00.000Z_§§_2025-06-30T23:59:59.999Z_§§_June 2025',
+        expected: { min: { isValid: true, _iso: '2025-01-01T00:00:00.000Z' }, max: { isValid: true, _iso: '2025-06-30T23:59:59.999Z' }, label: 'June 2025' },
+      },
+      {
+        name: 'falls back to raw ISO string when fromISO produces invalid DateTime for max',
+        input: '2024-01-01T00:00:00.000Z_§§_invalidDate_§§_test',
+        expected: { min: { isValid: true, _iso: '2024-01-01T00:00:00.000Z' }, max: 'invalidDate', label: 'test' },
+      },
+      {
+        name: 'both min and max fall back to raw strings when both invalid',
+        input: 'invalidMin_§§_invalidMax_§§_label',
+        expected: { min: 'invalidMin', max: 'invalidMax', label: 'label' },
+      },
+    ])(
+      '$name',
+      ({ input, expected }) => {
+        expect(PERIOD_IMPORT({ DateTime: makeMockDateTime(), input })).toEqual(expected)
       }
     )
   }

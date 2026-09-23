@@ -11,51 +11,38 @@ describe(
           'should create a mock document with documentElement',
           () => {
             const mock = createMockDocument()
-            expect(mock.documentElement).toBeDefined()
-            expect(typeof mock.documentElement.setAttribute).toBe('function')
+            expect(mock).toEqual({
+              documentElement: {
+                setAttribute: expect.any(Function),
+                getAttribute: expect.any(Function),
+              },
+              getSetAttributeCalls: expect.any(Function),
+              getGetAttributeCalls: expect.any(Function),
+            })
           }
         )
 
-        it(
-          'should track setAttribute calls',
-          () => {
+        it.each<{ name: string, attributes: Array<[string, string]> }>([
+          { name: 'should return empty calls array initially', attributes: [] },
+          { name: 'should track setAttribute calls', attributes: [['lang', 'en'], ['dir', 'ltr']] },
+        ])(
+          '$name',
+          ({ attributes }) => {
             const mock = createMockDocument()
-            mock.documentElement.setAttribute('lang', 'en')
-            mock.documentElement.setAttribute('dir', 'ltr')
-
-            const calls = mock.getSetAttributeCalls()
-            expect(calls).toHaveLength(2)
-            expect(calls[0]).toEqual(['lang', 'en'])
-            expect(calls[1]).toEqual(['dir', 'ltr'])
+            attributes.forEach(inAttribute => { mock.documentElement.setAttribute(...inAttribute) })
+            expect(mock.getSetAttributeCalls()).toEqual(attributes)
           }
         )
 
-        it(
-          'should return empty calls array initially',
-          () => {
-            const mock = createMockDocument()
-            expect(mock.getSetAttributeCalls()).toEqual([])
-          }
-        )
-
-        it(
-          'should track getAttribute calls and return getAttributeValue',
-          () => {
-            const mock = createMockDocument({ getAttributeValue: 'en' })
+        it.each<{ name: string, options: Parameters<typeof createMockDocument>[0], expected: string }>([
+          { name: 'should track getAttribute calls and return getAttributeValue', options: { getAttributeValue: 'en' }, expected: 'en' },
+          { name: 'should return default empty string for getAttribute when no value provided', options: undefined, expected: '' },
+        ])(
+          '$name',
+          ({ options, expected }) => {
+            const mock = createMockDocument(options)
             const result = mock.documentElement.getAttribute('lang')
-            expect(result).toBe('en')
-            const calls = mock.getGetAttributeCalls()
-            expect(calls).toHaveLength(1)
-            expect(calls[0]).toBe('lang')
-          }
-        )
-
-        it(
-          'should return default empty string for getAttribute when no value provided',
-          () => {
-            const mock = createMockDocument()
-            const result = mock.documentElement.getAttribute('lang')
-            expect(result).toBe('')
+            expect(result).toBe(expected)
             expect(mock.getGetAttributeCalls()).toEqual(['lang'])
           }
         )
@@ -65,27 +52,15 @@ describe(
     describe(
       'createMockSettings',
       () => {
-        it(
-          'should create a mock settings with default locale',
-          () => {
-            const mock = createMockSettings()
-            expect(mock.defaultLocale).toBe('old')
-          }
-        )
-
-        it(
-          'should create a mock settings with custom locale',
-          () => {
-            const mock = createMockSettings('en-US')
-            expect(mock.defaultLocale).toBe('en-US')
-          }
-        )
-
-        it(
-          'should create a mock settings with empty string locale',
-          () => {
-            const mock = createMockSettings('')
-            expect(mock.defaultLocale).toBe('')
+        it.each<{ name: string, args: Parameters<typeof createMockSettings>, expected: ReturnType<typeof createMockSettings> }>([
+          { name: 'default locale', args: [], expected: { defaultLocale: 'old' } },
+          { name: 'custom locale', args: ['en-US'], expected: { defaultLocale: 'en-US' } },
+          { name: 'empty string locale', args: [''], expected: { defaultLocale: '' } },
+        ])(
+          'should create a mock settings with $name',
+          ({ args, expected }) => {
+            const mock = createMockSettings(...args)
+            expect(mock).toEqual(expected)
           }
         )
       }
