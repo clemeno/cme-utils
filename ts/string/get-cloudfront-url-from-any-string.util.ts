@@ -1,5 +1,4 @@
 import { IS_A_STRING_AND_NOT_EMPTY } from './is-a-string-and-not-empty.util.js'
-import { IS_SET } from '../check/is-set.util.js'
 import { EXTRACT_UUID_FROM_STRING } from './extract-uuid-from-string.util.js'
 import { GET_CLOUDFRONT_URL_FILE } from './get-cloudfront-url-file.util.js'
 import { GET_CLOUDFRONT_URL_PNG_LIGHT_FROM_UUID } from './get-cloudfront-url-png-light-from-uuid.util.js'
@@ -35,7 +34,7 @@ export const GET_CLOUDFRONT_URL_FROM_ANY_STRING = <TypeofBasename = any> (_: {
       then: () => {
         const pathList = (new URL(s)).pathname.split('/')
         const filename = pathList[pathList.length - 1]
-        return IS_SET(filename) ? GET_CLOUDFRONT_URL_FILE({ filename, cloudfrontUri }) : ''
+        return IS_A_STRING_AND_NOT_EMPTY(filename) ? GET_CLOUDFRONT_URL_FILE({ filename, cloudfrontUri }) : ''
       },
     },
   ]

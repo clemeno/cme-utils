@@ -1,66 +1,25 @@
 import { describe, expect, it } from 'bun:test'
+import { basename } from 'node:path'
 import { GET_UPLOADED_FILE_FROM_ANY_STRING } from '../../ts/string/get-uploaded-file-from-any-string.util.js'
 
 describe(
   'GET_UPLOADED_FILE_FROM_ANY_STRING',
   () => {
-    const basenameFn = (s: string) => s.split('/').pop() ?? ''
+    const folders = { basename, fileUploadFolder: '/uploads', publicStaticImageFolder: '/static' }
 
-    const testCases = [
-      {
-        input: {
-          s: 'file.png',
-          fileUploadFolder: '/uploads',
-        },
-        expected: '/uploads/file.png',
-      },
-      {
-        input: {
-          basename: basenameFn,
-          s: '123e4567-e89b-12d3-a456-426614174000',
-          fileUploadFolder: '/uploads',
-          publicStaticImageFolder: '/static',
-        },
-        expected: { contains: '/uploads/' },
-      },
-      {
-        input: {
-          basename: basenameFn,
-          s: '/uploads/myfile.txt',
-          fileUploadFolder: '/uploads',
-          publicStaticImageFolder: '/static',
-        },
-        expected: '/uploads/myfile.txt',
-      },
-      {
-        input: {
-          basename: basenameFn,
-          s: '/static/image.png',
-          fileUploadFolder: '/uploads',
-          publicStaticImageFolder: '/static',
-        },
-        expected: '/uploads/image.png',
-      },
-      {
-        input: {
-          basename: basenameFn,
-          s: 'https://example.com/path/to/file.jpg',
-          fileUploadFolder: '/uploads',
-          publicStaticImageFolder: '/static',
-        },
-        expected: '/uploads/file.jpg',
-      },
+    const testCases: Array<{ name: string, s: string, expected: string }> = [
+      { name: 'plain filename → upload folder path', s: 'file.png', expected: '/uploads/file.png' },
+      { name: 'bare uuid → light png in upload folder', s: '123e4567-e89b-12d3-a456-426614174000', expected: '/uploads/123e4567-e89b-12d3-a456-426614174000.png' },
+      { name: 'path already in upload folder → unchanged', s: '/uploads/myfile.txt', expected: '/uploads/myfile.txt' },
+      { name: 'path in static folder → moved to upload folder', s: '/static/image.png', expected: '/uploads/image.png' },
+      { name: 'url → last path segment in upload folder', s: 'https://example.com/path/to/file.jpg', expected: '/uploads/file.jpg' },
+      { name: 'url without filename → empty string', s: 'https://example.com/path/', expected: '' },
     ]
 
     it.each(testCases)(
-      'handles "$input.s"',
-      ({ input, expected }) => {
-        const result = GET_UPLOADED_FILE_FROM_ANY_STRING(input)
-        if (typeof expected === 'string') {
-          expect(result).toBe(expected)
-        } else {
-          expect(result).toContain(expected.contains)
-        }
+      '$name',
+      ({ s, expected }) => {
+        expect(GET_UPLOADED_FILE_FROM_ANY_STRING({ ...folders, s })).toBe(expected)
       }
     )
   }

@@ -1,5 +1,4 @@
 import { IS_A_STRING_AND_NOT_EMPTY } from './is-a-string-and-not-empty.util.js'
-import { IS_SET } from '../check/is-set.util.js'
 import { EXTRACT_UUID_FROM_STRING } from './extract-uuid-from-string.util.js'
 import { GET_UPLOADED_FILE_PATH } from './get-uploaded-file-path.util.js'
 import { GET_UPLOADED_LIGHT_PNG_FROM_UUID } from './get-uploaded-light-png-from-uuid.util.js'
@@ -31,7 +30,7 @@ export const GET_UPLOADED_FILE_FROM_ANY_STRING = <TypeofBasename extends (s: str
       then: () => {
         const pathList = (new URL(s)).pathname.split('/')
         const filename = pathList[pathList.length - 1]
-        return IS_SET(filename) ? GET_UPLOADED_FILE_PATH({ filename, fileUploadFolder }) : ''
+        return IS_A_STRING_AND_NOT_EMPTY(filename) ? GET_UPLOADED_FILE_PATH({ filename, fileUploadFolder }) : ''
       },
     },
   ]
