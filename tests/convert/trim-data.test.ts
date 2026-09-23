@@ -23,10 +23,12 @@ describe(
       // exercises the Array.isArray(res[k]) branch (object whose value IS an array)
       { name: 'trims arrays nested inside an object property', input: { object: { items: [1, null, 2], name: 'test' } }, expected: { items: [1, undefined, 2], name: 'test' } },
       { name: 'trims objects inside an array that is itself a property value', input: { object: { rows: [{ a: 1, b: null }, { a: 2 }], id: 99 } }, expected: { rows: [{ a: 1 }, { a: 2 }], id: 99 } },
-      { name: 'accepts depth 5 and still trims recursively', input: { object: { a: { b: null, c: 1 } }, depth: 5 }, expected: { a: { c: 1 } } },
-      // depth is only decremented, never checked: nested levels are still trimmed
-      { name: 'accepts depth 1 (not enforced: the nested object is still trimmed)', input: { object: { a: { b: null, c: 1 }, d: 2 }, depth: 1 }, expected: { a: { c: 1 }, d: 2 } },
-      { name: 'accepts depth 0 (not enforced: the nested object is still trimmed)', input: { object: { a: { b: null, c: 1 } }, depth: 0 }, expected: { a: { c: 1 } } },
+      { name: 'depth deeper than the data → trims every level', input: { object: { a: { b: null, c: 1 } }, depth: 5 }, expected: { a: { c: 1 } } },
+      { name: 'depth 0 → object returned as-is', input: { object: { a: { b: null, c: 1 }, d: null }, depth: 0 }, expected: { a: { b: null, c: 1 }, d: null } },
+      { name: 'depth 1 → top level trimmed, nested object kept as-is', input: { object: { a: { b: null, c: 1 }, d: 2, e: null }, depth: 1 }, expected: { a: { b: null, c: 1 }, d: 2 } },
+      { name: 'depth 2 → two levels trimmed, third kept as-is', input: { object: { a: { b: { c: null, d: 1 }, e: null } }, depth: 2 }, expected: { a: { b: { c: null, d: 1 } } } },
+      { name: 'depth 1 on an array → elements kept as-is (the array is the level)', input: { object: [{ a: null, b: 1 }], depth: 1 }, expected: [{ a: null, b: 1 }] },
+      { name: 'depth 1 still converts top-level Date values', input: { object: { d: new Date('2023-06-15T12:00:00.000Z'), n: { x: null } }, depth: 1 }, expected: { d: '2023-06-15T12:00:00.000Z', n: { x: null } } },
     ])(
       '$name',
       ({ input, expected }) => {
