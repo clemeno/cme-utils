@@ -5,82 +5,24 @@ import { createMockHashFn } from '../mocks/password-mocks.js'
 describe(
   'ENCRYPT_PASSWORD',
   () => {
-    it(
-      'should hash password using provided hash function',
-      async () => {
-        const mockHashFn = createMockHashFn({ returnValue: 'hashed_password_123' })
+    it.each<{ name: string, input: { clear: unknown, iterations?: number }, expected: string, expectedCalls: Array<[string, number]> }>([
+      { name: 'should hash password using provided hash function', input: { clear: 'password123' }, expected: 'hashed_password_123', expectedCalls: [['password123', 12]] },
+      { name: 'should convert clear password to string', input: { clear: 123 }, expected: 'hashed_123', expectedCalls: [['123', 12]] },
+      { name: 'should handle empty passwords', input: { clear: '' }, expected: 'hashed_empty', expectedCalls: [['', 12]] },
+      { name: 'should handle null passwords', input: { clear: null }, expected: 'hashed_null', expectedCalls: [['', 12]] },
+      { name: 'should handle undefined passwords', input: { clear: undefined }, expected: 'hashed_undefined', expectedCalls: [['', 12]] },
+      { name: 'should return the hash string', input: { clear: 'password' }, expected: 'hashed_result', expectedCalls: [['password', 12]] },
+      { name: 'should use default iterations of 12', input: { clear: 'password' }, expected: 'hashed', expectedCalls: [['password', 12]] },
+      { name: 'should pass custom iterations to the hash function', input: { clear: 'password', iterations: 10 }, expected: 'hashed', expectedCalls: [['password', 10]] },
+    ])(
+      '$name',
+      async ({ input, expected, expectedCalls }) => {
+        const mockHashFn = createMockHashFn({ returnValue: expected })
 
-        const result = await ENCRYPT_PASSWORD({
-          clear: 'password123',
-          hashFn: mockHashFn,
-        })
+        const result = await ENCRYPT_PASSWORD({ ...input, hashFn: mockHashFn })
 
-        expect(result).toBe('hashed_password_123')
-        expect(mockHashFn.getCalls()).toEqual([['password123', 12]])
-      }
-    )
-
-    it(
-      'should convert clear password to string',
-      async () => {
-        const mockHashFn = createMockHashFn({ returnValue: 'hashed_123' })
-
-        const result = await ENCRYPT_PASSWORD({
-          clear: 123,
-          hashFn: mockHashFn,
-        })
-
-        expect(result).toBe('hashed_123')
-        expect(mockHashFn.getCalls()).toEqual([['123', 12]])
-      }
-    )
-
-    it(
-      'should handle empty passwords',
-      async () => {
-        const mockHashFn = createMockHashFn({ returnValue: 'hashed_empty' })
-
-        const result = await ENCRYPT_PASSWORD({
-          clear: '',
-          hashFn: mockHashFn,
-        })
-
-        expect(result).toBe('hashed_empty')
-        expect(mockHashFn.getCalls()).toEqual([['', 12]])
-      }
-    )
-
-    const nullUndefinedTestCases = [
-      { name: 'null', clear: null as any, expectedHash: 'hashed_null' },
-      { name: 'undefined', clear: undefined as any, expectedHash: 'hashed_undefined' },
-    ]
-
-    it.each(nullUndefinedTestCases)(
-      'should handle $name passwords',
-      async ({ clear, expectedHash }) => {
-        const mockHashFn = createMockHashFn({ returnValue: expectedHash })
-
-        const result = await ENCRYPT_PASSWORD({
-          clear,
-          hashFn: mockHashFn,
-        })
-
-        expect(result).toBe(expectedHash)
-        expect(mockHashFn.getCalls()).toEqual([['', 12]])
-      }
-    )
-
-    it(
-      'should return a string',
-      async () => {
-        const mockHashFn = createMockHashFn({ returnValue: 'hashed_result' })
-
-        const result = await ENCRYPT_PASSWORD({
-          clear: 'password',
-          hashFn: mockHashFn,
-        })
-
-        expect(typeof result).toBe('string')
+        expect(result).toBe(expected)
+        expect(mockHashFn.getCalls()).toEqual(expectedCalls)
       }
     )
 
@@ -93,35 +35,6 @@ describe(
           clear: 'password',
           hashFn: mockHashFn,
         })).rejects.toThrow('Hashing failed')
-      }
-    )
-
-    it(
-      'should use default iterations of 12',
-      async () => {
-        const mockHashFn = createMockHashFn({ returnValue: 'hashed' })
-
-        await ENCRYPT_PASSWORD({
-          clear: 'password',
-          hashFn: mockHashFn,
-        })
-
-        expect(mockHashFn.getCalls()).toEqual([['password', 12]])
-      }
-    )
-
-    it(
-      'should accept custom iterations parameter',
-      async () => {
-        const mockHashFn = createMockHashFn({ returnValue: 'hashed' })
-
-        await ENCRYPT_PASSWORD({
-          clear: 'password',
-          hashFn: mockHashFn,
-          iterations: 10, // This parameter is accepted but not used
-        })
-
-        expect(mockHashFn.getCalls()).toEqual([['password', 12]])
       }
     )
   }

@@ -6,6 +6,6 @@ export const ENCRYPT_PASSWORD = async (_: {
   hashFn: hashFnType
   iterations?: number
 }): Promise<string> => {
-  const res = await _.hashFn(TO_STRING(_.clear), 12)
+  const res = await _.hashFn(TO_STRING(_.clear), _.iterations ?? 12)
   return res
 }
