@@ -4,48 +4,18 @@ import { AppExceptionResult } from '../ts/app-exception-result.js'
 describe(
   'AppExceptionResult',
   () => {
-    it(
-      'default constructor creates instance with undefined exception and result',
-      () => {
-        const instance = new AppExceptionResult()
-        expect(instance.exception).toBeUndefined()
-        expect(instance.result).toBeUndefined()
-      }
-    )
-
-    it(
-      'constructor assigns exception only',
-      () => {
-        const instance = new AppExceptionResult({ exception: 'err' })
-        expect(instance.exception).toBe('err')
-        expect(instance.result).toBeUndefined()
-      }
-    )
-
-    it(
-      'constructor assigns result only',
-      () => {
-        const instance = new AppExceptionResult({ result: 42 })
-        expect(instance.result).toBe(42)
-        expect(instance.exception).toBeUndefined()
-      }
-    )
-
-    it(
-      'constructor assigns both exception and result',
-      () => {
-        const instance = new AppExceptionResult({ exception: 'e', result: 'r' })
-        expect(instance.exception).toBe('e')
-        expect(instance.result).toBe('r')
-      }
-    )
-
-    it(
-      'constructor with undefined argument',
-      () => {
-        const instance = new AppExceptionResult(undefined)
-        expect(instance.exception).toBeUndefined()
-        expect(instance.result).toBeUndefined()
+    it.each<{ name: string, build: () => AppExceptionResult, exception: unknown, result: unknown }>([
+      { name: 'default constructor creates instance with undefined exception and result', build: () => new AppExceptionResult(), exception: undefined, result: undefined },
+      { name: 'constructor assigns exception only', build: () => new AppExceptionResult({ exception: 'err' }), exception: 'err', result: undefined },
+      { name: 'constructor assigns result only', build: () => new AppExceptionResult({ result: 42 }), exception: undefined, result: 42 },
+      { name: 'constructor assigns both exception and result', build: () => new AppExceptionResult({ exception: 'e', result: 'r' }), exception: 'e', result: 'r' },
+      { name: 'constructor with undefined argument', build: () => new AppExceptionResult(undefined), exception: undefined, result: undefined },
+    ])(
+      '$name',
+      ({ build, exception, result }) => {
+        const instance = build()
+        expect(instance.exception).toBe(exception)
+        expect(instance.result).toBe(result)
       }
     )
   }

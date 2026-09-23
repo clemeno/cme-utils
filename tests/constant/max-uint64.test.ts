@@ -4,18 +4,14 @@ import { MAX_UINT64 } from '../../ts/constant/max-uint64.util.js'
 describe(
   'MAX_UINT64',
   () => {
-    it(
-      'should be the maximum value for a 64-bit unsigned integer',
-      () => {
-        expect(MAX_UINT64).toBe(18446744073709551615n)
-        expect(MAX_UINT64).toBe(2n ** 64n - 1n)
-      }
-    )
-
-    it(
-      'should be a bigint',
-      () => {
-        expect(typeof MAX_UINT64).toBe('bigint')
+    it.each<{ name: string, actual: unknown, expected: unknown }>([
+      { name: 'should be the maximum value for a 64-bit unsigned integer', actual: MAX_UINT64, expected: 18446744073709551615n },
+      { name: 'should be 2^64 - 1', actual: MAX_UINT64, expected: 2n ** 64n - 1n },
+      { name: 'should be a bigint', actual: typeof MAX_UINT64, expected: 'bigint' },
+    ])(
+      '$name',
+      ({ actual, expected }) => {
+        expect(actual).toBe(expected)
       }
     )
   }

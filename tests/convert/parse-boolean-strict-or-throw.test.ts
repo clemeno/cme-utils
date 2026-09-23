@@ -34,32 +34,22 @@ describe(
       }
     )
 
-    const throwTestCases = [
-      { name: 'null', input: null },
-      { name: 'undefined', input: undefined },
-      { name: 'non-numeric string "abc"', input: 'abc' },
-      { name: 'empty string', input: '' },
-      { name: 'object', input: {} },
-      { name: 'array', input: [] },
+    // the message names the offending value: 'null' / 'undefined' for unset inputs, TO_STRING(input) otherwise
+    const throwTestCases: Array<{ name: string, input: unknown, expected: string }> = [
+      { name: 'null', input: null, expected: 'Invalid serialized boolean value: null' },
+      { name: 'undefined', input: undefined, expected: 'Invalid serialized boolean value: undefined' },
+      { name: 'non-numeric string "abc"', input: 'abc', expected: 'Invalid serialized boolean value: abc' },
+      { name: 'non-numeric string "xyz"', input: 'xyz', expected: 'Invalid serialized boolean value: xyz' },
+      { name: 'empty string', input: '', expected: 'Invalid serialized boolean value: ' },
+      { name: 'object', input: {}, expected: 'Invalid serialized boolean value: {}' },
+      { name: 'array', input: [], expected: 'Invalid serialized boolean value: []' },
     ]
 
     it.each(throwTestCases)(
       'throws for $name',
-      ({ input }) => {
-        expect(() => PARSE_BOOLEAN_STRICT_OR_THROW(input)).toThrow()
+      ({ input, expected }) => {
+        expect(() => PARSE_BOOLEAN_STRICT_OR_THROW(input)).toThrow(new Error(expected))
       }
     )
-
-    it('throw message contains "null" for null input', () => {
-      expect(() => PARSE_BOOLEAN_STRICT_OR_THROW(null)).toThrow('null')
-    })
-
-    it('throw message contains "undefined" for undefined input', () => {
-      expect(() => PARSE_BOOLEAN_STRICT_OR_THROW(undefined)).toThrow('undefined')
-    })
-
-    it('throw message contains input value for string input', () => {
-      expect(() => PARSE_BOOLEAN_STRICT_OR_THROW('xyz')).toThrow('xyz')
-    })
   }
 )

@@ -1,64 +1,39 @@
-import { describe, expect, it } from 'bun:test'
+import { afterEach, describe, expect, it } from 'bun:test'
 import { SET_DOCUMENT_GEO_FROM_LOCALE } from '../../ts/space/set-document-geo-from-locale.util.js'
 import { createMockDocument } from '../mocks/space-mocks.js'
 
 describe(
   'SET_DOCUMENT_GEO_FROM_LOCALE',
   () => {
-    it(
-      'should set the geo attribute from locale',
-      () => {
+    const originalWindow = global.window
+
+    // restore even when an assertion fails, so a broken case can't leak the mocked window into other tests
+    afterEach(() => {
+      global.window = originalWindow
+    })
+
+    it.each<{ name: string, locale: string, expected: Array<[string, string]> }>([
+      { name: 'set the geo attribute from locale', locale: 'en-US', expected: [['geo', 'US']] },
+      { name: 'handle locale with multiple parts', locale: 'zh-CN-Hans', expected: [['geo', 'CN-Hans']] },
+      { name: 'handle locale without geo', locale: 'en', expected: [['geo', '']] },
+    ])(
+      'should $name',
+      ({ locale, expected }) => {
         const mockDocument = createMockDocument()
-        const originalDocument = global.window?.document
         global.window = { document: mockDocument } as any
 
-        SET_DOCUMENT_GEO_FROM_LOCALE('en-US')
+        SET_DOCUMENT_GEO_FROM_LOCALE(locale)
 
-        expect(mockDocument.getSetAttributeCalls()).toEqual([['geo', 'US']])
-
-        global.window = originalDocument as any
-      }
-    )
-
-    it(
-      'should handle locale with multiple parts',
-      () => {
-        const mockDocument = createMockDocument()
-        const originalDocument = global.window?.document
-        global.window = { document: mockDocument } as any
-
-        SET_DOCUMENT_GEO_FROM_LOCALE('zh-CN-Hans')
-
-        expect(mockDocument.getSetAttributeCalls()).toEqual([['geo', 'CN-Hans']])
-
-        global.window = originalDocument as any
-      }
-    )
-
-    it(
-      'should handle locale without geo',
-      () => {
-        const mockDocument = createMockDocument()
-        const originalDocument = global.window?.document
-        global.window = { document: mockDocument } as any
-
-        SET_DOCUMENT_GEO_FROM_LOCALE('en')
-
-        expect(mockDocument.getSetAttributeCalls()).toEqual([['geo', '']])
-
-        global.window = originalDocument as any
+        expect(mockDocument.getSetAttributeCalls()).toEqual(expected)
       }
     )
 
     it(
       'should handle missing document',
       () => {
-        const originalWindow = global.window
         delete (global as any).window
 
         expect(() => SET_DOCUMENT_GEO_FROM_LOCALE('en-US')).not.toThrow()
-
-        global.window = originalWindow
       }
     )
   }

@@ -19,6 +19,7 @@ describe(
     const arrayTestCases = [
       { name: 'array with elements', input: [1, 2, 3], expected: '[1,2,3]' },
       { name: 'empty array', input: [], expected: '[]' },
+      { name: 'array with mixed types', input: [1, 'string', true, null, { obj: 'value' }, [1, 2, 3]], expected: '[1,"string",true,null,{"obj":"value"},[1,2,3]]' },
     ]
 
     it.each(arrayTestCases)(
@@ -41,6 +42,7 @@ describe(
       { name: 'boolean true', input: true, expected: 'true' },
       { name: 'boolean false', input: false, expected: 'false' },
       { name: 'null', input: null, expected: '' },
+      { name: 'undefined', input: undefined, expected: '' },
     ]
 
     it.each(primitiveTestCases)(
@@ -55,8 +57,12 @@ describe(
       { name: 'RegExp object', input: /test/gi, expected: '{}', note: 'RegExp loses its properties' },
       { name: 'Map object', input: new Map([['key', 'value']]), expected: '{}' },
       { name: 'Set object', input: new Set([1, 2, 3]), expected: '{}' },
+      { name: 'empty Map', input: new Map(), expected: '{}' },
+      { name: 'empty Set', input: new Set(), expected: '{}' },
       { name: 'Uint8Array', input: new Uint8Array([1, 2, 3]), expected: '{"0":1,"1":2,"2":3}' },
       { name: 'BigInt', input: 123n, expected: '' },
+      { name: 'functions gracefully', input: () => {}, expected: '' },
+      { name: 'symbols gracefully', input: Symbol('test'), expected: '' },
     ]
 
     it.each(specialObjectTestCases)(
@@ -83,6 +89,7 @@ describe(
 
     const edgeCaseTestCases = [
       { name: 'object with toJSON method', input: { toJSON: () => 'custom' }, expected: '"custom"' },
+      { name: 'objects that throw during serialization', input: { toJSON: () => { throw new Error('Cannot serialize') } }, expected: '' },
       { name: 'object with getter', input: Object.defineProperty({}, 'dynamic', { get: () => 'value', enumerable: true }), expected: '{"dynamic":"value"}' },
       { name: 'object with non-enumerable property', input: Object.defineProperty({ visible: 'yes' }, 'hidden', { value: 'no', enumerable: false }), expected: '{"visible":"yes"}' },
       { name: 'very large number', input: Number.MAX_SAFE_INTEGER, expected: '9007199254740991' },
@@ -96,73 +103,32 @@ describe(
       }
     )
 
-    it(
-      'should handle objects that throw during serialization',
-      () => {
-        const throwingObject = {
-          toJSON () {
-            throw new Error('Cannot serialize')
-          },
-        }
-        expect(TO_JSON(throwingObject)).toBe('')
-      }
-    )
-
-    it(
-      'should handle deeply nested structures',
-      () => {
-        const deep: Record<string, unknown> = { level: 0 }
-        let current: Record<string, unknown> = deep
-        for (let i = 1; i <= 10; i += 1) {
-          current = current[`level${i}`] = { level: i }
-        }
-        expect(TO_JSON(deep)).toContain('"level":0')
-      }
-    )
-
-    it(
-      'should handle arrays with mixed types',
-      () => {
-        const mixed = [1, 'string', true, null, { obj: 'value' }, [1, 2, 3]]
-        expect(TO_JSON(mixed)).toBe('[1,"string",true,null,{"obj":"value"},[1,2,3]]')
-      }
-    )
-
-    it(
-      'should handle empty Map and Set',
-      () => {
-        expect(TO_JSON(new Map())).toBe('{}')
-        expect(TO_JSON(new Set())).toBe('{}')
-      }
-    )
-
-    it(
-      'should return empty string for undefined',
-      () => {
-        expect(TO_JSON(undefined)).toBe('')
-      }
-    )
-
-    it(
-      'should handle circular references gracefully',
-      () => {
-        const obj: Record<string, unknown> = { a: 1 }
-        obj.self = obj
-        expect(TO_JSON(obj)).toBe('')
-      }
-    )
-
-    it(
-      'should handle functions gracefully',
-      () => {
-        expect(TO_JSON(() => {})).toBe('')
-      }
-    )
-
-    it(
-      'should handle symbols gracefully',
-      () => {
-        expect(TO_JSON(Symbol('test'))).toBe('')
+    it.each<{ name: string, build: () => unknown, expected: string }>([
+      {
+        name: 'deeply nested structures',
+        build: () => {
+          const deep: Record<string, unknown> = { level: 0 }
+          let current: Record<string, unknown> = deep
+          for (let i = 1; i <= 10; i += 1) {
+            current = current[`level${i}`] = { level: i }
+          }
+          return deep
+        },
+        expected: '{"level":0,"level1":{"level":1,"level2":{"level":2,"level3":{"level":3,"level4":{"level":4,"level5":{"level":5,"level6":{"level":6,"level7":{"level":7,"level8":{"level":8,"level9":{"level":9,"level10":{"level":10}}}}}}}}}}}',
+      },
+      {
+        name: 'circular references gracefully',
+        build: () => {
+          const obj: Record<string, unknown> = { a: 1 }
+          obj.self = obj
+          return obj
+        },
+        expected: '',
+      },
+    ])(
+      'should handle $name',
+      ({ build, expected }) => {
+        expect(TO_JSON(build())).toBe(expected)
       }
     )
   }
