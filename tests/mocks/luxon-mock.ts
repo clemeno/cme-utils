@@ -22,6 +22,11 @@ class MockDateTimeInstance extends Date {
     return this.getTime()
   }
 
+  // like Luxon: an unparseable or invalid() DateTime reports isValid false
+  get isValid (): boolean {
+    return !isNaN(this.getTime())
+  }
+
   plus (duration: DurationObjectUnits) {
     const totalMs = (duration.years ?? 0) * 31536000000 +
       (duration.quarters ?? 0) * 7776000000 +
@@ -68,8 +73,9 @@ class MockDateTimeInstance extends Date {
     return this.toISOString()
   }
 
+  // like Luxon: an invalid DateTime has no SQL representation
   toSQL (options?: { includeOffset?: boolean }) {
-    return this.toISOString().replace('T', ' ').replace('Z', '')
+    return this.isValid ? this.toISOString().replace('T', ' ').replace('Z', '') : null
   }
 
   setZone (tz: string) {
@@ -132,8 +138,9 @@ export class MockDateTimeClass {
   // eslint-disable-next-line @typescript-eslint/no-useless-constructor
   constructor () {}
 
+  // like Luxon: invalid() returns a DateTime instance whose isValid is false, not null
   static invalid (reason: string) {
-    return null
+    return mockDateTime(NaN)
   }
 
   static fromMillis (millis: number) {

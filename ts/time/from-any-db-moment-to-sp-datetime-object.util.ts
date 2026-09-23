@@ -38,7 +38,8 @@ export const FROM_ANY_DB_MOMENT_TO_SP_DATETIME_OBJECT = <TypeofDateTime = any, D
     }
   }
 
-  if (IS_SET(m)) {
+  // Luxon's invalid() and failed parses return a DateTime with isValid false, not null
+  if (IS_SET(m) && IS_ON((m as any).isValid)) {
     res = {
       date: TO_STRING((m as any).toSQL({ includeOffset: false })),
       timezone_type: 3,

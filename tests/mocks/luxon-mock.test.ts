@@ -286,10 +286,15 @@ describe(
           setSystemTime()
         })
 
-        it(
-          'invalid returns null',
-          () => {
-            expect(MockDateTime.invalid('reason')).toBeNull()
+        it.each<{ name: string, act: () => ReturnType<typeof mockDateTime>, expected: { isValid: boolean, sql: string | null } }>([
+          { name: 'invalid returns an instance with isValid false and no SQL, like Luxon', act: () => MockDateTime.invalid('reason'), expected: { isValid: false, sql: null } },
+          { name: 'fromISO of an unparseable string is invalid', act: () => MockDateTime.fromISO('not a date'), expected: { isValid: false, sql: null } },
+          { name: 'a parsed date is valid', act: () => MockDateTime.fromMillis(0), expected: { isValid: true, sql: '1970-01-01 00:00:00.000' } },
+        ])(
+          '$name',
+          ({ act, expected }) => {
+            const vDateTime = act()
+            expect({ isValid: vDateTime.isValid, sql: vDateTime.toSQL() }).toEqual(expected)
           }
         )
 

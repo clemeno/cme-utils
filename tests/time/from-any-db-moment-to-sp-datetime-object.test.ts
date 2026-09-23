@@ -13,6 +13,7 @@ describe(
       setZone (_tz: string) { return this }
       toSQL (_opts?: any) { return '2023-01-01 00:00:00' }
       get zoneName () { return 'UTC' }
+      get isValid () { return true }
     }
 
     it.each<{ name: string, from: unknown, expected: AppSpDate | null }>([
@@ -42,11 +43,12 @@ describe(
         from: new DateTimeSubInstance(),
         expected: { date: '2023-01-01 00:00:00', timezone_type: 3, timezone: 'UTC' },
       },
-      {
-        name: 'returns null for null input',
-        from: null,
-        expected: null,
-      },
+      { name: 'returns null for null input', from: null, expected: null },
+      { name: 'returns null for undefined input', from: undefined, expected: null },
+      { name: 'returns null for an empty string', from: '', expected: null },
+      { name: 'returns null for an unparseable string (fromISO and fromSQL both invalid)', from: 'not a date', expected: null },
+      { name: 'returns null for NaN', from: NaN, expected: null },
+      { name: 'returns null for an unsupported type', from: {}, expected: null },
     ])(
       '$name',
       ({ from, expected }) => {
