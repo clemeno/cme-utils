@@ -1,7 +1,7 @@
 /**
  * @description
  * This function takes an array of async and returns a promise that resolves when all of the promises have either resolved or rejected.
- * It returns an object containing two arrays: one for fulfilled promises and one for rejected promises.
+ * It returns an object containing two sparse arrays indexed like the input: one for fulfilled values and one for rejection reasons.
  *
  * @param todoInParallel - An array of tasks to be executed in parallel.
  * @returns A promise that resolves to an object containing the `fulfilled` and `rejected` results clearly separated.
@@ -18,7 +18,7 @@ export async function ALL_SETTLED<const T extends readonly unknown[], Reason = a
   const fulfilled: { [K in keyof T]: Awaited<T[K]> | undefined } = [] as unknown as { [K in keyof T]: Awaited<T[K]> | undefined }
   let fulfilledSize = 0
 
-  const rejected: { [K in keyof T]?: Reason } = {}
+  const rejected: { [K in keyof T]?: Reason } = [] as unknown as { [K in keyof T]?: Reason }
   let rejectedSize = 0
 
   for (const [index, settled] of allSettledList.entries()) {

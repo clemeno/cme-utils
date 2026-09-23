@@ -4,197 +4,124 @@ import { ALL_SETTLED } from '../../ts/async/all-settled.util.js'
 describe(
   'ALL_SETTLED',
   () => {
-    it(
-      'should handle an empty array',
-      async () => {
-        const result = await ALL_SETTLED([])
-        expect(result.fulfilledSize).toBe(0)
-        expect(result.rejectedSize).toBe(0)
-        expect(result.size).toBe(0)
-      }
-    )
-
-    it(
-      'should handle all promises fulfilled',
-      async () => {
-        const promises = [
+    it.each<{ name: string, input: () => Array<Promise<unknown>>, expected: { fulfilled: unknown[], rejected: Array<Error | undefined>, fulfilledSize: number, rejectedSize: number, size: number } }>([
+      {
+        name: 'should handle an empty array',
+        input: () => [],
+        expected: { fulfilled: [], rejected: [], fulfilledSize: 0, rejectedSize: 0, size: 0 },
+      },
+      {
+        name: 'should handle all promises fulfilled',
+        input: () => [
           Promise.resolve(1),
           Promise.resolve('hello'),
           Promise.resolve({ key: 'value' }),
-        ]
-        const result = await ALL_SETTLED(promises)
-        expect(result.fulfilled[0]).toBe(1)
-        expect(result.fulfilled[1]).toBe('hello')
-        expect((result.fulfilled[2] as any).key).toBe('value')
-        expect(result.fulfilledSize).toBe(3)
-        expect(result.rejectedSize).toBe(0)
-        expect(result.size).toBe(3)
-      }
-    )
-
-    it(
-      'should handle all promises rejected',
-      async () => {
-        const promises = [
+        ],
+        expected: { fulfilled: [1, 'hello', { key: 'value' }], rejected: [], fulfilledSize: 3, rejectedSize: 0, size: 3 },
+      },
+      {
+        name: 'should handle all promises rejected',
+        input: () => [
           Promise.reject(new Error('error1')),
           Promise.reject(new Error('error2')),
           Promise.reject(new Error('error3')),
-        ]
-        const result = await ALL_SETTLED(promises)
-        expect(result.rejected[0]).toEqual(new Error('error1'))
-        expect(result.rejected[1]).toEqual(new Error('error2'))
-        expect(result.rejected[2]).toEqual(new Error('error3'))
-        expect(result.fulfilledSize).toBe(0)
-        expect(result.rejectedSize).toBe(3)
-        expect(result.size).toBe(3)
-      }
-    )
-
-    it(
-      'should handle mix of fulfilled and rejected promises',
-      async () => {
-        const promises = [
+        ],
+        expected: {
+          fulfilled: [],
+          rejected: [new Error('error1'), new Error('error2'), new Error('error3')],
+          fulfilledSize: 0,
+          rejectedSize: 3,
+          size: 3,
+        },
+      },
+      {
+        name: 'should handle mix of fulfilled and rejected promises',
+        input: () => [
           Promise.resolve(42),
           Promise.reject(new Error('fail')),
           Promise.resolve('success'),
           Promise.reject(new Error('test error')),
-        ]
-        const result = await ALL_SETTLED(promises)
-        expect(result.fulfilled[0]).toBe(42)
-        expect(result.fulfilled[2]).toBe('success')
-        expect(result.rejected[1]).toEqual(new Error('fail'))
-        expect(result.rejected[3]).toEqual(new Error('test error'))
-        expect(result.fulfilledSize).toBe(2)
-        expect(result.rejectedSize).toBe(2)
-        expect(result.size).toBe(4)
-      }
-    )
-
-    it(
-      'should handle single promise that resolves',
-      async () => {
-        const result = await ALL_SETTLED([Promise.resolve('single')])
-        expect(result.fulfilled[0]).toBe('single')
-        expect(result.fulfilledSize).toBe(1)
-        expect(result.rejectedSize).toBe(0)
-        expect(result.size).toBe(1)
-      }
-    )
-
-    it(
-      'should handle single promise that rejects',
-      async () => {
-        const result = await ALL_SETTLED([Promise.reject(new Error('single error'))])
-        expect(result.rejected[0]).toEqual(new Error('single error'))
-        expect(result.fulfilledSize).toBe(0)
-        expect(result.rejectedSize).toBe(1)
-        expect(result.size).toBe(1)
-      }
-    )
-
-    it(
-      'should handle promises that resolve with different types',
-      async () => {
-        const promises = [
+        ],
+        expected: {
+          fulfilled: [42, undefined, 'success'],
+          rejected: [undefined, new Error('fail'), undefined, new Error('test error')],
+          fulfilledSize: 2,
+          rejectedSize: 2,
+          size: 4,
+        },
+      },
+      {
+        name: 'should handle single promise that resolves',
+        input: () => [Promise.resolve('single')],
+        expected: { fulfilled: ['single'], rejected: [], fulfilledSize: 1, rejectedSize: 0, size: 1 },
+      },
+      {
+        name: 'should handle single promise that rejects',
+        input: () => [Promise.reject(new Error('single error'))],
+        expected: { fulfilled: [], rejected: [new Error('single error')], fulfilledSize: 0, rejectedSize: 1, size: 1 },
+      },
+      {
+        name: 'should handle promises that resolve with different types',
+        input: () => [
           Promise.resolve(0),
           Promise.resolve(false),
           Promise.resolve(''),
           Promise.resolve(null),
           Promise.resolve(undefined),
-        ]
-        const result = await ALL_SETTLED(promises)
-        expect(result.fulfilled[0]).toBe(0)
-        expect(result.fulfilled[1]).toBe(false)
-        expect(result.fulfilled[2]).toBe('')
-        expect(result.fulfilled[3]).toBe(null)
-        expect(result.fulfilled[4]).toBe(undefined)
-        expect(result.fulfilledSize).toBe(5)
-        expect(result.rejectedSize).toBe(0)
-        expect(result.size).toBe(5)
-      }
-    )
-
-    it(
-      'should handle promises that reject with different types',
-      async () => {
-        const promises = [
+        ],
+        expected: { fulfilled: [0, false, '', null, undefined], rejected: [], fulfilledSize: 5, rejectedSize: 0, size: 5 },
+      },
+      {
+        name: 'should handle promises that reject with different types',
+        input: () => [
           Promise.reject(new Error('error0')),
           Promise.reject(new Error('error1')),
           Promise.reject(new Error('error2')),
           Promise.reject(new Error('error3')),
           Promise.reject(new Error('error4')),
-        ]
-        const result = await ALL_SETTLED(promises)
-        expect(result.rejected[0]).toEqual(new Error('error0'))
-        expect(result.rejected[1]).toEqual(new Error('error1'))
-        expect(result.rejected[2]).toEqual(new Error('error2'))
-        expect(result.rejected[3]).toEqual(new Error('error3'))
-        expect(result.rejected[4]).toEqual(new Error('error4'))
-        expect(result.fulfilledSize).toBe(0)
-        expect(result.rejectedSize).toBe(5)
-        expect(result.size).toBe(5)
-      }
-    )
-
-    it(
-      'should handle large number of promises',
-      async () => {
-        const promises = []
-
-        for (let i = 0; i < 20; i += 1) {
-          promises.push((i % 2) === 0 ? Promise.resolve(i) : Promise.reject(new Error(`error${i}`)))
-        }
-
-        const result = await ALL_SETTLED(promises)
-
-        // Check fulfilled and rejected promises (even fulfilled, odd rejected)
-        for (let i = 0; i < 20; i += 1) {
-          if ((i % 2) === 0) {
-            expect(result.fulfilled[i]).toBe(i)
-          } else {
-            expect(result.rejected[i]).toEqual(new Error(`error${i}`))
-          }
-        }
-
-        expect(result.fulfilledSize).toBe(10)
-        expect(result.rejectedSize).toBe(10)
-        expect(result.size).toBe(20)
-      }
-    )
-
-    it(
-      'should preserve promise resolution order',
-      async () => {
-        const promises = [
+        ],
+        expected: {
+          fulfilled: [],
+          rejected: [new Error('error0'), new Error('error1'), new Error('error2'), new Error('error3'), new Error('error4')],
+          fulfilledSize: 0,
+          rejectedSize: 5,
+          size: 5,
+        },
+      },
+      {
+        name: 'should handle large number of promises (even indexes fulfilled, odd rejected)',
+        input: () => [...Array(20).keys()].map(inIndex => (inIndex % 2) === 0 ? Promise.resolve(inIndex) : Promise.reject(new Error(`error${inIndex}`))),
+        expected: {
+          fulfilled: [0, undefined, 2, undefined, 4, undefined, 6, undefined, 8, undefined, 10, undefined, 12, undefined, 14, undefined, 16, undefined, 18],
+          rejected: [...Array(20).keys()].map(inIndex => (inIndex % 2) === 1 ? new Error(`error${inIndex}`) : undefined),
+          fulfilledSize: 10,
+          rejectedSize: 10,
+          size: 20,
+        },
+      },
+      {
+        name: 'should preserve promise resolution order',
+        input: () => [
           Promise.resolve('first'),
           Promise.resolve('second'),
           Promise.resolve('third'),
-        ]
-        const result = await ALL_SETTLED(promises)
-        expect(result.fulfilled[0]).toBe('first')
-        expect(result.fulfilled[1]).toBe('second')
-        expect(result.fulfilled[2]).toBe('third')
-        expect(result.fulfilledSize).toBe(3)
-        expect(result.rejectedSize).toBe(0)
-        expect(result.size).toBe(3)
-      }
-    )
-
-    it(
-      'should handle promises that resolve at different times',
-      async () => {
-        const promises = [
+        ],
+        expected: { fulfilled: ['first', 'second', 'third'], rejected: [], fulfilledSize: 3, rejectedSize: 0, size: 3 },
+      },
+      {
+        name: 'should handle promises that resolve at different times',
+        input: () => [
           new Promise(resolve => setTimeout(() => resolve('slow'), 10)),
           Promise.resolve('fast'),
           new Promise(resolve => setTimeout(() => resolve('medium'), 5)),
-        ]
-        const result = await ALL_SETTLED(promises)
-        expect(result.fulfilled[0]).toBe('slow')
-        expect(result.fulfilled[1]).toBe('fast')
-        expect(result.fulfilled[2]).toBe('medium')
-        expect(result.fulfilledSize).toBe(3)
-        expect(result.rejectedSize).toBe(0)
-        expect(result.size).toBe(3)
+        ],
+        expected: { fulfilled: ['slow', 'fast', 'medium'], rejected: [], fulfilledSize: 3, rejectedSize: 0, size: 3 },
+      },
+    ])(
+      '$name',
+      async ({ input, expected }) => {
+        // toEqual reads array holes as undefined; it still fails if `rejected` is a plain object instead of an array
+        expect(await ALL_SETTLED(input())).toEqual(expected)
       }
     )
   }
