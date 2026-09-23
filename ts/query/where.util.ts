@@ -38,7 +38,7 @@ export function WHERE (_: WhereParams): void {
     } else {
       _.qb.where(_.column, _.operator, _.value)
     }
-  } else if (IS_NULL(_.value) || ('§§null§§' === _.value)) {
+  } else if (IS_NULL(_.value) || ((typeof _.value === 'string') && (_.value.toLowerCase() === '§§null§§'))) {
     _.qb.whereNull(_.column)
   } else {
     _.qb.where(_.column, '=', _.value)

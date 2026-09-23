@@ -11,6 +11,7 @@ describe(
       { name: 'explicit operator < → orWhere(col, "<", val)', params: { column: 'age', operator: '<', value: 30 }, expectedMethod: 'orWhere', expectedArgs: ['age', '<', 30] },
       { name: 'null value → orWhereNull(col)', params: { column: 'deleted_at', value: null }, expectedMethod: 'orWhereNull', expectedArgs: ['deleted_at'] },
       { name: '§§null§§ value → orWhereNull(col)', params: { column: 'deleted_at', value: '§§null§§' }, expectedMethod: 'orWhereNull', expectedArgs: ['deleted_at'] },
+      { name: 'uppercase §§NULL§§ → orWhereNull (case-insensitive)', params: { column: 'deleted_at', value: '§§NULL§§' }, expectedMethod: 'orWhereNull', expectedArgs: ['deleted_at'] },
     ]
 
     it.each(equalityCases)(

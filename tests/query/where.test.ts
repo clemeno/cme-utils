@@ -11,6 +11,7 @@ describe(
       { name: 'explicit operator > → where(col, ">", val)', params: { column: 'age', operator: '>', value: 18 }, expectedMethod: 'where', expectedArgs: ['age', '>', 18] },
       { name: 'null value → whereNull(col)', params: { column: 'deleted_at', value: null }, expectedMethod: 'whereNull', expectedArgs: ['deleted_at'] },
       { name: '§§null§§ value → whereNull(col)', params: { column: 'deleted_at', value: '§§null§§' }, expectedMethod: 'whereNull', expectedArgs: ['deleted_at'] },
+      { name: 'uppercase §§NULL§§ → whereNull (case-insensitive)', params: { column: 'deleted_at', value: '§§NULL§§' }, expectedMethod: 'whereNull', expectedArgs: ['deleted_at'] },
     ]
 
     it.each(equalityCases)(
