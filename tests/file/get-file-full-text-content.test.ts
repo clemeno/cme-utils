@@ -13,16 +13,6 @@ describe(
       { name: 'should keep a multi-byte character split between chunks', openStream: () => createMockReadStream([Buffer.from([0x63, 0x61, 0x66, 0xC3]), Buffer.from([0xA9])]), filePath: '/tmp/utf8.txt', expected: 'café' },
       { name: 'should keep a 4-byte character split over three chunks', openStream: () => createMockReadStream([Buffer.from([0xF0, 0x9F]), Buffer.from([0x98]), Buffer.from([0x80, 0x21])]), filePath: '/tmp/emoji.txt', expected: '😀!' },
       { name: 'should accept string chunks (stream opened with an encoding)', openStream: () => createMockReadStream(['base64Key', '==\n']), filePath: '/tmp/key.txt', expected: 'base64Key==' },
-      { name: 'should handle file read errors gracefully', openStream: () => { throw new Error('File not found') }, filePath: '/tmp/nonexistent.txt', expected: '' },
-      {
-        name: 'should keep the chunks read before an error in the middle of the stream',
-        openStream: async function * () {
-          yield Buffer.from('partial ')
-          throw new Error('Read error')
-        },
-        filePath: '/tmp/partial.txt',
-        expected: 'partial',
-      },
     ])(
       '$name',
       async ({ openStream, filePath, expected }) => {
@@ -39,6 +29,23 @@ describe(
 
         expect(result).toBe(expected)
         expect(vPathList).toEqual([filePath])
+      }
+    )
+
+    it.each<{ name: string, createReadStream: (inFilePath: string) => AsyncIterable<Buffer>, expectedError: Error }>([
+      { name: 'the file cannot be opened', createReadStream: () => { throw new Error('ENOENT: no such file or directory') }, expectedError: new Error('ENOENT: no such file or directory') },
+      {
+        name: 'the stream fails midway (no partial content returned)',
+        createReadStream: async function * () {
+          yield Buffer.from('partial ')
+          throw new Error('Read error')
+        },
+        expectedError: new Error('Read error'),
+      },
+    ])(
+      'rejects when $name',
+      async ({ createReadStream, expectedError }) => {
+        await expect(GET_FILE_FULL_TEXT_CONTENT({ createReadStream, filePath: '/tmp/any.txt' })).rejects.toThrow(expectedError)
       }
     )
   }
