@@ -29,7 +29,7 @@ describe(
       { name: '3 plain values → orWhere callback + 3 inner whereNot', column: 'col', values: ['a', 'b', 'c'], expectedInner: [{ method: 'whereNot', args: ['col', '=', 'a'] }, { method: 'whereNot', args: ['col', '=', 'b'] }, { method: 'whereNot', args: ['col', '=', 'c'] }] },
       { name: 'empty values → orWhere callback, no inner calls', column: 'col', values: [], expectedInner: [] },
       { name: 'Set input → orWhere callback + whereNot per entry', column: 'tag', values: new Set(['p', 'q']), expectedInner: [{ method: 'whereNot', args: ['tag', '=', 'p'] }, { method: 'whereNot', args: ['tag', '=', 'q'] }] },
-      { name: 'mixed sentinels + plain → where(0), whereNull, whereNot inside callback', column: 'col', values: ['§§not0§§', '§§null§§', 'active'], expectedInner: [{ method: 'where', args: ['col', '=', 0] }, { method: 'whereNull', args: ['col'] }, { method: 'whereNot', args: ['col', '=', 'active'] }] },
+      { name: 'mixed sentinels + plain → where(0), whereNotNull, whereNot inside callback', column: 'col', values: ['§§not0§§', '§§null§§', 'active'], expectedInner: [{ method: 'where', args: ['col', '=', 0] }, { method: 'whereNotNull', args: ['col'] }, { method: 'whereNot', args: ['col', '=', 'active'] }] },
     ]
 
     it.each(multiValueCases)(

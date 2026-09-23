@@ -23,7 +23,7 @@ export function OR_WHERE_NOT_IN (_: OrWhereInParams): void {
         if (lowercaseV === '§§not0§§') {
           qb.where(_.column, '=', 0)
         } else if (lowercaseV === '§§null§§') {
-          qb.whereNull(_.column)
+          qb.whereNotNull(_.column)
         } else {
           qb.whereNot(_.column, '=', v)
         }
