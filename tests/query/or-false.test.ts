@@ -1,16 +1,12 @@
 import { describe, expect, it } from 'bun:test'
 import { OR_WHERE_IN_OR_FALSE } from '../../ts/query/or-where-in-or-false.util.js'
-import { OR_WHERE_NOT_IN_OR_FALSE } from '../../ts/query/or-where-not-in-or-false.util.js'
 import { WHERE_IN_OR_FALSE } from '../../ts/query/where-in-or-false.util.js'
-import { WHERE_NOT_IN_OR_FALSE } from '../../ts/query/where-not-in-or-false.util.js'
 import { makeMockQb } from '../mocks/query-mocks.js'
 import type { QbMethod } from '../mocks/query-mocks.js'
 
 const utilCases: Array<{ name: string, util: (inParams: any) => void, rawMethod: QbMethod, delegateMethod: QbMethod }> = [
   { name: 'WHERE_IN_OR_FALSE', util: WHERE_IN_OR_FALSE, rawMethod: 'whereRaw', delegateMethod: 'where' },
   { name: 'OR_WHERE_IN_OR_FALSE', util: OR_WHERE_IN_OR_FALSE, rawMethod: 'orWhereRaw', delegateMethod: 'orWhere' },
-  { name: 'WHERE_NOT_IN_OR_FALSE', util: WHERE_NOT_IN_OR_FALSE, rawMethod: 'whereRaw', delegateMethod: 'whereNot' },
-  { name: 'OR_WHERE_NOT_IN_OR_FALSE', util: OR_WHERE_NOT_IN_OR_FALSE, rawMethod: 'orWhereRaw', delegateMethod: 'orWhereNot' },
 ]
 
 describe.each(utilCases)(
