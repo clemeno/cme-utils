@@ -27,9 +27,10 @@ describe(
     const multiValueCases: Array<{ name: string, column: string, values: unknown, expectedInner: QbCall[] }> = [
       { name: '2 plain values → orWhere callback + 2 inner whereNot', column: 'role', values: ['admin', 'editor'], expectedInner: [{ method: 'whereNot', args: ['role', '=', 'admin'] }, { method: 'whereNot', args: ['role', '=', 'editor'] }] },
       { name: '3 plain values → orWhere callback + 3 inner whereNot', column: 'col', values: ['a', 'b', 'c'], expectedInner: [{ method: 'whereNot', args: ['col', '=', 'a'] }, { method: 'whereNot', args: ['col', '=', 'b'] }, { method: 'whereNot', args: ['col', '=', 'c'] }] },
-      { name: 'empty values → orWhere callback, no inner calls', column: 'col', values: [], expectedInner: [] },
+      { name: 'empty values → empty orWhere group, dropped by knex (filter ignored)', column: 'col', values: [], expectedInner: [] },
       { name: 'Set input → orWhere callback + whereNot per entry', column: 'tag', values: new Set(['p', 'q']), expectedInner: [{ method: 'whereNot', args: ['tag', '=', 'p'] }, { method: 'whereNot', args: ['tag', '=', 'q'] }] },
       { name: 'mixed sentinels + plain → where(0), whereNotNull, whereNot inside callback', column: 'col', values: ['§§not0§§', '§§null§§', 'active'], expectedInner: [{ method: 'where', args: ['col', '=', 0] }, { method: 'whereNotNull', args: ['col'] }, { method: 'whereNot', args: ['col', '=', 'active'] }] },
+      { name: 'multi with uppercase sentinels → case-insensitive', column: 'col', values: ['§§NOT0§§', '§§NULL§§'], expectedInner: [{ method: 'where', args: ['col', '=', 0] }, { method: 'whereNotNull', args: ['col'] }] },
     ]
 
     it.each(multiValueCases)(

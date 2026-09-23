@@ -30,11 +30,15 @@ describe.each(utilCases)(
       }
     )
 
-    it(
-      `non-empty Set → delegates (${delegateMethod})`,
-      () => {
+    it.each([
+      { name: 'non-empty array', values: [42] },
+      { name: 'non-empty Set', values: new Set([42]) },
+      { name: 'non-empty Map', values: new Map([['k', 42]]) },
+    ])(
+      `$name → delegates (${delegateMethod})`,
+      ({ values }) => {
         const { qb, calls } = makeMockQb()
-        util({ qb, column: 'id', values: new Set([42]) })
+        util({ qb, column: 'id', values })
         expect(calls).toEqual([{ method: delegateMethod, args: ['id', '=', 42] }])
       }
     )

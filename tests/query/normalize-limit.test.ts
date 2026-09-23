@@ -64,13 +64,5 @@ describe(
         expect(NORMALIZE_LIMIT(input)).toBe(expected)
       }
     )
-
-    it(
-      'should return a string',
-      () => {
-        const result = NORMALIZE_LIMIT(42)
-        expect(typeof result).toBe('string')
-      }
-    )
   }
 )

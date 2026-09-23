@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test'
 import { NORMALIZE_PAGE } from '../../ts/query/normalize-page.util.js'
+import type { numeric } from '../../ts/numeric.js'
 
 describe(
   'NORMALIZE_PAGE',
@@ -53,7 +54,7 @@ describe(
       }
     )
 
-    const invalidInputTestCases = [
+    const invalidInputTestCases: Array<{ name: string, page: unknown, pages: number, expected: string }> = [
       { name: 'null page', page: null, pages: 10, expected: '1' },
       { name: 'undefined page', page: undefined, pages: 10, expected: '1' },
       { name: 'invalid string page', page: 'abc', pages: 10, expected: '1' },
@@ -62,11 +63,11 @@ describe(
     it.each(invalidInputTestCases)(
       'should handle invalid inputs for $name',
       ({ page, pages, expected }) => {
-        expect(NORMALIZE_PAGE({ page, normalizedPages: pages })).toBe(expected)
+        expect(NORMALIZE_PAGE({ page: page as numeric, normalizedPages: pages })).toBe(expected)
       }
     )
 
-    const invalidPagesTestCases = [
+    const invalidPagesTestCases: Array<{ name: string, page: number, pages: unknown, expected: string }> = [
       { name: 'null pages', page: 5, pages: null, expected: '1' },
       { name: 'zero pages', page: 5, pages: 0, expected: '1' },
     ]
@@ -74,15 +75,7 @@ describe(
     it.each(invalidPagesTestCases)(
       'should handle invalid normalizedPages for $name',
       ({ page, pages, expected }) => {
-        expect(NORMALIZE_PAGE({ page, normalizedPages: pages })).toBe(expected)
-      }
-    )
-
-    it(
-      'should return a string',
-      () => {
-        const result = NORMALIZE_PAGE({ page: 1, normalizedPages: 10 })
-        expect(typeof result).toBe('string')
+        expect(NORMALIZE_PAGE({ page, normalizedPages: pages as numeric })).toBe(expected)
       }
     )
   }

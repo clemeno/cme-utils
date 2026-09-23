@@ -8,13 +8,14 @@ describe(
   () => {
     const testCases: Array<{
       name: string
-      or: Array<{ column: string, operator?: string, value: unknown }>
+      or: Array<{ column: string, operator?: string, value: unknown, bKeepPercentAndDash?: boolean }>
       expectedInner: QbCall[]
     }> = [
       { name: '2 OR conditions → where callback + 2 inner orWhere calls', or: [{ column: 'city', value: 'Paris' }, { column: 'city', value: 'Lyon' }], expectedInner: [{ method: 'orWhere', args: ['city', '=', 'Paris'] }, { method: 'orWhere', args: ['city', '=', 'Lyon'] }] },
       { name: 'empty or array → where callback with no inner calls', or: [], expectedInner: [] },
       { name: 'single condition → where callback + 1 inner orWhere', or: [{ column: 'status', value: 'active' }], expectedInner: [{ method: 'orWhere', args: ['status', '=', 'active'] }] },
       { name: 'custom operator → orWhere with that operator', or: [{ column: 'age', operator: '>', value: 18 }], expectedInner: [{ method: 'orWhere', args: ['age', '>', 18] }] },
+      { name: 'bKeepPercentAndDash is passed through to OR_WHERE', or: [{ column: 'name', operator: 'ilike', value: '5%', bKeepPercentAndDash: true }], expectedInner: [{ method: 'orWhere', args: ['name', 'like', '%5\\%%'] }] },
     ]
 
     it.each(testCases)(

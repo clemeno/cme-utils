@@ -1,62 +1,30 @@
 import { describe, expect, it } from 'bun:test'
 import { NORMALIZE_PAGINATION } from '../../ts/query/normalize-pagination.util.js'
+import type { numeric } from '../../ts/numeric.js'
 
 describe(
   'NORMALIZE_PAGINATION',
   () => {
-    it(
-      'page 1 of 10, 100 items',
-      () => {
-        const result = NORMALIZE_PAGINATION({ page: '1', perPage: '10', filteredCount: '100' })
-        expect(result).toEqual({
-          normalizedPage: '1',
-          normalizedPerPage: '10',
-          normalizedPages: '10',
-          normalizedOffset: '0',
-          normalizedLimit: '10',
-        })
-      }
-    )
+    const testCases: Array<{
+      name: string
+      input: { page: numeric, perPage: numeric, filteredCount: numeric }
+      expected: { normalizedPage: string, normalizedPerPage: string, normalizedPages: string, normalizedOffset: string, normalizedLimit: string }
+    }> = [
+      { name: 'page 1 of 10, 100 items', input: { page: '1', perPage: '10', filteredCount: '100' }, expected: { normalizedPage: '1', normalizedPerPage: '10', normalizedPages: '10', normalizedOffset: '0', normalizedLimit: '10' } },
+      { name: 'last partial page: page 3 of 3, 25 items', input: { page: '3', perPage: '10', filteredCount: '25' }, expected: { normalizedPage: '3', normalizedPerPage: '10', normalizedPages: '3', normalizedOffset: '20', normalizedLimit: '10' } },
+      { name: 'page exceeds total pages → clamped to last page', input: { page: '99', perPage: '10', filteredCount: '20' }, expected: { normalizedPage: '2', normalizedPerPage: '10', normalizedPages: '2', normalizedOffset: '10', normalizedLimit: '10' } },
+      { name: 'numbers instead of strings → same normalized strings', input: { page: 2, perPage: 10, filteredCount: 25 }, expected: { normalizedPage: '2', normalizedPerPage: '10', normalizedPages: '3', normalizedOffset: '10', normalizedLimit: '10' } },
+      { name: 'no items → 0 pages, page stays 1, offset 0', input: { page: '1', perPage: '10', filteredCount: '0' }, expected: { normalizedPage: '1', normalizedPerPage: '10', normalizedPages: '0', normalizedOffset: '0', normalizedLimit: '10' } },
+      { name: 'page 0 → raised to 1', input: { page: '0', perPage: '10', filteredCount: '25' }, expected: { normalizedPage: '1', normalizedPerPage: '10', normalizedPages: '3', normalizedOffset: '0', normalizedLimit: '10' } },
+      { name: 'negative page → raised to 1', input: { page: '-3', perPage: '10', filteredCount: '25' }, expected: { normalizedPage: '1', normalizedPerPage: '10', normalizedPages: '3', normalizedOffset: '0', normalizedLimit: '10' } },
+      { name: 'perPage 0 → raised to 1', input: { page: '2', perPage: '0', filteredCount: '25' }, expected: { normalizedPage: '2', normalizedPerPage: '1', normalizedPages: '25', normalizedOffset: '1', normalizedLimit: '1' } },
+      { name: 'non-numeric page and perPage → 1', input: { page: 'abc', perPage: 'x', filteredCount: '25' }, expected: { normalizedPage: '1', normalizedPerPage: '1', normalizedPages: '25', normalizedOffset: '0', normalizedLimit: '1' } },
+    ]
 
-    it(
-      'page 3 of 3, 25 items',
-      () => {
-        const result = NORMALIZE_PAGINATION({ page: '3', perPage: '10', filteredCount: '25' })
-        expect(result).toEqual({
-          normalizedPage: '3',
-          normalizedPerPage: '10',
-          normalizedPages: '3',
-          normalizedOffset: '20',
-          normalizedLimit: '10',
-        })
-      }
-    )
-
-    it(
-      'page exceeds total pages → clamped to last page',
-      () => {
-        const result = NORMALIZE_PAGINATION({ page: '99', perPage: '10', filteredCount: '20' })
-        expect(result).toEqual({
-          normalizedPage: '2',
-          normalizedPerPage: '10',
-          normalizedPages: '2',
-          normalizedOffset: '10',
-          normalizedLimit: '10',
-        })
-      }
-    )
-
-    it(
-      'returns an object with all expected keys',
-      () => {
-        const result = NORMALIZE_PAGINATION({ page: '1', perPage: '20', filteredCount: '200' })
-        expect(Object.keys(result).sort()).toEqual([
-          'normalizedLimit',
-          'normalizedOffset',
-          'normalizedPage',
-          'normalizedPages',
-          'normalizedPerPage',
-        ])
+    it.each(testCases)(
+      '$name',
+      ({ input, expected }) => {
+        expect(NORMALIZE_PAGINATION(input)).toEqual(expected)
       }
     )
   }

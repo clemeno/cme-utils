@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test'
 import { NORMALIZE_OFFSET } from '../../ts/query/normalize-offset.util.js'
+import type { numeric } from '../../ts/numeric.js'
 
 describe(
   'NORMALIZE_OFFSET',
@@ -55,7 +56,7 @@ describe(
       }
     )
 
-    const invalidInputTestCases = [
+    const invalidInputTestCases: Array<{ name: string, page: unknown, perPage: number, expected: string }> = [
       { name: 'null page', page: null, perPage: 10, expected: '' },
       { name: 'undefined page', page: undefined, perPage: 10, expected: '' },
       { name: 'invalid string page', page: 'abc', perPage: 10, expected: '' },
@@ -64,15 +65,7 @@ describe(
     it.each(invalidInputTestCases)(
       'should handle invalid inputs for $name',
       ({ page, perPage, expected }) => {
-        expect(NORMALIZE_OFFSET({ normalizedPage: page, normalizedPerPage: perPage })).toBe(expected)
-      }
-    )
-
-    it(
-      'should return a string',
-      () => {
-        const result = NORMALIZE_OFFSET({ normalizedPage: 1, normalizedPerPage: 10 })
-        expect(typeof result).toBe('string')
+        expect(NORMALIZE_OFFSET({ normalizedPage: page as numeric, normalizedPerPage: perPage })).toBe(expected)
       }
     )
   }

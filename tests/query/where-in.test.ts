@@ -6,25 +6,30 @@ import type { QbCall } from '../mocks/query-mocks.js'
 describe(
   'WHERE_IN',
   () => {
-    const singleValueCases: Array<{ name: string, column: string, values: unknown[], expectedCalls: QbCall[] }> = [
+    const singleValueCases: Array<{ name: string, column: string, values: unknown, expectedCalls: QbCall[] }> = [
       { name: 'single plain value → where(col, "=", val)', column: 'id', values: [42], expectedCalls: [{ method: 'where', args: ['id', '=', 42] }] },
       { name: 'single §§not0§§ → whereNot(col, "=", 0)', column: 'status', values: ['§§not0§§'], expectedCalls: [{ method: 'whereNot', args: ['status', '=', 0] }] },
       { name: 'single §§null§§ → whereNull(col)', column: 'deleted_at', values: ['§§null§§'], expectedCalls: [{ method: 'whereNull', args: ['deleted_at'] }] },
+      { name: 'uppercase §§NOT0§§ → whereNot (case-insensitive)', column: 'status', values: ['§§NOT0§§'], expectedCalls: [{ method: 'whereNot', args: ['status', '=', 0] }] },
+      { name: 'uppercase §§NULL§§ → whereNull (case-insensitive)', column: 'deleted_at', values: ['§§NULL§§'], expectedCalls: [{ method: 'whereNull', args: ['deleted_at'] }] },
+      { name: 'Set with single entry → where(col, "=", val)', column: 'id', values: new Set([7]), expectedCalls: [{ method: 'where', args: ['id', '=', 7] }] },
     ]
 
     it.each(singleValueCases)(
       '$name',
       ({ column, values, expectedCalls }) => {
         const { qb, calls } = makeMockQb()
-        WHERE_IN({ qb, column, values })
+        WHERE_IN({ qb, column, values: values as any })
         expect(calls).toEqual(expectedCalls)
       }
     )
 
     const multiValueCases: Array<{ name: string, column: string, values: unknown, expectedInner: QbCall[] }> = [
+      { name: 'empty values → empty where group, dropped by knex (filter ignored)', column: 'id', values: [], expectedInner: [] },
       { name: '2 plain values → orWhere for each inside callback', column: 'role', values: ['admin', 'editor'], expectedInner: [{ method: 'orWhere', args: ['role', '=', 'admin'] }, { method: 'orWhere', args: ['role', '=', 'editor'] }] },
       { name: 'multi with §§not0§§ → orWhereNot for sentinel', column: 'status', values: ['§§not0§§', 1], expectedInner: [{ method: 'orWhereNot', args: ['status', '=', 0] }, { method: 'orWhere', args: ['status', '=', 1] }] },
       { name: 'multi with §§null§§ → orWhereNull for sentinel', column: 'deleted_at', values: ['§§null§§', 1], expectedInner: [{ method: 'orWhereNull', args: ['deleted_at'] }, { method: 'orWhere', args: ['deleted_at', '=', 1] }] },
+      { name: 'multi with uppercase sentinels → case-insensitive', column: 'col', values: ['§§NOT0§§', '§§NULL§§'], expectedInner: [{ method: 'orWhereNot', args: ['col', '=', 0] }, { method: 'orWhereNull', args: ['col'] }] },
       { name: 'Map values → iterates Map.values() inside callback', column: 'n', values: new Map([['a', 1], ['b', 2]]), expectedInner: [{ method: 'orWhere', args: ['n', '=', 1] }, { method: 'orWhere', args: ['n', '=', 2] }] },
     ]
 
