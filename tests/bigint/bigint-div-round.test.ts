@@ -12,7 +12,23 @@ describe(
       { name: 'zero dividend returns zero', input: { dividend: 0n, divisor: 10n }, expected: 0n },
       { name: 'dividend just below midpoint rounds down', input: { dividend: 14n, divisor: 10n }, expected: 1n },
       { name: 'dividend at three-quarters rounds up', input: { dividend: 17n, divisor: 10n }, expected: 2n },
+      { name: 'odd divisor, a third rounds down', input: { dividend: 1n, divisor: 3n }, expected: 0n },
+      { name: 'odd divisor, one and a third rounds down', input: { dividend: 4n, divisor: 3n }, expected: 1n },
+      { name: 'odd divisor, two thirds rounds up', input: { dividend: 2n, divisor: 3n }, expected: 1n },
+      { name: 'negative dividend above half away rounds down', input: { dividend: -26n, divisor: 10n }, expected: -3n },
+      { name: 'negative dividend at half rounds toward +infinity', input: { dividend: -25n, divisor: 10n }, expected: -2n },
+      { name: 'negative dividend below half away rounds up', input: { dividend: -24n, divisor: 10n }, expected: -2n },
+      { name: 'negative divisor rounds to the nearest', input: { dividend: 5n, divisor: -3n }, expected: -2n },
+      { name: 'negative divisor at half rounds toward +infinity', input: { dividend: 3n, divisor: -2n }, expected: -1n },
+      { name: 'both negative rounds to the nearest', input: { dividend: -5n, divisor: -3n }, expected: 2n },
     ]
+
+    it(
+      'division by zero throws a RangeError',
+      () => {
+        expect(() => BIGINT_DIV_ROUND({ dividend: 7n, divisor: 0n })).toThrow(RangeError)
+      }
+    )
 
     it.each(testCases)(
       '$name',
