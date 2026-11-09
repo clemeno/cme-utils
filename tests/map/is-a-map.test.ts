@@ -4,7 +4,7 @@ import { IS_A_MAP } from '../../ts/map/is-a-map.util.js'
 describe(
   'IS_A_MAP',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: 'should return true for empty Map', input: new Map(), expected: true },
       { name: 'should return true for Map with one entry', input: new Map([['key', 'value']]), expected: true },
       { name: 'should return true for Map with multiple entries', input: new Map([[1, 'one'], [2, 'two']]), expected: true },

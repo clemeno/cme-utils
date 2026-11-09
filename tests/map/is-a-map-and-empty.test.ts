@@ -4,7 +4,7 @@ import { IS_A_MAP_AND_EMPTY } from '../../ts/map/is-a-map-and-empty.util.js'
 describe(
   'IS_A_MAP_AND_EMPTY',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: 'should return true for empty Map', input: new Map(), expected: true },
       { name: 'should return false for Map with one entry', input: new Map([['key', 'value']]), expected: false },
       { name: 'should return false for Map with multiple entries', input: new Map([[1, 'one'], [2, 'two']]), expected: false },
@@ -20,7 +20,7 @@ describe(
 
     it.each(testCases)(
       '$name',
-      ({ name, input, expected }) => {
+      ({ input, expected }) => {
         expect(IS_A_MAP_AND_EMPTY(input)).toBe(expected)
       }
     )

@@ -4,7 +4,7 @@ import { IS_A_MAP_AND_NOT_EMPTY } from '../../ts/map/is-a-map-and-not-empty.util
 describe(
   'IS_A_MAP_AND_NOT_EMPTY',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: 'should return true for Map with one entry', input: new Map([['key', 'value']]), expected: true },
       { name: 'should return true for Map with multiple entries', input: new Map([[1, 'one'], [2, 'two']]), expected: true },
       { name: 'should return true for Map with object value', input: new Map([['a', {}]]), expected: true },
