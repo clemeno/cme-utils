@@ -5,11 +5,11 @@ import { GET_LOCALE } from '../space/index.js'
 /**
  * * provide Settings -> import { Settings } from 'luxon'
  */
-export const TO_LOCAL_NUMBER_WITH_2_F_DIGITS = <TypeofSettings = any> (_: {
+export function TO_LOCAL_NUMBER_WITH_2_F_DIGITS<TypeofSettings = any> (_: {
   Settings: TypeofSettings
   x: any
-}): string => (
-    IS_NUMERIC(_.x)
-      ? TO_NUMBER(_.x).toLocaleString(GET_LOCALE(_.Settings), { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-      : ''
-  )
+}): string {
+  return IS_NUMERIC(_.x)
+    ? TO_NUMBER(_.x).toLocaleString(GET_LOCALE(_.Settings), { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    : ''
+}

@@ -3,7 +3,7 @@
  * Random integer between `a` and `b`, both bounds included, in any order (decimals are truncated first).
  * @description use `crypto.getRandomValues` instead for secure random number generation
  */
-export const GET_RANDOM_INT_BETWEEN = (_: { a: number, b: number }): number => {
+export function GET_RANDOM_INT_BETWEEN (_: { a: number, b: number }): number {
   const a = Math.trunc(_.a)
   const b = Math.trunc(_.b)
 

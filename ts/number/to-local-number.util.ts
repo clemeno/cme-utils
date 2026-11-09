@@ -5,7 +5,9 @@ import { GET_LOCALE } from '../space/index.js'
 /**
  * * provide Settings -> import { Settings } from 'luxon'
  */
-export const TO_LOCAL_NUMBER = <TypeofSettings = any> (_: {
+export function TO_LOCAL_NUMBER<TypeofSettings = any> (_: {
   Settings: TypeofSettings
   x: any
-}): string => IS_NUMERIC(_.x) ? TO_NUMBER(_.x).toLocaleString(GET_LOCALE(_.Settings)) : ''
+}): string {
+  return IS_NUMERIC(_.x) ? TO_NUMBER(_.x).toLocaleString(GET_LOCALE(_.Settings)) : ''
+}
