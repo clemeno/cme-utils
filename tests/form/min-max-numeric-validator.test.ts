@@ -4,7 +4,7 @@ import { MIN_MAX_NUMERIC_VALIDATOR } from '../../ts/form/min-max-numeric-validat
 describe(
   'MIN_MAX_NUMERIC_VALIDATOR',
   () => {
-    const withinRangeTestCases = [
+    const withinRangeTestCases: Array<{ name: string, value: number | string }> = [
       { name: 'minimum value', value: 0 },
       { name: 'middle value', value: 50 },
       { name: 'maximum value', value: 100 },
@@ -21,7 +21,7 @@ describe(
       }
     )
 
-    const belowMinimumTestCases = [
+    const belowMinimumTestCases: Array<{ name: string, value: number | string }> = [
       { name: 'number below minimum', value: 5 },
       { name: 'string below minimum', value: '5' },
     ]
@@ -34,7 +34,7 @@ describe(
       }
     )
 
-    const aboveMaximumTestCases = [
+    const aboveMaximumTestCases: Array<{ name: string, value: number | string }> = [
       { name: 'number above maximum', value: 100 },
       { name: 'string above maximum', value: '100' },
     ]
@@ -47,7 +47,7 @@ describe(
       }
     )
 
-    const nonNumericTestCases = [
+    const nonNumericTestCases: Array<{ name: string, value: string | {} }> = [
       { name: 'non-numeric string', value: 'abc' },
       { name: 'object', value: {} },
     ]
@@ -60,7 +60,7 @@ describe(
       }
     )
 
-    const nullUndefinedTestCases = [
+    const nullUndefinedTestCases: Array<{ name: string, value: null | undefined | string }> = [
       { name: 'null', value: null },
       { name: 'undefined', value: undefined },
       { name: 'empty string', value: '' },
@@ -74,7 +74,7 @@ describe(
       }
     )
 
-    const negativeRangeTestCases = [
+    const negativeRangeTestCases: Array<{ name: string, value: number }> = [
       { name: 'negative minimum', value: -50 },
       { name: 'zero in negative range', value: 0 },
       { name: 'positive maximum', value: 50 },
@@ -88,7 +88,7 @@ describe(
       }
     )
 
-    const outsideNegativeRangeTestCases = [
+    const outsideNegativeRangeTestCases: Array<{ name: string, value: number }> = [
       { name: '-100', value: -100 },
       { name: '100', value: 100 },
     ]
@@ -101,7 +101,7 @@ describe(
       }
     )
 
-    const decimalRangeTestCases = [
+    const decimalRangeTestCases: Array<{ name: string, value: number | string }> = [
       { name: 'decimal within range', value: 1.5 },
       { name: 'string decimal within range', value: '2.5' },
     ]
@@ -114,7 +114,7 @@ describe(
       }
     )
 
-    const outsideDecimalRangeTestCases = [
+    const outsideDecimalRangeTestCases: Array<{ name: string, value: number }> = [
       { name: '0.3', value: 0.3 },
       { name: '11.0', value: 11.0 },
     ]

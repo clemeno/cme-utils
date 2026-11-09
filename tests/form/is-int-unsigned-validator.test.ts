@@ -4,7 +4,7 @@ import { IS_INT_UNSIGNED_VALIDATOR } from '../../ts/form/is-int-unsigned-validat
 describe(
   'IS_INT_UNSIGNED_VALIDATOR',
   () => {
-    const validUnsignedIntTestCases = [
+    const validUnsignedIntTestCases: Array<{ name: string, value: number | string }> = [
       { name: '0', value: 0 },
       { name: '1', value: 1 },
       { name: '100', value: 100 },
@@ -20,7 +20,7 @@ describe(
       }
     )
 
-    const negativeNumberTestCases = [
+    const negativeNumberTestCases: Array<{ name: string, value: number | string }> = [
       { name: '-1', value: -1 },
       { name: 'string "-5"', value: '-5' },
     ]
@@ -33,7 +33,7 @@ describe(
       }
     )
 
-    const tooLargeTestCases = [
+    const tooLargeTestCases: Array<{ name: string, value: number | string }> = [
       { name: '4294967296', value: 4294967296 },
       { name: 'string "4294967296"', value: '4294967296' },
     ]
@@ -46,7 +46,7 @@ describe(
       }
     )
 
-    const nonIntegerTestCases = [
+    const nonIntegerTestCases: Array<{ name: string, value: number | string }> = [
       { name: '1.5', value: 1.5 },
       { name: 'string "1.5"', value: '1.5' },
     ]
@@ -59,7 +59,7 @@ describe(
       }
     )
 
-    const nonNumericStringTestCases = [
+    const nonNumericStringTestCases: Array<{ name: string, value: string }> = [
       { name: '"abc"', value: 'abc' },
       { name: '"12abc"', value: '12abc' },
     ]
@@ -72,7 +72,7 @@ describe(
       }
     )
 
-    const nullUndefinedEmptyTestCases = [
+    const nullUndefinedEmptyTestCases: Array<{ name: string, value: null | undefined | string }> = [
       { name: 'null', value: null },
       { name: 'undefined', value: undefined },
       { name: 'empty string', value: '' },
@@ -85,7 +85,7 @@ describe(
       }
     )
 
-    const booleanTestCases = [
+    const booleanTestCases: Array<{ name: string, value: boolean }> = [
       { name: 'true', value: true },
       { name: 'false', value: false },
     ]

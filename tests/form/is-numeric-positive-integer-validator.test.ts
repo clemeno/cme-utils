@@ -4,7 +4,7 @@ import { IS_NUMERIC_POSITIVE_INTEGER_VALIDATOR } from '../../ts/form/is-numeric-
 describe(
   'IS_NUMERIC_POSITIVE_INTEGER_VALIDATOR',
   () => {
-    const validPositiveIntTestCases = [
+    const validPositiveIntTestCases: Array<{ name: string, value: number }> = [
       { name: '0', value: 0 },
       { name: '1', value: 1 },
       { name: '100', value: 100 },
@@ -18,7 +18,7 @@ describe(
       }
     )
 
-    const validPositiveIntStringTestCases = [
+    const validPositiveIntStringTestCases: Array<{ name: string, value: string }> = [
       { name: '"0"', value: '0' },
       { name: '"1"', value: '1' },
       { name: '"123"', value: '123' },
@@ -32,7 +32,7 @@ describe(
       }
     )
 
-    const negativeNumberTestCases = [
+    const negativeNumberTestCases: Array<{ name: string, value: number | string }> = [
       { name: '-1', value: -1 },
       { name: 'string "-5"', value: '-5' },
     ]
@@ -45,7 +45,7 @@ describe(
       }
     )
 
-    const decimalNumberTestCases = [
+    const decimalNumberTestCases: Array<{ name: string, value: number | string }> = [
       { name: '1.5', value: 1.5 },
       { name: 'string "1.5"', value: '1.5' },
     ]
@@ -58,7 +58,7 @@ describe(
       }
     )
 
-    const nonNumericStringTestCases = [
+    const nonNumericStringTestCases: Array<{ name: string, value: string }> = [
       { name: '"abc"', value: 'abc' },
       { name: 'string "123abc"', value: '123abc' },
       { name: 'radix-prefixed string "0x10"', value: '0x10' },
@@ -72,7 +72,7 @@ describe(
       }
     )
 
-    const whitespaceStringTestCases = [
+    const whitespaceStringTestCases: Array<{ name: string, value: string }> = [
       { name: '" 123 "', value: ' 123 ' },
       { name: '"123 "', value: '123 ' },
     ]
@@ -93,7 +93,7 @@ describe(
       }
     )
 
-    const nonNumberNonStringTestCases = [
+    const nonNumberNonStringTestCases: Array<{ name: string, value: {} | boolean }> = [
       { name: 'true', value: true },
       { name: 'empty object', value: {} },
       { name: 'empty array', value: [] },
@@ -107,7 +107,7 @@ describe(
       }
     )
 
-    const nullUndefinedTestCases = [
+    const nullUndefinedTestCases: Array<{ name: string, value: null | undefined }> = [
       { name: 'null', value: null },
       { name: 'undefined', value: undefined },
     ]
