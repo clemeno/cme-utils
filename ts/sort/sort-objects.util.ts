@@ -28,7 +28,7 @@ export type ANY_SORT_FUNCTION_TYPE = (a: any, b: any) => number
  * users.sort(SORT_OBJECTS({ on: u => u.age, bPureNumeric: true }))
  * ```
  */
-export const SORT_OBJECTS = (_: { on: (x: any) => any, order?: any, bPureNumeric?: bool }): ANY_SORT_FUNCTION_TYPE => {
+export function SORT_OBJECTS (_: { on: (x: any) => any, order?: any, bPureNumeric?: bool }): ANY_SORT_FUNCTION_TYPE {
   let res: ANY_SORT_FUNCTION_TYPE
 
   // Handle descending order with different logic for pure numeric vs mixed types
