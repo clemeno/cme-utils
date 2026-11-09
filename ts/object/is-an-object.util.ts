@@ -1,2 +1,4 @@
 /** CHECK (is an `object` instance, not `null`) */
-export const IS_AN_OBJECT = (o: any): o is any => (o !== null) && (typeof o === 'object')
+export function IS_AN_OBJECT (o: any): o is any {
+  return (o !== null) && (typeof o === 'object')
+}

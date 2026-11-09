@@ -5,4 +5,6 @@ import type { objectEntryListType } from '../object-entry-list-type.js'
  * @param o the object to get the entries from
  * @returns the list of entries of an `object` as an array of pair of [key, value]
  */
-export const GET_OBJECT_ENTRY_LIST = <T = any> (o: T): objectEntryListType<T> => Object.entries(o as any) as any
+export function GET_OBJECT_ENTRY_LIST<T = any> (o: T): objectEntryListType<T> {
+  return Object.entries(o as any) as any
+}

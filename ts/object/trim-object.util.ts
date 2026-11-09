@@ -1,7 +1,7 @@
 import { IS_SET } from '../check/is-set.util.js'
 
 /** create a new instance of an object where `undefined` or `null` attributes are not kept, recursively */
-export const TRIM_OBJECT = (_: { object: any, depth?: number }): any => {
+export function TRIM_OBJECT (_: { object: any, depth?: number }): any {
   const res: any = {}
 
   const o: any = _.object
