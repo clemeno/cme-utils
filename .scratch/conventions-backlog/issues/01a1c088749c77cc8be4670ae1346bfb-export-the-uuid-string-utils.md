@@ -1,6 +1,6 @@
 # 01a1c088749c77cc8be4670ae1346bfb: Export the UUID string utils from the barrels
 
-Status: needs-triage
+Status: resolved
 Blocked by: none
 
 ## What
@@ -21,3 +21,7 @@ Export both (a `feat:` for the next minor release), or export `EXTRACT_ALL_UUIDS
 
 - The chosen names are in `ts/string/index.ts` and `ts/index.ts`, alphabetically.
 - `bun run check` passes.
+
+## Comments
+
+2026-11-09: the user chose to export them all, like the other utils. `feat: export IS_UUID, EXTRACT_ALL_UUIDS_FROM_STRING and ANY_SORT_FUNCTION_TYPE from the barrels`: a scan of every export against its folder `index.ts` and `ts/index.ts` also found the `ANY_SORT_FUNCTION_TYPE` type of `ts/sort/sort-objects.util.ts`. `CHECK` (deprecated) and the ESLint plugin entry points stay out. `tests/exports.test.ts` now fails on any export a barrel misses ([01a1c08f17e5708c9e7e5df3e144fed0](01a1c08f17e5708c9e7e5df3e144fed0-check-the-jsdoc-in-bun-run-check.md)).

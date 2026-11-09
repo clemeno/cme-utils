@@ -1,6 +1,6 @@
 # 01a1c08874c9700eab35010fda0c024c: Name the error keys of the unsigned int validators
 
-Status: needs-triage
+Status: resolved
 Blocked by: none
 
 ## What
@@ -19,3 +19,7 @@ Keep the shared key (and document it as a generic "out of range" key), or rename
 
 - The chosen keys are returned, documented in each JSDoc, and pinned by the tests.
 - `bun run check` passes.
+
+## Comments
+
+2026-11-09: the user chose the rename, the next release being a major version. `fix!: name the error key of each unsigned int validator after its range`: `IS_INT_UNSIGNED_VALIDATOR` returns `{ isInt: true }`, `IS_TINY_INT_UNSIGNED_VALIDATOR` `{ isTinyInt: true }`. In the same spirit, `refactor!:` renamed `ts/bigint/bigint-div-trunk.util.ts` to `bigint-div-trunc.util.ts` and `ts/http/base-uri.util.ts` to `get-base-uri.util.ts`, the two util files not named after their export.

@@ -1,6 +1,6 @@
 # 01a1c08f17e5708c9e7e5df3e144fed0: Check the JSDoc of every export in `bun run check`
 
-Status: needs-triage
+Status: resolved
 Blocked by: none
 
 ## What
@@ -23,3 +23,7 @@ Whether the check is worth its upkeep: luxon is not a dev dependency, so the tim
 - `tsconfig.json` sets `isolatedModules`, and every type re-export uses `type`.
 - A test under `tests/` fails on an exported function without `@param` / `@returns` / `@example`, and on a `// returns` line whose value differs from the call's result.
 - `bun run check` passes.
+
+## Comments
+
+2026-11-09: the user asked for the complete check, luxon included. `fix: mark the type re-exports of the barrels with type` sets `isolatedModules` and marks 21 re-exports. `tests/exports.test.ts` (`test: check the barrels and the JSDoc of every export in bun run check`) checks the barrels, the three tags, and runs the 276 example blocks with the library, luxon (a new dev dependency, with `@types/luxon`) and `node:crypto` in scope; lines naming `qb`, `axios`, `createReadStream`, `writeFile` or `FileReader` are skipped. A deliberately wrong `ARRAY_MAX` value failed it. It found three examples that could not run as written (`DECIPHER_AES_GCM_TO_UTF8`, `NORMALIZE_N_1`, `NOW_APP`), fixed in the same commit. How to write a checked line: section 3 of `.github/instructions/new-utility.instructions.md`.
