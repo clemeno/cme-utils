@@ -7,7 +7,7 @@ import { GET_PROPERTY_NAME } from './get-property-name.util.js'
  * @param {GetFunctionNameWithKindParams} _ The function node to describe, plus an optional ESLint source code used to render computed property keys
  * @returns {string} The name and kind of the function node
  */
-export const GET_FUNCTION_NAME_WITH_KIND = (_: GetFunctionNameWithKindParams): string => {
+export function GET_FUNCTION_NAME_WITH_KIND (_: GetFunctionNameWithKindParams): string {
   const parent = _.node.parent
   const tokens: string[] = []
   const isObjectMethod = parent.type === 'Property' && parent.value === _.node

@@ -7,7 +7,7 @@ import type { EsNode } from './es-node-type.js'
  * @param {EsNode} node The AST node to read
  * @returns {string | null} The property name, or null when it cannot be resolved
  */
-export const GET_PROPERTY_NAME = (node: EsNode): string | null => {
+export function GET_PROPERTY_NAME (node: EsNode): string | null {
   let result: string | null = null
 
   if (node.type === 'MemberExpression') {
