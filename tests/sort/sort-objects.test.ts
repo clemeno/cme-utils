@@ -4,7 +4,7 @@ import { SORT_OBJECTS } from '../../ts/sort/sort-objects.util.js'
 describe(
   'SORT_OBJECTS',
   () => {
-    const sortingTestCases = [
+    const sortingTestCases: Array<{ name: string, options: Parameters<typeof SORT_OBJECTS>[0], items: unknown[], expected: unknown[] }> = [
       {
         name: 'ascending order by name',
         options: { on: (x: any) => x.name },
@@ -299,7 +299,7 @@ describe(
 
     it.each(sortingTestCases)(
       'should sort objects $name',
-      ({ name, options, items, expected }) => {
+      ({ options, items, expected }) => {
         const sorted = [...items].sort(SORT_OBJECTS(options))
         expect(sorted).toEqual(expected)
       }
@@ -313,7 +313,7 @@ describe(
       }
     )
 
-    const descendingStringTestCases = [
+    const descendingStringTestCases: Array<{ name: string, a: { name: string }, b: { name: string }, expected: number }> = [
       { name: 'a vs b (desc)', a: { name: 'a' }, b: { name: 'b' }, expected: 1 },
       { name: 'b vs a (desc)', a: { name: 'b' }, b: { name: 'a' }, expected: -1 },
       { name: 'a vs a (desc)', a: { name: 'a' }, b: { name: 'a' }, expected: 0 },
@@ -327,7 +327,7 @@ describe(
       }
     )
 
-    const descendingNumericTestCases = [
+    const descendingNumericTestCases: Array<{ name: string, a: { value: number }, b: { value: number }, expected: number }> = [
       { name: '1 vs 2 (desc)', a: { value: 1 }, b: { value: 2 }, expected: 1 },
       { name: '2 vs 1 (desc)', a: { value: 2 }, b: { value: 1 }, expected: -1 },
       { name: '1 vs 1 (desc)', a: { value: 1 }, b: { value: 1 }, expected: 0 },

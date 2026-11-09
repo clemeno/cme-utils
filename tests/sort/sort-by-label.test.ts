@@ -4,7 +4,7 @@ import { SORT_BY_LABEL } from '../../ts/sort/sort-by-label.util.js'
 describe(
   'SORT_BY_LABEL',
   () => {
-    const sortingTestCases = [
+    const sortingTestCases: Array<{ name: string, items: unknown[], expected: unknown[] }> = [
       {
         name: 'ascending order',
         items: [
@@ -71,7 +71,7 @@ describe(
 
     it.each(sortingTestCases)(
       'should sort objects by label $name',
-      ({ name, items, expected }) => {
+      ({ items, expected }) => {
         const sorted = [...items].sort(SORT_BY_LABEL)
         expect(sorted).toEqual(expected)
       }
