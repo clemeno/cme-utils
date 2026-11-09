@@ -12,6 +12,9 @@ describe(
       { name: 'both negative returns positive quotient unchanged', input: { dividend: -10n, divisor: -3n }, expected: 3n },
       { name: 'zero dividend returns zero', input: { dividend: 0n, divisor: 5n }, expected: 0n },
       { name: 'dividend smaller than divisor returns zero', input: { dividend: 2n, divisor: 7n }, expected: 0n },
+      { name: 'negative fraction above -1 rounds down to -1', input: { dividend: -1n, divisor: 3n }, expected: -1n },
+      { name: 'negative divisor, fraction above -1 rounds down to -1', input: { dividend: 1n, divisor: -3n }, expected: -1n },
+      { name: 'both negative, fraction below 1 returns zero', input: { dividend: -1n, divisor: -3n }, expected: 0n },
     ]
 
     it.each(testCases)(
