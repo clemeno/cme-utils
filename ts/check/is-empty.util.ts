@@ -25,6 +25,21 @@ function IS_NOT_EMPTY (_: any): _ is any {
   )
 }
 
+/**
+ * CHECK (is empty): `null`, `undefined`, `NaN`, an empty string, array, Set, Map or object, or an invalid Date
+ * @param v - The value to check
+ * @returns `true` when `v` is empty; numbers (even `0`), booleans and non-empty containers are not empty
+ * @example
+ * ```typescript
+ * IS_EMPTY(null) // returns true
+ * IS_EMPTY('') // returns true
+ * IS_EMPTY([]) // returns true
+ * IS_EMPTY({}) // returns true
+ * IS_EMPTY(0) // returns false
+ * IS_EMPTY([0]) // returns false
+ * IS_EMPTY({ a: 1 }) // returns false
+ * ```
+ */
 export function IS_EMPTY (v: any): boolean {
   return !IS_NOT_EMPTY(v)
 }
