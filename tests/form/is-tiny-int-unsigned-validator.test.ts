@@ -29,7 +29,7 @@ describe(
       'should return error for negative number $name',
       ({ value }) => {
         const result = IS_TINY_INT_UNSIGNED_VALIDATOR({ value })
-        expect(result).toEqual({ isSmallInt: true })
+        expect(result).toEqual({ isTinyInt: true })
       }
     )
 
@@ -42,7 +42,7 @@ describe(
       'should return error for number too large $name',
       ({ value }) => {
         const result = IS_TINY_INT_UNSIGNED_VALIDATOR({ value })
-        expect(result).toEqual({ isSmallInt: true })
+        expect(result).toEqual({ isTinyInt: true })
       }
     )
 
@@ -55,7 +55,7 @@ describe(
       'should return error for non-integer number $name',
       ({ value }) => {
         const result = IS_TINY_INT_UNSIGNED_VALIDATOR({ value })
-        expect(result).toEqual({ isSmallInt: true })
+        expect(result).toEqual({ isTinyInt: true })
       }
     )
 
@@ -68,7 +68,7 @@ describe(
       'should return error for non-numeric string $name',
       ({ value }) => {
         const result = IS_TINY_INT_UNSIGNED_VALIDATOR({ value })
-        expect(result).toEqual({ isSmallInt: true })
+        expect(result).toEqual({ isTinyInt: true })
       }
     )
 

@@ -7,13 +7,13 @@ import type { AppValidatorFn } from '../app-validator-fn.js'
  * Form validator: accepts an unsigned 8-bit integer (0 to 255), as a number or a numeric string.
  * An unset or empty value is valid (combine with a required validator).
  * @param control - The form control, read through its `value`
- * @returns null when the value is valid, otherwise the error `{ isSmallInt: true }` (the error key of the source, shared with the small variant)
+ * @returns null when the value is valid, otherwise the error `{ isTinyInt: true }`
  * @example
  * ```typescript
  * IS_TINY_INT_UNSIGNED_VALIDATOR({ value: 255 }) // returns null
  * IS_TINY_INT_UNSIGNED_VALIDATOR({ value: '' }) // returns null
- * IS_TINY_INT_UNSIGNED_VALIDATOR({ value: 256 }) // returns { isSmallInt: true }
- * IS_TINY_INT_UNSIGNED_VALIDATOR({ value: -1 }) // returns { isSmallInt: true }
+ * IS_TINY_INT_UNSIGNED_VALIDATOR({ value: 256 }) // returns { isTinyInt: true }
+ * IS_TINY_INT_UNSIGNED_VALIDATOR({ value: -1 }) // returns { isTinyInt: true }
  * ```
  */
 export const IS_TINY_INT_UNSIGNED_VALIDATOR: AppValidatorFn = control => {
@@ -26,7 +26,7 @@ export const IS_TINY_INT_UNSIGNED_VALIDATOR: AppValidatorFn = control => {
     (control.value !== '') &&
     (!IS_NUMERIC(value) || !Number.isInteger(value) || (value < 0) || (255 < value))
   ) {
-    res = { isSmallInt: true }
+    res = { isTinyInt: true }
   }
 
   return res
