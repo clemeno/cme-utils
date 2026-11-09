@@ -2,7 +2,14 @@ import { BYTE_ARRAY_TO_UUID } from './byte-array-to-uuid.util.js'
 import { TO_NUMBER } from '../convert/to-number.util.js'
 
 /**
- * Generate a standard RFC 9652 UUID v7 string
+ * Generate a standard RFC 9562 UUID v7 string
+ * @returns A lowercase UUID v7 string, whose first 48 bits are the current timestamp in milliseconds
+ * @example
+ * ```typescript
+ * IS_UUID_STRING(UUID_V7()) // returns true
+ * UUID_V7()[14] // returns '7'
+ * UUID_V7() === UUID_V7() // returns false
+ * ```
  */
 export function UUID_V7 (): string {
   const randomByteArrayLength = 16

@@ -2,6 +2,13 @@ import { BYTE_ARRAY_TO_UUID } from './byte-array-to-uuid.util.js'
 
 /**
  * Generate a standard RFC 4122 UUID v4 string
+ * @returns A random lowercase UUID v4 string
+ * @example
+ * ```typescript
+ * IS_UUID_STRING(UUID_V4()) // returns true
+ * UUID_V4()[14] // returns '4'
+ * UUID_V4() === UUID_V4() // returns false
+ * ```
  */
 export function UUID_V4 (): string {
   let res = ''
