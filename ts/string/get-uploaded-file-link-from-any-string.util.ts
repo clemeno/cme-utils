@@ -5,8 +5,22 @@ import { GET_CLOUDFRONT_LINK_PATH } from './get-cloudfront-link-path.util.js'
 import { IS_A_URL } from './is-a-url.util.js'
 
 /**
- * * provide basename -> import { basename } from 'node:path'
- * @returns {string} (path|url)?`filename` -> /opt/cme/svd/www/svd/public_html/static/`filename`
+ * Converts any string (uuid, upload path, static path, url or file name) into the static link of its file.
+ * @param _ - The object parameter
+ * @param _.basename - The basename function, for example `basename` of 'node:path'
+ * @param _.s - The string to convert: a uuid, a path, a url or a file name
+ * @param _.fileUploadFolder - The upload folder
+ * @param _.publicStaticImageFolder - The public static image folder
+ * @returns The static link of the file, or '' (empty string) when `s` is a url without a file name
+ * @example
+ * ```typescript
+ * const basename = s => s.split('/').pop()
+ * const opts = { basename, fileUploadFolder: './uploads', publicStaticImageFolder: '/static' }
+ * GET_UPLOADED_FILE_LINK_FROM_ANY_STRING({ ...opts, s: '123e4567-e89b-12d3-a456-426614174000' }) // returns '/static/123e4567-e89b-12d3-a456-426614174000.png'
+ * GET_UPLOADED_FILE_LINK_FROM_ANY_STRING({ ...opts, s: './uploads/a.png' }) // returns '/static/a.png'
+ * GET_UPLOADED_FILE_LINK_FROM_ANY_STRING({ ...opts, s: 'a.png' }) // returns '/static/a.png'
+ * GET_UPLOADED_FILE_LINK_FROM_ANY_STRING({ ...opts, s: 'https://x.com/' }) // returns ''
+ * ```
  */
 export function GET_UPLOADED_FILE_LINK_FROM_ANY_STRING<TypeofBasename extends (s: string) => string> (_: {
   basename: TypeofBasename
