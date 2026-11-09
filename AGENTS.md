@@ -48,7 +48,7 @@ The library has **zero runtime dependencies**. All `devDependencies` are build/t
 - `unknown` with type guards over `any`; an `interface` for a complex object type used in several places.
 
 ### Testing Pattern
-Template: section 6 of [.github/instructions/new-utility.instructions.md](.github/instructions/new-utility.instructions.md). These rules cover every test file; older files that break them are fixed by [01a1bf8ff2d8718c9e178403db3dbda0](.scratch/conventions-backlog/issues/01a1bf8ff2d8718c9e178403db3dbda0-bring-test-tables-to-the-rules.md).
+Template: section 6 of [.github/instructions/new-utility.instructions.md](.github/instructions/new-utility.instructions.md). These rules cover every test file; the older tables still keyed `label` or without a name column are listed in [01a1c0755cd5745fb6b20ab977fa30c7](.scratch/conventions-backlog/issues/01a1c0755cd5745fb6b20ab977fa30c7-name-every-test-row.md).
 - All test cases must have a descriptive `name`, used as the `'$name'` title: bun prints `'%s'` literally for object rows.
 - Tests import directly from `ts/` source, not from `m/`.
 - Type the table rows (`const testCases: Array<{ name: string, input: ..., expected: ... }> = [`), so `bun run test:types` stays at 0 errors.
@@ -66,7 +66,7 @@ Template: section 6 of [.github/instructions/new-utility.instructions.md](.githu
 - In `tests/` only: a rule whose violation is the test input or the mocked API's shape (e.g. `no-new-wrappers` to build a `new String()` input, `@typescript-eslint/no-useless-constructor` in a mock)
 
 ### JSDoc
-All exported functions must have JSDoc with `@param`, `@returns`, and `@example`. Older exports that lack it are completed by [01a1bf8ff30573c9bf5e6d5581b207b2](.scratch/conventions-backlog/issues/01a1bf8ff30573c9bf5e6d5581b207b2-complete-jsdoc-on-exports.md).
+All exported functions must have JSDoc with `@param`, `@returns`, and `@example`; each `// returns` line of an example states what the call really returns.
 
 ## Git
 

@@ -11,6 +11,8 @@ Blocked by: none
 
 Their titles already print descriptive text, so this is a consistency change, not a broken-output fix. Watch for row data that has its own `label` field (`tests/sort/sort-by-label.test.ts`, `tests/convert/from-list-to-record.test.ts`): only the row key that feeds the title is renamed.
 
+In passing: `tests/number/to-local-number-with-1-f-digit.test.ts` and `to-local-number-with-2-f-digits.test.ts` end with a `'returns a string'` test that only checks `typeof result`, which `AGENTS.md` (Testing Pattern) asks to avoid; the table's `toBe` rows already pin the string, so the test can go.
+
 ## Acceptance
 
 - Every table row type starts with `name: string`, and every `it.each` title uses `$name`.
