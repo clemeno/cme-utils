@@ -6,6 +6,7 @@ describe(
   () => {
     const testCases = [
       { name: '0 → 0', input: '0', expected: '0' },
+      { name: 'leading zeros only "00" → 0', input: '00', expected: '0' },
       { name: '10 → a', input: '10', expected: 'a' },
       { name: '15 → f', input: '15', expected: 'f' },
       { name: '16 → 10', input: '16', expected: '10' },

@@ -7,7 +7,7 @@ export function BIG_10_TO_BIG_16 (_s: numeric): string {
 
   const sStr = (IS_SET(_s) && (((typeof _s === 'number') && !isNaN(_s)) || (_s !== 'NaN'))) ? `${_s}` : ''
 
-  if (sStr === '0') {
+  if (/^0+$/.test(sStr)) {
     hex.push('0')
   } else if (/^\d+$/.test(sStr)) {
     // digits only: any other character converts to NaN, which never reaches 0 and loops forever
