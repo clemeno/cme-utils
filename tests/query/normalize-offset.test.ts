@@ -5,7 +5,7 @@ import type { numeric } from '../../ts/numeric.js'
 describe(
   'NORMALIZE_OFFSET',
   () => {
-    const offsetTestCases = [
+    const offsetTestCases: Array<{ name: string, page: number, perPage: number, expected: string }> = [
       { name: 'page 1 with 10 per page', page: 1, perPage: 10, expected: '0' },
       { name: 'page 2 with 10 per page', page: 2, perPage: 10, expected: '10' },
       { name: 'page 3 with 10 per page', page: 3, perPage: 10, expected: '20' },
@@ -18,7 +18,7 @@ describe(
       }
     )
 
-    const perPageTestCases = [
+    const perPageTestCases: Array<{ name: string, page: number, perPage: number, expected: string }> = [
       { name: 'page 1 with 5 per page', page: 1, perPage: 5, expected: '0' },
       { name: 'page 2 with 5 per page', page: 2, perPage: 5, expected: '5' },
       { name: 'page 1 with 25 per page', page: 1, perPage: 25, expected: '0' },
@@ -32,7 +32,7 @@ describe(
       }
     )
 
-    const stringInputTestCases = [
+    const stringInputTestCases: Array<{ name: string, page: string, perPage: string, expected: string }> = [
       { name: 'page 1 with 10 per page', page: '1', perPage: '10', expected: '0' },
       { name: 'page 2 with 10 per page', page: '2', perPage: '10', expected: '10' },
     ]
@@ -44,7 +44,7 @@ describe(
       }
     )
 
-    const decimalInputTestCases = [
+    const decimalInputTestCases: Array<{ name: string, page: number, perPage: number, expected: string }> = [
       { name: 'page 1.0 with 10.0 per page', page: 1.0, perPage: 10.0, expected: '0' },
       { name: 'page 2.0 with 10.0 per page', page: 2.0, perPage: 10.0, expected: '10' },
     ]

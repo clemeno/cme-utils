@@ -5,7 +5,7 @@ import type { numeric } from '../../ts/numeric.js'
 describe(
   'NORMALIZE_PAGE',
   () => {
-    const withinBoundsTestCases = [
+    const withinBoundsTestCases: Array<{ name: string, page: number, pages: number, expected: string }> = [
       { name: 'page 1 with 10 pages', page: 1, pages: 10, expected: '1' },
       { name: 'page 5 with 10 pages', page: 5, pages: 10, expected: '5' },
       { name: 'page 10 with 10 pages', page: 10, pages: 10, expected: '10' },
@@ -18,7 +18,7 @@ describe(
       }
     )
 
-    const clampTestCases = [
+    const clampTestCases: Array<{ name: string, page: number, pages: number, expected: string }> = [
       { name: 'page 15 with 10 pages', page: 15, pages: 10, expected: '10' },
       { name: 'page 100 with 5 pages', page: 100, pages: 5, expected: '5' },
     ]
@@ -30,7 +30,7 @@ describe(
       }
     )
 
-    const lessThanOneTestCases = [
+    const lessThanOneTestCases: Array<{ name: string, page: number, pages: number, expected: string }> = [
       { name: 'page 0 with 10 pages', page: 0, pages: 10, expected: '1' },
       { name: 'page -1 with 10 pages', page: -1, pages: 10, expected: '1' },
     ]
@@ -42,7 +42,7 @@ describe(
       }
     )
 
-    const stringInputTestCases = [
+    const stringInputTestCases: Array<{ name: string, page: string, pages: number, expected: string }> = [
       { name: 'page 1 with 10 pages', page: '1', pages: 10, expected: '1' },
       { name: 'page 5 with 10 pages', page: '5', pages: 10, expected: '5' },
     ]

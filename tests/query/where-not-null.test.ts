@@ -5,7 +5,7 @@ import { makeMockQb } from '../mocks/query-mocks.js'
 describe(
   'WHERE_NOT_NULL',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, column: string }> = [
       { name: 'calls whereNotNull for a timestamp column', column: 'verified_at' },
       { name: 'calls whereNotNull for a foreign key column', column: 'user_id' },
       { name: 'calls whereNotNull for a string column', column: 'name' },

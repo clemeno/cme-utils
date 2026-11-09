@@ -4,7 +4,7 @@ import { NORMALIZE_LIMIT } from '../../ts/query/normalize-limit.util.js'
 describe(
   'NORMALIZE_LIMIT',
   () => {
-    const numberTestCases = [
+    const numberTestCases: Array<{ name: string, input: number, expected: string }> = [
       { name: '10', input: 10, expected: '10' },
       { name: '0', input: 0, expected: '0' },
       { name: '1000', input: 1000, expected: '1000' },
@@ -17,7 +17,7 @@ describe(
       }
     )
 
-    const decimalTestCases = [
+    const decimalTestCases: Array<{ name: string, input: number, expected: string }> = [
       { name: '10.5', input: 10.5, expected: '10.5' },
       { name: '0.0', input: 0.0, expected: '0' },
     ]
@@ -29,7 +29,7 @@ describe(
       }
     )
 
-    const stringNumberTestCases = [
+    const stringNumberTestCases: Array<{ name: string, input: any, expected: string }> = [
       { name: '10', input: '10' as any, expected: '10' },
       { name: '0', input: '0' as any, expected: '0' },
     ]
@@ -41,7 +41,7 @@ describe(
       }
     )
 
-    const nullUndefinedTestCases = [
+    const nullUndefinedTestCases: Array<{ name: string, input: any, expected: string }> = [
       { name: 'null', input: null as any, expected: '' },
       { name: 'undefined', input: undefined as any, expected: '' },
     ]
@@ -53,7 +53,7 @@ describe(
       }
     )
 
-    const booleanTestCases = [
+    const booleanTestCases: Array<{ name: string, input: any, expected: string }> = [
       { name: 'true', input: true as any, expected: 'true' },
       { name: 'false', input: false as any, expected: 'false' },
     ]

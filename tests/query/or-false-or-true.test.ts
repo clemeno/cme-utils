@@ -17,7 +17,7 @@ const utilCases: Array<{ name: string, util: (inParams: any) => void, rawMethod:
 describe.each(utilCases)(
   '$name',
   ({ util, rawMethod, rawSql, delegateMethod }) => {
-    it.each([
+    it.each<{ name: string, values: [] | Set<unknown> | Map<any, any> }>([
       { name: 'empty array', values: [] },
       { name: 'empty Set', values: new Set() },
       { name: 'empty Map', values: new Map() },
@@ -30,7 +30,7 @@ describe.each(utilCases)(
       }
     )
 
-    it.each([
+    it.each<{ name: string, values: [42] | Set<number> | Map<string, number> }>([
       { name: 'non-empty array', values: [42] },
       { name: 'non-empty Set', values: new Set([42]) },
       { name: 'non-empty Map', values: new Map([['k', 42]]) },

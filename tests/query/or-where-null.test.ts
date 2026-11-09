@@ -5,7 +5,7 @@ import { makeMockQb } from '../mocks/query-mocks.js'
 describe(
   'OR_WHERE_NULL',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, column: string }> = [
       { name: 'calls orWhereNull for a timestamp column', column: 'deleted_at' },
       { name: 'calls orWhereNull for a foreign key column', column: 'parent_id' },
       { name: 'calls orWhereNull for a string column', column: 'email' },

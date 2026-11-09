@@ -4,7 +4,7 @@ import { NORMALIZE_PAGES } from '../../ts/query/normalize-pages.util.js'
 describe(
   'NORMALIZE_PAGES',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, normalizedPerPage: string | number, filteredCount: string | number, expected: string }> = [
       { name: '100 items / 10 per page = 10 pages', normalizedPerPage: '10', filteredCount: '100', expected: '10' },
       { name: '101 items / 10 per page = 11 pages (ceil)', normalizedPerPage: '10', filteredCount: '101', expected: '11' },
       { name: '0 items = 0 pages', normalizedPerPage: '10', filteredCount: '0', expected: '0' },

@@ -4,7 +4,7 @@ import { NORMALIZE_PER_PAGE } from '../../ts/query/normalize-per-page.util.js'
 describe(
   'NORMALIZE_PER_PAGE',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: number | string | any, expected: string }> = [
       { name: '10', input: 10, expected: '10' },
       { name: '50', input: '50', expected: '50' },
       { name: '1', input: 1, expected: '1' },
