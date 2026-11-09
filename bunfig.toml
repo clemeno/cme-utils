@@ -1,2 +1,4 @@
 [test]
 coverageSkipTestFiles = true
+# AGENTS.md: coverage stays at 100% lines and functions; bun reports no branches
+coverageThreshold = { lines = 1.0, functions = 1.0 }

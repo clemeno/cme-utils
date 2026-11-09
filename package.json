@@ -44,6 +44,7 @@
   "scripts": {
     "prepare": "bun run build",
     "build": "tsc -p tsconfig.json",
+    "check": "bun run build && eslint && bun test --coverage && bun run test:types",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "test": "bun test",
