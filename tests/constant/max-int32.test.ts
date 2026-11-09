@@ -4,7 +4,7 @@ import { MAX_INT32 } from '../../ts/constant/max-int32.util.js'
 describe(
   'MAX_INT32',
   () => {
-    const valueTestCases = [
+    const valueTestCases: Array<{ name: string, expected: number }> = [
       { name: 'literal value', expected: 2147483647 },
       { name: 'calculated value', expected: 2 ** 31 - 1 },
     ]
@@ -16,7 +16,7 @@ describe(
       }
     )
 
-    const typeTestCases = [
+    const typeTestCases: Array<{ name: string, check: () => boolean, expected: boolean }> = [
       { name: 'typeof check', check: () => typeof MAX_INT32 === 'number', expected: true },
       { name: 'isInteger check', check: () => Number.isInteger(MAX_INT32), expected: true },
     ]

@@ -4,7 +4,7 @@ import { MIN_SAFE_INTEGER } from '../../ts/constant/min-safe-integer.util.js'
 describe(
   'MIN_SAFE_INTEGER',
   () => {
-    const valueTestCases = [
+    const valueTestCases: Array<{ name: string, expected: number }> = [
       { name: 'literal value', expected: -9007199254740991 },
       { name: 'calculated value', expected: -(2 ** 53 - 1) },
       { name: 'Number.MIN_SAFE_INTEGER', expected: Number.MIN_SAFE_INTEGER },
@@ -17,7 +17,7 @@ describe(
       }
     )
 
-    const typeTestCases = [
+    const typeTestCases: Array<{ name: string, check: () => boolean, expected: boolean }> = [
       { name: 'typeof check', check: () => typeof MIN_SAFE_INTEGER === 'number', expected: true },
       { name: 'isInteger check', check: () => Number.isInteger(MIN_SAFE_INTEGER), expected: true },
       { name: 'isSafeInteger check', check: () => Number.isSafeInteger(MIN_SAFE_INTEGER), expected: true },
