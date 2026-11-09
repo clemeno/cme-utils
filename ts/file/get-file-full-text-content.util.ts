@@ -5,6 +5,19 @@ import { TO_STRING } from '../convert/to-string.util.js'
  * Byte chunks go through one streaming TextDecoder, so a multi-byte character split between chunks stays intact.
  * Open and read errors (e.g. ENOENT) are not caught: the returned promise rejects with them.
  * * provide createReadStream -> import { createReadStream } from 'node:fs'
+ * @param _ - The parameter object
+ * @param _.createReadStream - The `createReadStream` function of `node:fs`
+ * @param _.filePath - The path of the file to read
+ * @returns The trimmed text content of the file
+ * @example
+ * ```typescript
+ * // hello.txt holds "  hello world \n"
+ * await GET_FILE_FULL_TEXT_CONTENT({ createReadStream, filePath: 'hello.txt' }) // returns 'hello world'
+ * // empty.txt is empty
+ * await GET_FILE_FULL_TEXT_CONTENT({ createReadStream, filePath: 'empty.txt' }) // returns ''
+ * // a missing file rejects with ENOENT
+ * await GET_FILE_FULL_TEXT_CONTENT({ createReadStream, filePath: 'missing.txt' }) // throws Error ENOENT
+ * ```
  */
 export async function GET_FILE_FULL_TEXT_CONTENT<TypeofCreateReadStream = any> (_: {
   createReadStream: TypeofCreateReadStream
