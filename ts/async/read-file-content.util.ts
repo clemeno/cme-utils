@@ -2,7 +2,7 @@ import type { AppExceptionResult } from '../app-exception-result.js'
 import { GET_EXCEPTION_RESULT_OF } from './get-exception-result-of.util.js'
 
 /** Takes a `Blob` or `File` and returns its content as a `string`. OK for small files */
-export const READ_FILE_CONTENT = async (file: Blob | File): Promise<AppExceptionResult> => {
+export async function READ_FILE_CONTENT (file: Blob | File): Promise<AppExceptionResult> {
   const reader = new FileReader()
 
   // eslint-disable-next-line max-params
