@@ -4,6 +4,8 @@
  * @returns Nothing
  * @example
  * ```typescript
+ * SET_DOCUMENT_GEO('CA') // in a browser, sets <html geo="CA">
+ * // outside a browser (no window), it does nothing
  * SET_DOCUMENT_GEO('CA') // returns undefined
  * ```
  */

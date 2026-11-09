@@ -6,11 +6,11 @@ import type { numeric } from '../numeric.js'
 /**
  * Normalizes a numeric value within specified bounds (inclusive).
  * Useful for pagination, limits, and other bounded numeric inputs.
- * @param options - Normalization options
- * @param options.n - The value to normalize (defaults to 1)
- * @param options.min - Minimum allowed value (defaults to 1)
- * @param options.max - Maximum allowed value (defaults to 1)
- * @param options.def - Default value if input is invalid (defaults to 1)
+ * @param _ - Normalization options
+ * @param _.n - The value to normalize (defaults to 1)
+ * @param _.min - Minimum allowed value (defaults to 1)
+ * @param _.max - Maximum allowed value (defaults to 1)
+ * @param _.def - Default value if input is invalid (defaults to 1)
  * @returns The normalized value as a string, clamped between min and max
  * @example
  * ```typescript

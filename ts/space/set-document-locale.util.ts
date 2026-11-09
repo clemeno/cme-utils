@@ -4,6 +4,8 @@
  * @returns Nothing
  * @example
  * ```typescript
+ * SET_DOCUMENT_LOCALE('fr-CA') // in a browser, sets <html locale="fr-CA">
+ * // outside a browser (no window), it does nothing
  * SET_DOCUMENT_LOCALE('fr-CA') // returns undefined
  * ```
  */

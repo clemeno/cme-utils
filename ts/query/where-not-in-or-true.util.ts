@@ -7,7 +7,7 @@ import { WHERE_NOT_IN } from './where-not-in.util.js'
  * @param inParams - The query builder, the column and the values
  * @param inParams.qb - The knex query builder to add the condition to
  * @param inParams.column - The column to compare
- * @param inParams.values - The values to match, as an array, a Set or a Map (its values are used); `'§§null§§'` matches a null column and `'§§not0§§'` a column different from 0
+ * @param inParams.values - The values to exclude, as an array, a Set or a Map (its values are used); `'§§null§§'` excludes a null column (`is not null`) and `'§§not0§§'` excludes every value but 0 (`= 0`)
  * @returns nothing: adds the condition to the query builder
  * @example
  * ```typescript

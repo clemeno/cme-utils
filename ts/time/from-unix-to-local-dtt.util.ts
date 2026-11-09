@@ -13,7 +13,7 @@ import { LUXON_FORMAT_LOCAL_YMD_HMS } from './luxon.util.js'
  * ```typescript
  * // with Settings.defaultZone = 'Europe/Paris' and the en-US locale
  * FROM_UNIX_TO_LOCAL_DTT({ DateTime, Settings, unix: 1710513045 }) // returns '3/15/2024 15:30:45'
- * FROM_UNIX_TO_LOCAL_DTT({ DateTime, Settings, unix: 'abc' }) // returns ''
+ * FROM_UNIX_TO_LOCAL_DTT({ DateTime, Settings, unix: NaN }) // returns ''
  * ```
  */
 export function FROM_UNIX_TO_LOCAL_DTT<TypeofDateTime = any, TypeofSettings = any> (_: {

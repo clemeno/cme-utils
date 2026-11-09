@@ -4,6 +4,10 @@
  * @returns Nothing
  * @example
  * ```typescript
+ * SET_DOCUMENT_GEO_FROM_LOCALE('fr-CA') // in a browser, sets <html geo="CA">
+ * SET_DOCUMENT_GEO_FROM_LOCALE('zh-CN-Hans') // in a browser, sets <html geo="CN-Hans">
+ * SET_DOCUMENT_GEO_FROM_LOCALE('fr') // in a browser, sets <html geo="">
+ * // outside a browser (no window), it does nothing
  * SET_DOCUMENT_GEO_FROM_LOCALE('fr-CA') // returns undefined
  * ```
  */

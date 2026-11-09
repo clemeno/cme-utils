@@ -4,6 +4,8 @@
  * @returns Nothing
  * @example
  * ```typescript
+ * SET_DOCUMENT_LANG('fr') // in a browser, sets <html lang="fr">
+ * // outside a browser (no window), it does nothing
  * SET_DOCUMENT_LANG('fr') // returns undefined
  * ```
  */

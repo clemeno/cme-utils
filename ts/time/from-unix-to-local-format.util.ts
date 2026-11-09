@@ -17,7 +17,7 @@ import { LUXON_FORMAT_LOCAL_YMD_HMS_S_Z } from './luxon.util.js'
  * ```typescript
  * // with Settings.defaultZone = 'Europe/Paris'
  * FROM_UNIX_TO_LOCAL_FORMAT({ DateTime, Settings, unix: 1710513045, format: 'yyyy-MM-dd HH:mm' }) // returns '2024-03-15 15:30'
- * FROM_UNIX_TO_LOCAL_FORMAT({ DateTime, Settings, unix: 'abc', format: 'yyyy-MM-dd' }) // returns ''
+ * FROM_UNIX_TO_LOCAL_FORMAT({ DateTime, Settings, unix: NaN, format: 'yyyy-MM-dd' }) // returns ''
  * ```
  */
 export function FROM_UNIX_TO_LOCAL_FORMAT<TypeofDateTime = any, TypeofSettings = any> (_: {
