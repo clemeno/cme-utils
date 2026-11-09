@@ -4,7 +4,7 @@ import { IS_A_SET } from '../../ts/set/is-a-set.util.js'
 describe(
   'IS_A_SET',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: unknown, expected: boolean }> = [
       { label: 'new Set()', input: new Set(), expected: true },
       { label: 'new Set([1,2,3])', input: new Set([1, 2, 3]), expected: true },
       { label: 'new Set(["a","b"])', input: new Set(['a', 'b']), expected: true },

@@ -4,7 +4,7 @@ import { IS_A_SET_AND_NOT_EMPTY } from '../../ts/set/is-a-set-and-not-empty.util
 describe(
   'IS_A_SET_AND_NOT_EMPTY',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: 'should return true for Set with one number', input: new Set([1]), expected: true },
       { name: 'should return true for Set with multiple numbers', input: new Set([1, 2, 3]), expected: true },
       { name: 'should return true for Set with string', input: new Set(['a']), expected: true },

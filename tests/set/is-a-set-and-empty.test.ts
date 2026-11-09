@@ -4,7 +4,7 @@ import { IS_A_SET_AND_EMPTY } from '../../ts/set/is-a-set-and-empty.util.js'
 describe(
   'IS_A_SET_AND_EMPTY',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: 'should return true for empty Set', input: new Set(), expected: true },
       { name: 'should return false for Set with one element', input: new Set([1]), expected: false },
       { name: 'should return false for Set with multiple elements', input: new Set([1, 2, 3]), expected: false },
