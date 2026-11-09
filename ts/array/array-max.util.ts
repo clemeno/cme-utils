@@ -14,7 +14,7 @@ import { IS_SET } from '../check/is-set.util.js'
  * ARRAY_MAX([]) // returns undefined
  * ```
  */
-export const ARRAY_MAX = <T = any> (a: T[] | readonly T[]): T | undefined => {
+export function ARRAY_MAX<T = any> (a: T[] | readonly T[]): T | undefined {
   let max: any
 
   for (const v of a) {

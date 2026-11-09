@@ -3,7 +3,7 @@ import { IS_SET } from '../check/is-set.util.js'
 import { TO_NUMBER } from '../convert/to-number.util.js'
 import type { numeric } from '../numeric.js'
 
-export const ARRAY_SUM = (a: numeric[]): number => {
+export function ARRAY_SUM (a: numeric[]): number {
   let sum: number | undefined
 
   for (const v of a) {

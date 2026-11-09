@@ -2,7 +2,7 @@ import { IS_NUMERIC } from '../number/is-numeric.util.js'
 import type { numeric } from '../numeric.js'
 import { ARRAY_SUM } from './array-sum.util.js'
 
-export const ARRAY_AVERAGE = (a: numeric[]): number => {
+export function ARRAY_AVERAGE (a: numeric[]): number {
   const validLength = a.filter(v => IS_NUMERIC(v)).length
   return (0 < validLength) ? (ARRAY_SUM(a) / validLength) : NaN
 }

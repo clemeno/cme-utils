@@ -1,6 +1,6 @@
 import { IS_SET } from '../check/is-set.util.js'
 
-export const ARRAY_MIN = <T = any> (a: T[]): T | undefined => {
+export function ARRAY_MIN<T = any> (a: T[]): T | undefined {
   let min: any
 
   for (const v of a) {

@@ -14,7 +14,7 @@ import type { numeric } from '../numeric.js'
  * ARRAY_MEDIAN([]) // returns NaN
  * ```
  */
-export const ARRAY_MEDIAN = (arr: numeric[]): number => {
+export function ARRAY_MEDIAN (arr: numeric[]): number {
   let res = NaN
 
   const count = arr.length

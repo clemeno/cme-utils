@@ -1,6 +1,6 @@
 import { IS_SET } from '../check/is-set.util.js'
 
-export const ARRAY_MIN_MAX = <T = any> (a: T[]): { min: T | undefined, max: T | undefined } => {
+export function ARRAY_MIN_MAX<T = any> (a: T[]): { min: T | undefined, max: T | undefined } {
   let min: T | undefined
   let max: T | undefined
 
