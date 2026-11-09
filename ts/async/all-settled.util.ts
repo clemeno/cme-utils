@@ -5,6 +5,15 @@
  *
  * @param todoInParallel - An array of tasks to be executed in parallel.
  * @returns A promise that resolves to an object containing the `fulfilled` and `rejected` results clearly separated.
+ * @example
+ * ```typescript
+ * const res = await ALL_SETTLED([Promise.resolve(1), Promise.reject('fail'), Promise.resolve('ok')])
+ * res.fulfilledSize // returns 2
+ * res.rejectedSize // returns 1
+ * res.fulfilled[2] // returns 'ok'
+ * res.rejected[1] // returns 'fail'
+ * (await ALL_SETTLED([])).size // returns 0
+ * ```
  */
 export async function ALL_SETTLED<const T extends readonly unknown[], Reason = any> (todoInParallel: T): Promise<{
   fulfilled: { [K in keyof T]: Awaited<T[K]> | undefined }
