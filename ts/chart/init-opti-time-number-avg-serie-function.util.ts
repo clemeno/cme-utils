@@ -2,11 +2,11 @@
  * initialize a `Highcharts`/`Highstock` `Array<[number, number | null]>` data for an optimized (boost) time serie
  * * provide DateTime and DurationObjectUnits -> import { DateTime, type DurationObjectUnits } from 'luxon'
  */
-export const INIT_OPTI_TIME_NUMBER_AVG_SERIE_FUNCTION = async <DateTime = any, DurationObjectUnits = any> (_: {
+export async function INIT_OPTI_TIME_NUMBER_AVG_SERIE_FUNCTION<DateTime = any, DurationObjectUnits = any> (_: {
   mFrom: DateTime
   mTo: DateTime
   step: DurationObjectUnits
-}): Promise<Array<[number, number | null]>> => {
+}): Promise<Array<[number, number | null]>> {
   const { mFrom, mTo, step } = _
 
   const pointList: Array<[number, number | null]> = []

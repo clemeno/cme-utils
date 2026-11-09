@@ -2,13 +2,13 @@
  * initialize a `Highcharts`/`Highstock` `PointOptionsObject[]` data for a time serie
  * * provide DateTime and DurationObjectUnits -> import { DateTime, type DurationObjectUnits } from 'luxon'
  */
-export const INIT_TIME_NUMBER_SERIE_FUNCTION = async <DateTime = any, DurationObjectUnits = any> (_: {
+export async function INIT_TIME_NUMBER_SERIE_FUNCTION<DateTime = any, DurationObjectUnits = any> (_: {
   mFrom: DateTime
   mTo: DateTime
   step: DurationObjectUnits
   toTz: string
   toFormat: string
-}): Promise<any[]> => {
+}): Promise<any[]> {
   const { mFrom, mTo, step } = _
 
   const pointList: any[] = []
