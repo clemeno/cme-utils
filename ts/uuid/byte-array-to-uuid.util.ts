@@ -12,7 +12,7 @@ for (let n = 0; n < 256; n += 1) {
  * The UUID string is formatted as 8-4-4-4-12 hexadecimal digits, separated by hyphens.
  * @returns A UUID string in the format 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
  */
-export function BYTE_ARRAY_TO_UUID (uint8Array: Uint8Array) {
+export function BYTE_ARRAY_TO_UUID (uint8Array: Uint8Array): string {
   const ah = Array.from(uint8Array).map(n => n2hh[n])
   const partList = [ah.slice(0, 4), ah.slice(4, 6), ah.slice(6, 8), ah.slice(8, 10), ah.slice(10, 16)]
   return partList.map(p => p.join('')).join('-').toLowerCase()
