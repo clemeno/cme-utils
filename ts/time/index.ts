@@ -1,4 +1,4 @@
-export { AppSpDate, FASTIFY_SP_DATE_SCHEMA } from './app-sp-date.js'
+export { type AppSpDate, FASTIFY_SP_DATE_SCHEMA } from './app-sp-date.js'
 export { DATE_TO_SP_DATETIME_MAPPER } from './date-to-sp-datetime-mapper.util.js'
 export { DELAY_MS } from './delay-ms.util.js'
 export { FROM_ANY_DB_MOMENT_TO_SP_DATETIME_OBJECT } from './from-any-db-moment-to-sp-datetime-object.util.js'

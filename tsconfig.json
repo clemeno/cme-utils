@@ -5,6 +5,7 @@
     "outDir": "./m",
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
     "strict": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
