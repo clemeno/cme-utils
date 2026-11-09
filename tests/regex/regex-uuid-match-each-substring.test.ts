@@ -4,7 +4,7 @@ import { REGEX_UUID_MATCH_EACH_SUBSTRING } from '../../ts/regex/regex-uuid-match
 describe(
   'REGEX_UUID_MATCH_EACH_SUBSTRING',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: string, expected: RegExpMatchArray | null }> = [
       {
         name: 'all UUIDs in a string',
         input: 'prefix-123e4567-e89b-12d3-a456-426614174000-middle-550e8400-e29b-41d4-a716-446655440000-suffix',
@@ -34,13 +34,13 @@ describe(
 
     it.each(testCases)(
       '$name',
-      ({ name, input, expected }) => {
+      ({ input, expected }) => {
         const matches = input.match(REGEX_UUID_MATCH_EACH_SUBSTRING)
         expect(matches).toEqual(expected)
       }
     )
 
-    const regexTestCases = [
+    const regexTestCases: Array<{ name: string, check: () => boolean, expected: boolean }> = [
       { name: 'instance check', check: () => REGEX_UUID_MATCH_EACH_SUBSTRING instanceof RegExp, expected: true },
       { name: 'global flag check', check: () => REGEX_UUID_MATCH_EACH_SUBSTRING.flags.includes('g'), expected: true },
     ]

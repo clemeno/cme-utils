@@ -4,7 +4,7 @@ import { REGEX_HEX_INT_OR_EMPTY } from '../../ts/regex/regex-hex-int-or-empty.ut
 describe(
   'REGEX_HEX_INT_OR_EMPTY',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: string, expected: boolean }> = [
       { name: 'valid decimal', input: '123', expected: true },
       { name: 'valid uppercase hex', input: 'ABC', expected: true },
       { name: 'valid lowercase hex', input: 'abc', expected: true },

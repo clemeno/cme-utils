@@ -12,7 +12,7 @@ describe(
       }
     )
 
-    const testCases = [
+    const testCases: Array<{ input: string, expected: boolean }> = [
       { input: 'hello', expected: true },
       { input: 'hello123', expected: true },
       { input: 'a', expected: true },

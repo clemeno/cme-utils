@@ -4,7 +4,7 @@ import { REGEX_HEX_INT_AND_NOT_EMPTY } from '../../ts/regex/regex-hex-int-and-no
 describe(
   'REGEX_HEX_INT_AND_NOT_EMPTY',
   () => {
-    const testCases = [
+    const testCases: Array<{ input: string, expected: boolean }> = [
       { input: '123', expected: true },
       { input: 'ABC', expected: true },
       { input: 'abc', expected: true },

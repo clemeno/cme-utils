@@ -4,7 +4,7 @@ import { REGEX_NO_WHITESPACE } from '../../ts/regex/regex-no-whitespace.util.js'
 describe(
   'REGEX_NO_WHITESPACE',
   () => {
-    const testCases = [
+    const testCases: Array<{ input: string, expected: boolean }> = [
       { input: 'hello', expected: true },
       { input: 'hello123', expected: true },
       { input: 'a', expected: true },

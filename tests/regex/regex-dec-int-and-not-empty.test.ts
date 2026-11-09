@@ -4,7 +4,7 @@ import { REGEX_DEC_INT_AND_NOT_EMPTY } from '../../ts/regex/regex-dec-int-and-no
 describe(
   'REGEX_DEC_INT_AND_NOT_EMPTY',
   () => {
-    const testCases = [
+    const testCases: Array<{ input: string, expected: boolean }> = [
       { input: '123', expected: true },
       { input: '-456', expected: true },
       { input: '0', expected: true },

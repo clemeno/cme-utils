@@ -4,7 +4,7 @@ import { REGEX_EMAIL } from '../../ts/regex/regex-email.util.js'
 describe(
   'REGEX_EMAIL',
   () => {
-    const validEmailTestCases = [
+    const validEmailTestCases: Array<{ name: string, email: string, expected: boolean }> = [
       { name: 'test@example.com', email: 'test@example.com', expected: true },
       { name: 'user.name+tag@example.co.uk', email: 'user.name+tag@example.co.uk', expected: true },
       { name: 'test.email@subdomain.example.com', email: 'test.email@subdomain.example.com', expected: true },
@@ -19,7 +19,7 @@ describe(
       }
     )
 
-    const invalidEmailTestCases = [
+    const invalidEmailTestCases: Array<{ name: string, email: string, expected: boolean }> = [
       { name: 'empty string', email: '', expected: false },
       { name: '@example.com', email: '@example.com', expected: false },
       { name: 'test@', email: 'test@', expected: false },
@@ -36,7 +36,7 @@ describe(
       }
     )
 
-    const caseSensitiveTestCases = [
+    const caseSensitiveTestCases: Array<{ name: string, email: string, expected: boolean }> = [
       { name: 'TEST@EXAMPLE.COM', email: 'TEST@EXAMPLE.COM', expected: false },
       { name: 'Test.Email@Example.Com', email: 'Test.Email@Example.Com', expected: false },
     ]
@@ -49,7 +49,7 @@ describe(
       }
     )
 
-    const regexpTestCases = [
+    const regexpTestCases: Array<{ name: string, check: (regex: RegExp) => void }> = [
       { name: 'be a RegExp', check: (regex: RegExp) => expect(regex).toBeInstanceOf(RegExp) },
       { name: 'have global flag', check: (regex: RegExp) => expect(regex.flags).toContain('g') },
     ]
