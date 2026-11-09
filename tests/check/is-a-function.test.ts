@@ -4,7 +4,7 @@ import { IS_A_FUNCTION } from '../../ts/check/is-a-function.util.js'
 describe(
   'IS_A_FUNCTION',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: 'should return true for arrow function', input: () => {}, expected: true },
       { name: 'should return true for function declaration', input: function () {}, expected: true },
       { name: 'should return true for async function', input: async () => {}, expected: true },
@@ -22,17 +22,7 @@ describe(
 
     it.each(testCases)(
       '$name',
-      async ({ input, expected }) => {
-        if (typeof input === 'function') {
-          if (input.constructor.name === 'GeneratorFunction') {
-            input().next()
-          } else if (input.constructor.name === 'AsyncFunction') {
-            await input()
-          } else {
-            input()
-          }
-        }
-
+      ({ input, expected }) => {
         expect(IS_A_FUNCTION(input)).toBe(expected)
       }
     )

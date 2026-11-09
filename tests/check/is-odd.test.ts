@@ -4,7 +4,7 @@ import { IS_ODD } from '../../ts/check/is-odd.util.js'
 describe(
   'IS_ODD',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: number | string | null | undefined | {} | boolean, expected: boolean }> = [
       { name: 'odd number 1', input: 1, expected: true },
       { name: 'odd number 3', input: 3, expected: true },
       { name: 'odd number 5', input: 5, expected: true },
@@ -40,7 +40,7 @@ describe(
 
     it.each(testCases)(
       'should return %s for %s',
-      ({ name, input, expected }) => {
+      ({ input, expected }) => {
         expect(IS_ODD(input)).toBe(expected)
       }
     )

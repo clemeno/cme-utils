@@ -4,7 +4,7 @@ import { IS_AN_INT } from '../../ts/check/is-an-int.util.js'
 describe(
   'IS_AN_INT',
   () => {
-    const trueCases = [
+    const trueCases: Array<{ name: string, input: bigint | number | string, expected: boolean }> = [
       { name: 'bigint literal (0n)', input: 0n, expected: true },
       { name: 'bigint literal (42n)', input: 42n, expected: true },
       { name: 'bigint literal (-7n)', input: -7n, expected: true },
@@ -23,7 +23,7 @@ describe(
       }
     )
 
-    const falseCases = [
+    const falseCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: 'float number 1.5', input: 1.5, expected: false },
       { name: 'float string "1.5"', input: '1.5', expected: false },
       { name: 'non-numeric string "abc"', input: 'abc', expected: false },

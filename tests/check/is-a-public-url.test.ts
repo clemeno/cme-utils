@@ -4,7 +4,7 @@ import { IS_A_PUBLIC_URL } from '../../ts/check/is-a-public-url.util.js'
 describe(
   'IS_A_PUBLIC_URL',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: string | undefined, expected: boolean }> = [
       { name: 'should return true for empty string', input: '', expected: true },
       { name: 'should return true for "/"', input: '/', expected: true },
       { name: 'should return true for "/public_"', input: '/public_', expected: true },

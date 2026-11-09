@@ -4,7 +4,7 @@ import { IS_EMPTY } from '../../ts/check/is-empty.util.js'
 describe(
   'IS_EMPTY',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: 'null', input: null, expected: true },
       { name: 'undefined', input: undefined, expected: true },
       { name: 'NaN', input: NaN, expected: true },

@@ -4,7 +4,7 @@ import { IS_A_BIGINT } from '../../ts/check/is-a-bigint.util.js'
 describe(
   'IS_A_BIGINT',
   () => {
-    const trueCases = [
+    const trueCases: Array<{ name: string, input: bigint, expected: boolean }> = [
       { name: 'zero bigint literal (0n)', input: 0n, expected: true },
       { name: 'positive bigint literal (1n)', input: 1n, expected: true },
       { name: 'negative bigint literal (-1n)', input: -1n, expected: true },
@@ -18,7 +18,7 @@ describe(
       }
     )
 
-    const falseCases = [
+    const falseCases: Array<{ name: string, input: number | string | null | undefined | {} | boolean, expected: boolean }> = [
       { name: 'integer number (0)', input: 0, expected: false },
       { name: 'integer number (1)', input: 1, expected: false },
       { name: 'negative integer number (-1)', input: -1, expected: false },

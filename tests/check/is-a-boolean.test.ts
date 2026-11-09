@@ -4,7 +4,7 @@ import { IS_A_BOOLEAN } from '../../ts/check/is-a-boolean.util.js'
 describe(
   'IS_A_BOOLEAN',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: number | string | null | undefined | {} | boolean, expected: boolean }> = [
       { name: 'should return true for true', input: true, expected: true },
       { name: 'should return true for false', input: false, expected: true },
       { name: 'should return false for 0', input: 0, expected: false },

@@ -4,7 +4,7 @@ import { IS_NULL } from '../../ts/check/is-null.util.js'
 describe(
   'IS_NULL',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: null | undefined | number | string | {} | boolean, expected: boolean }> = [
       { name: 'null', input: null, expected: true },
       { name: 'undefined', input: undefined, expected: false },
       { name: '0', input: 0, expected: false },
