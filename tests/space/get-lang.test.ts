@@ -12,7 +12,7 @@ describe(
       global.window = originalWindow
     })
 
-    const testCases = [
+    const testCases: Array<{ name: string, input: { defaultZone: { name: string }, defaultLocale: string }, expected: string }> = [
       { name: 'en from en-US', input: createMockSettings({ initialZone: 'UTC', initialLocale: 'en-US' }), expected: 'en' },
       { name: 'zh from zh-CN-Hans', input: createMockSettings({ initialZone: 'UTC', initialLocale: 'zh-CN-Hans' }), expected: 'zh' },
       { name: 'fr from fr', input: createMockSettings({ initialZone: 'UTC', initialLocale: 'fr' }), expected: 'fr' },
