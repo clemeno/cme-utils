@@ -57,7 +57,7 @@ export const MAX_RETURN_STATEMENTS_PER_FUNCTION_RULE = {
      * @private
      */
     // eslint-disable-next-line max-params
-    function reportIfTooManyStatements (node: any, count: any, max: any) {
+    function reportIfTooManyStatements (node: any, count: any, max: any): void {
       if (count > max) {
         const name = upperCaseFirst(GET_FUNCTION_NAME_WITH_KIND({ node }))
 
