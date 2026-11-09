@@ -1,6 +1,19 @@
 import { IS_SET } from '../check/is-set.util.js'
 
-/** create a new instance of an object where `undefined` or `null` attributes are not kept, recursively */
+/**
+ * Creates a new instance of an object where `undefined` or `null` attributes are not kept, recursively
+ * @param _ - The object and the depth
+ * @param _.object - The object to trim
+ * @param _.depth - How many levels of nested objects and arrays are trimmed (defaults to unlimited)
+ * @returns A trimmed copy of the object; `{}` when `object` is `null` or `undefined`
+ * @example
+ * ```typescript
+ * TRIM_OBJECT({ object: { a: 1, b: null, c: undefined } }) // returns { a: 1 }
+ * TRIM_OBJECT({ object: { a: { b: null, c: 2 }, d: [{ e: undefined, f: 1 }] } }) // returns { a: { c: 2 }, d: [{ f: 1 }] }
+ * TRIM_OBJECT({ object: { a: { b: null } }, depth: 1 }) // returns { a: {} }
+ * TRIM_OBJECT({ object: null }) // returns {}
+ * ```
+ */
 export function TRIM_OBJECT (_: { object: any, depth?: number }): any {
   const res: any = {}
 
