@@ -4,15 +4,15 @@ import { TO_LOCAL_NUMBER } from '../../ts/number/to-local-number.util.js'
 describe(
   'TO_LOCAL_NUMBER',
   () => {
-    const formatTestCases: Array<{ name: string, input: unknown, settings: { locale: string }, expected: string }> = [
-      { name: 'large number with en-US locale', input: 1234567.89, settings: { locale: 'en-US' }, expected: '1 234 567,89' },
-      { name: 'small integer', input: 123, settings: { locale: 'en-US' }, expected: '123' },
-      { name: 'zero', input: 0, settings: { locale: 'en-US' }, expected: '0' },
-      { name: 'negative decimal', input: -123.456, settings: { locale: 'en-US' }, expected: '-123,456' },
-      { name: 'large string number', input: '1234567.89', settings: { locale: 'en-US' }, expected: '1 234 567,89' },
-      { name: 'small string number', input: '123', settings: { locale: 'en-US' }, expected: '123' },
-      { name: 'large number with fr-FR locale', input: 1234567.89, settings: { locale: 'fr-FR' }, expected: '1 234 567,89' },
-      { name: 'large number with de-DE locale', input: 1234567.89, settings: { locale: 'de-DE' }, expected: '1 234 567,89' },
+    const formatTestCases: Array<{ name: string, input: unknown, settings: { defaultLocale: string }, expected: string }> = [
+      { name: 'large number with en-US locale', input: 1234567.89, settings: { defaultLocale: 'en-US' }, expected: '1,234,567.89' },
+      { name: 'small integer', input: 123, settings: { defaultLocale: 'en-US' }, expected: '123' },
+      { name: 'zero', input: 0, settings: { defaultLocale: 'en-US' }, expected: '0' },
+      { name: 'negative decimal', input: -123.456, settings: { defaultLocale: 'en-US' }, expected: '-123.456' },
+      { name: 'large string number', input: '1234567.89', settings: { defaultLocale: 'en-US' }, expected: '1,234,567.89' },
+      { name: 'small string number', input: '123', settings: { defaultLocale: 'en-US' }, expected: '123' },
+      { name: 'large number with fr-FR locale', input: 1234567.89, settings: { defaultLocale: 'fr-FR' }, expected: '1\u202f234\u202f567,89' },
+      { name: 'large number with de-DE locale', input: 1234567.89, settings: { defaultLocale: 'de-DE' }, expected: '1.234.567,89' },
     ]
 
     it.each(formatTestCases)(
@@ -36,7 +36,7 @@ describe(
     it.each(nonNumericTestCases)(
       '$name -> returns expected string',
       ({ input, expected }) => {
-        const mockSettings = { locale: 'en-US' }
+        const mockSettings = { defaultLocale: 'en-US' }
         expect(TO_LOCAL_NUMBER({ Settings: mockSettings, x: input })).toBe(expected)
       }
     )

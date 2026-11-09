@@ -4,17 +4,17 @@ import { TO_LOCAL_NUMBER_WITH_1_F_DIGIT } from '../../ts/number/to-local-number-
 describe(
   'TO_LOCAL_NUMBER_WITH_1_F_DIGIT',
   () => {
-    const enUS = { locale: 'en-US' }
-    const frFR = { locale: 'fr-FR' }
-    const deDE = { locale: 'de-DE' }
+    const enUS = { defaultLocale: 'en-US' }
+    const frFR = { defaultLocale: 'fr-FR' }
+    const deDE = { defaultLocale: 'de-DE' }
 
-    const testCases: Array<{ label: string, Settings: { locale: string }, x: unknown, expected: string }> = [
-      { label: '123.456 (en-US)', Settings: enUS, x: 123.456, expected: '123,5' },
-      { label: '123 (en-US)', Settings: enUS, x: 123, expected: '123,0' },
-      { label: '0 (en-US)', Settings: enUS, x: 0, expected: '0,0' },
-      { label: '-123.789 (en-US)', Settings: enUS, x: -123.789, expected: '-123,8' },
-      { label: '"123.456" string (en-US)', Settings: enUS, x: '123.456', expected: '123,5' },
-      { label: '"123" string (en-US)', Settings: enUS, x: '123', expected: '123,0' },
+    const testCases: Array<{ label: string, Settings: { defaultLocale: string }, x: unknown, expected: string }> = [
+      { label: '123.456 (en-US)', Settings: enUS, x: 123.456, expected: '123.5' },
+      { label: '123 (en-US)', Settings: enUS, x: 123, expected: '123.0' },
+      { label: '0 (en-US)', Settings: enUS, x: 0, expected: '0.0' },
+      { label: '-123.789 (en-US)', Settings: enUS, x: -123.789, expected: '-123.8' },
+      { label: '"123.456" string (en-US)', Settings: enUS, x: '123.456', expected: '123.5' },
+      { label: '"123" string (en-US)', Settings: enUS, x: '123', expected: '123.0' },
       { label: '"abc" (en-US)', Settings: enUS, x: 'abc', expected: '' },
       { label: 'null (en-US)', Settings: enUS, x: null, expected: '' },
       { label: 'undefined (en-US)', Settings: enUS, x: undefined, expected: '' },
@@ -37,7 +37,7 @@ describe(
     it(
       'returns a string',
       () => {
-        const result = TO_LOCAL_NUMBER_WITH_1_F_DIGIT({ Settings: { locale: 'en-US' }, x: 123.456 })
+        const result = TO_LOCAL_NUMBER_WITH_1_F_DIGIT({ Settings: { defaultLocale: 'en-US' }, x: 123.456 })
         expect(typeof result).toBe('string')
       }
     )
