@@ -4,7 +4,7 @@ import { DISPLAY_NS_OR_NB } from '../../ts/convert/display-ns-or-nb.util.js'
 describe(
   'DISPLAY_NS_OR_NB',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: { ns: unknown, nb: unknown }, expected: string }> = [
       { label: 'returns ns display when ns has a name', input: { ns: { nsName: 'My Network' }, nb: { nbIdentifier: 'NB-001' } }, expected: 'My Network' },
       { label: 'falls back to nb display when ns is empty', input: { ns: {}, nb: { nbIdentifier: 'NB-001' } }, expected: 'NB-001' },
       { label: 'falls back to nb display when ns is null', input: { ns: null, nb: { nbNumber: 'NB-5' } }, expected: 'NB-5' },

@@ -4,7 +4,7 @@ import { FROM_BASE_16_TO_CSN_DISPLAY } from '../../ts/convert/from-base-16-to-cs
 describe(
   'FROM_BASE_16_TO_CSN_DISPLAY',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, from: string, bCsnHexCard: boolean, bCsnDecNumber: boolean, expected: string }> = [
       {
         name: 'no flags — returns hex string as-is',
         from: 'ff',

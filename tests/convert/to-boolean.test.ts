@@ -4,7 +4,7 @@ import { TO_BOOLEAN } from '../../ts/convert/to-boolean.util.js'
 describe(
   'TO_BOOLEAN',
   () => {
-    const booleanTestCases = [
+    const booleanTestCases: Array<{ name: string, input: boolean, expected: boolean }> = [
       { name: 'true', input: true, expected: true },
       { name: 'false', input: false, expected: false },
     ]
@@ -16,7 +16,7 @@ describe(
       }
     )
 
-    const truthyTestCases = [
+    const truthyTestCases: Array<{ name: string, input: number | string | { a: number } | number[], expected: boolean }> = [
       { name: 'positive number', input: 1, expected: true },
       { name: 'negative number', input: -1, expected: true },
       { name: 'non-zero number', input: 123, expected: true },
@@ -34,7 +34,7 @@ describe(
       }
     )
 
-    const falsyTestCases = [
+    const falsyTestCases: Array<{ name: string, input: null | undefined | number | string, expected: boolean }> = [
       { name: 'null', input: null, expected: false },
       { name: 'undefined', input: undefined, expected: false },
       { name: 'NaN', input: NaN, expected: false },

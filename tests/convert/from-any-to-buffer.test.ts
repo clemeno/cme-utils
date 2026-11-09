@@ -4,7 +4,7 @@ import { FROM_ANY_TO_BUFFER } from '../../ts/convert/from-any-to-buffer.util.js'
 describe(
   'FROM_ANY_TO_BUFFER',
   () => {
-    const arrayBufferViewTestCases = [
+    const arrayBufferViewTestCases: Array<{ name: string, input: unknown, expected: Buffer<ArrayBuffer> }> = [
       {
         name: 'Uint8Array with known bytes',
         input: new Uint8Array([72, 101, 108, 108, 111]),
@@ -39,7 +39,7 @@ describe(
       }
     )
 
-    const fallbackTestCases = [
+    const fallbackTestCases: Array<{ name: string, input: string | ArrayBuffer | number[], expected: Buffer<ArrayBuffer> }> = [
       {
         name: 'string',
         input: 'hello',

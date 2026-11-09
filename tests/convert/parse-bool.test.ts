@@ -4,7 +4,7 @@ import { PARSE_BOOL } from '../../ts/convert/parse-bool.util.js'
 describe(
   'PARSE_BOOL',
   () => {
-    const booleanTestCases = [
+    const booleanTestCases: Array<{ name: string, input: boolean, expected: boolean }> = [
       { name: 'true', input: true, expected: true },
       { name: 'false', input: false, expected: false },
     ]
@@ -16,7 +16,7 @@ describe(
       }
     )
 
-    const numberTestCases = [
+    const numberTestCases: Array<{ name: string, input: number, expected: boolean }> = [
       { name: '1', input: 1, expected: true },
       { name: '0', input: 0, expected: false },
       { name: '2', input: 2, expected: false },
@@ -32,7 +32,7 @@ describe(
       }
     )
 
-    const truthyStringTestCases = [
+    const truthyStringTestCases: Array<{ name: string, input: string, expected: boolean }> = [
       { name: 'true', input: 'true', expected: true },
       { name: 'TRUE', input: 'TRUE', expected: true },
       { name: 'True', input: 'True', expected: true },
@@ -54,7 +54,7 @@ describe(
       }
     )
 
-    const falsyStringTestCases = [
+    const falsyStringTestCases: Array<{ name: string, input: string, expected: boolean }> = [
       { name: 'false', input: 'false', expected: false },
       { name: 'FALSE', input: 'FALSE', expected: false },
       { name: '0', input: '0', expected: false },
@@ -72,7 +72,7 @@ describe(
       }
     )
 
-    const falsyValueTestCases = [
+    const falsyValueTestCases: Array<{ name: string, input: null | undefined | {} | { value: boolean } }> = [
       { name: 'null', input: null },
       { name: 'undefined', input: undefined },
       { name: 'empty object', input: {} },

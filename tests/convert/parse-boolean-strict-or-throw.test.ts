@@ -4,7 +4,7 @@ import { PARSE_BOOLEAN_STRICT_OR_THROW } from '../../ts/convert/parse-boolean-st
 describe(
   'PARSE_BOOLEAN_STRICT_OR_THROW',
   () => {
-    const trueTestCases = [
+    const trueTestCases: Array<{ name: string, input: string | number | boolean }> = [
       { name: 'boolean true', input: true },
       { name: 'string "true"', input: 'true' },
       { name: 'number 1', input: 1 },
@@ -20,7 +20,7 @@ describe(
       }
     )
 
-    const falseTestCases = [
+    const falseTestCases: Array<{ name: string, input: string | number | boolean }> = [
       { name: 'boolean false', input: false },
       { name: 'string "false"', input: 'false' },
       { name: 'number 0', input: 0 },

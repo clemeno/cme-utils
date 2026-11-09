@@ -4,7 +4,7 @@ import { TO_ANY } from '../../ts/convert/to-any.util.js'
 describe(
   'TO_ANY',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: undefined | string, expected: unknown }> = [
       { label: 'undefined', input: undefined, expected: '' },
       { label: '"" (empty string)', input: '', expected: '' },
       { label: '"42" (JSON number)', input: '42', expected: 42 },

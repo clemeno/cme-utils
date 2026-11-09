@@ -4,7 +4,7 @@ import { FROM_BASE_16_TO_CARD_SERIAL } from '../../ts/convert/from-base-16-to-ca
 describe(
   'FROM_BASE_16_TO_CARD_SERIAL',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: string, expected: string }> = [
       { name: 'empty string returns empty', input: '', expected: '' },
       { name: '8-char hex padded to 16', input: 'aabbccdd', expected: '00000000 aabbccdd' },
       { name: '16-char hex no padding needed', input: '1122334455667788', expected: '11223344 55667788' },

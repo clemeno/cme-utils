@@ -4,7 +4,7 @@ import { FROM_BASE_64_TO_UINT8_LIST } from '../../ts/convert/from-base-64-to-uin
 describe(
   'FROM_BASE_64_TO_UINT8_LIST',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, base64: string, expected: number[] }> = [
       { name: 'empty base64', base64: '', expected: [] },
       { name: 'base64 for "Hello"', base64: 'SGVsbG8=', expected: [72, 101, 108, 108, 111] },
       { name: 'single zero byte', base64: 'AA==', expected: [0] },
@@ -30,7 +30,7 @@ describe(
 describe(
   'FROM_BASE_64_TO_UINT8_LIST (fallback — no Buffer)',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, base64: string, expected: number[] }> = [
       { name: 'empty base64', base64: '', expected: [] },
       { name: 'base64 for "Hello"', base64: 'SGVsbG8=', expected: [72, 101, 108, 108, 111] },
       { name: 'single zero byte', base64: 'AA==', expected: [0] },

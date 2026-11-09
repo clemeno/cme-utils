@@ -4,7 +4,7 @@ import { BIG_10_TO_BIG_16 } from '../../ts/convert/big-10-to-big-16.util.js'
 describe(
   'BIG_10_TO_BIG_16',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: string | number, expected: string }> = [
       { name: '0 → 0', input: '0', expected: '0' },
       { name: 'leading zeros only "00" → 0', input: '00', expected: '0' },
       { name: '10 → a', input: '10', expected: 'a' },

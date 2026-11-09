@@ -4,7 +4,7 @@ import { DISPLAY_NS } from '../../ts/convert/display-ns.util.js'
 describe(
   'DISPLAY_NS',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: unknown, expected: string }> = [
       { label: 'returns nsName when present', input: { nsName: 'Main Network' }, expected: 'Main Network' },
       { label: 'falls back to nsNumber when nsName is absent', input: { nsNumber: 'NS-10' }, expected: 'NS-10' },
       { label: 'falls back to "ID <nsId>" when only nsId is present', input: { nsId: 7 }, expected: 'ID 7' },

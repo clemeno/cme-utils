@@ -4,7 +4,7 @@ import { BASE_256_TO_ARRAY_16 } from '../../ts/convert/base-256-to-array-16.util
 describe(
   'BASE_256_TO_ARRAY_16',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: string, expected: string[] }> = [
       { label: '""', input: '', expected: [] },
       { label: '"0"', input: '0', expected: ['0'] },
       { label: '"a"', input: 'a', expected: ['a'] },

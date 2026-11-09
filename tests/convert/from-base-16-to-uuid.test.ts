@@ -4,7 +4,7 @@ import { FROM_BASE_16_TO_UUID } from '../../ts/convert/from-base-16-to-uuid.util
 describe(
   'FROM_BASE_16_TO_UUID',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: string, expected: string }> = [
       {
         name: 'empty string pads to nil UUID',
         input: '',

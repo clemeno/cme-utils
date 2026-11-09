@@ -4,7 +4,7 @@ import { SIGNED_TO_UNSIGNED } from '../../ts/convert/signed-to-unsigned.util.js'
 describe(
   'SIGNED_TO_UNSIGNED',
   () => {
-    const positiveTestCases = [
+    const positiveTestCases: Array<{ name: string, value: number, bits: number, expected: number }> = [
       { name: 'zero', value: 0, bits: 8, expected: 0 },
       { name: 'small positive', value: 5, bits: 8, expected: 5 },
       { name: 'max positive 8-bit', value: 127, bits: 8, expected: 127 },
@@ -18,7 +18,7 @@ describe(
       }
     )
 
-    const negativeTestCases = [
+    const negativeTestCases: Array<{ name: string, value: number, bits: number, expected: number }> = [
       { name: '-1 to 255', value: -1, bits: 8, expected: 255 },
       { name: '-2 to 254', value: -2, bits: 8, expected: 254 },
       { name: '-128 to 128', value: -128, bits: 8, expected: 128 },
@@ -31,7 +31,7 @@ describe(
       }
     )
 
-    const differentBitsTestCases = [
+    const differentBitsTestCases: Array<{ name: string, value: number, bits: number, expected: number }> = [
       { name: '-1 with 16 bits', value: -1, bits: 16, expected: 65535 },
       { name: '-1 with 32 bits', value: -1, bits: 32, expected: 4294967295 },
       { name: '10 with 4 bits', value: 10, bits: 4, expected: 10 },

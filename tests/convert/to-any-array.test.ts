@@ -12,7 +12,7 @@ describe(
       }
     )
 
-    const testCases = [
+    const testCases: Array<{ label: string, input: unknown, expected: number[] | string[] }> = [
       { label: 'Uint8Array([10,20,30])', input: new Uint8Array([10, 20, 30]), expected: [10, 20, 30] },
       { label: 'Buffer([1,2,3])', input: Buffer.from([1, 2, 3]), expected: [1, 2, 3] },
       { label: '"abc" (string iterable)', input: 'abc', expected: ['a', 'b', 'c'] },

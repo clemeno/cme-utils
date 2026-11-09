@@ -4,7 +4,7 @@ import { FROM_SNAKE_TO_CLASS_CASE } from '../../ts/convert/from-snake-to-class-c
 describe(
   'FROM_SNAKE_TO_CLASS_CASE',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: string, expected: string }> = [
       { name: 'simple two-word snake case', input: 'hello_world', expected: 'HelloWorld' },
       { name: 'three-word snake case', input: 'some_function_name', expected: 'SomeFunctionName' },
       { name: 'single word', input: 'single', expected: 'Single' },

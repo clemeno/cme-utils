@@ -4,7 +4,7 @@ import { DISPLAY_NB } from '../../ts/convert/display-nb.util.js'
 describe(
   'DISPLAY_NB',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: unknown, expected: string }> = [
       { label: 'returns nbIdentifier when present', input: { nbIdentifier: 'ABC-001' }, expected: 'ABC-001' },
       { label: 'falls back to nbNumber when nbIdentifier is absent', input: { nbNumber: 'NB-42' }, expected: 'NB-42' },
       { label: 'falls back to "ID <nbId>" when only nbId is present', input: { nbId: 99 }, expected: 'ID 99' },

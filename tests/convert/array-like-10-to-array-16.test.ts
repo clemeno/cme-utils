@@ -4,7 +4,7 @@ import { ARRAY_LIKE_10_TO_ARRAY_16 } from '../../ts/convert/array-like-10-to-arr
 describe(
   'ARRAY_LIKE_10_TO_ARRAY_16',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: number[], expected: string[] }> = [
       { name: 'empty array', input: [], expected: [] },
       { name: '[0]', input: [0], expected: ['0'] },
       { name: '[10] → ["a"]', input: [10], expected: ['a'] },

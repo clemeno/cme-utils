@@ -4,7 +4,7 @@ import { TO_JSON } from '../../ts/convert/to-json.util.js'
 describe(
   'TO_JSON',
   () => {
-    const objectTestCases = [
+    const objectTestCases: Array<{ name: string, input: { a: number, b: number } | {}, expected: string }> = [
       { name: 'object with properties', input: { a: 1, b: 2 }, expected: '{"a":1,"b":2}' },
       { name: 'empty object', input: {}, expected: '{}' },
     ]
@@ -16,7 +16,7 @@ describe(
       }
     )
 
-    const arrayTestCases = [
+    const arrayTestCases: Array<{ name: string, input: unknown, expected: string }> = [
       { name: 'array with elements', input: [1, 2, 3], expected: '[1,2,3]' },
       { name: 'empty array', input: [], expected: '[]' },
       { name: 'array with mixed types', input: [1, 'string', true, null, { obj: 'value' }, [1, 2, 3]], expected: '[1,"string",true,null,{"obj":"value"},[1,2,3]]' },
@@ -29,7 +29,7 @@ describe(
       }
     )
 
-    const primitiveTestCases = [
+    const primitiveTestCases: Array<{ name: string, input: string | number | null | undefined | boolean, expected: string }> = [
       { name: 'string', input: 'hello', expected: '"hello"' },
       { name: 'empty string', input: '', expected: '""' },
       { name: 'number', input: 123, expected: '123' },
@@ -52,7 +52,7 @@ describe(
       }
     )
 
-    const specialObjectTestCases = [
+    const specialObjectTestCases: Array<{ name: string, input: unknown, expected: string, note?: string }> = [
       { name: 'Date object', input: new Date('2023-01-01T00:00:00.000Z'), expected: '"2023-01-01T00:00:00.000Z"' },
       { name: 'RegExp object', input: /test/gi, expected: '{}', note: 'RegExp loses its properties' },
       { name: 'Map object', input: new Map([['key', 'value']]), expected: '{}' },
@@ -72,7 +72,7 @@ describe(
       }
     )
 
-    const complexObjectTestCases = [
+    const complexObjectTestCases: Array<{ name: string, input: unknown, expected: string }> = [
       { name: 'nested object', input: { a: { b: { c: 1 } } }, expected: '{"a":{"b":{"c":1}}}' },
       { name: 'object with array', input: { items: [1, 2, 3] }, expected: '{"items":[1,2,3]}' },
       { name: 'object with mixed types', input: { str: 'hello', num: 42, bool: true, arr: [1, 2], obj: { nested: 'value' } }, expected: '{"str":"hello","num":42,"bool":true,"arr":[1,2],"obj":{"nested":"value"}}' },
@@ -87,7 +87,7 @@ describe(
       }
     )
 
-    const edgeCaseTestCases = [
+    const edgeCaseTestCases: Array<{ name: string, input: unknown, expected: string }> = [
       { name: 'object with toJSON method', input: { toJSON: () => 'custom' }, expected: '"custom"' },
       { name: 'objects that throw during serialization', input: { toJSON: () => { throw new Error('Cannot serialize') } }, expected: '' },
       { name: 'object with getter', input: Object.defineProperty({}, 'dynamic', { get: () => 'value', enumerable: true }), expected: '{"dynamic":"value"}' },

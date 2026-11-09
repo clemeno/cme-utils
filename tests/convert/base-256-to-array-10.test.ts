@@ -4,7 +4,7 @@ import { BASE_256_TO_ARRAY_10 } from '../../ts/convert/base-256-to-array-10.util
 describe(
   'BASE_256_TO_ARRAY_10',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: string, expected: number[] }> = [
       { label: '"0"', input: '0', expected: [0] },
       { label: '"a"', input: 'a', expected: [10] },
       { label: '"0a"', input: '0a', expected: [0, 10] },

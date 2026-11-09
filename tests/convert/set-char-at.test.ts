@@ -4,7 +4,7 @@ import { SET_CHAR_AT } from '../../ts/convert/set-char-at.util.js'
 describe(
   'SET_CHAR_AT',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: string, at: number, set: string, expected: string }> = [
       { label: '"hello" at 1 set "a"', input: 'hello', at: 1, set: 'a', expected: 'hallo' },
       { label: '"world" at 0 set "H"', input: 'world', at: 0, set: 'H', expected: 'Horld' },
       { label: '"test" at 3 set "x"', input: 'test', at: 3, set: 'x', expected: 'tesx' },

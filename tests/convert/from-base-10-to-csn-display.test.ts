@@ -4,7 +4,7 @@ import { FROM_BASE_10_TO_CSN_DISPLAY } from '../../ts/convert/from-base-10-to-cs
 describe(
   'FROM_BASE_10_TO_CSN_DISPLAY',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, from: string, bCsnHexNumber: boolean, bCsnHexCard: boolean, expected: string }> = [
       {
         name: 'no conversion flags — returns decimal string',
         from: '42',

@@ -4,7 +4,7 @@ import { FROM_SNAKE_TO_JS_CASE } from '../../ts/convert/from-snake-to-js-case.ut
 describe(
   'FROM_SNAKE_TO_JS_CASE',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: string, expected: string }> = [
       { name: 'simple two-word snake case', input: 'hello_world', expected: 'helloWorld' },
       { name: 'three-word snake case', input: 'some_function_name', expected: 'someFunctionName' },
       { name: 'single word', input: 'single', expected: 'single' },

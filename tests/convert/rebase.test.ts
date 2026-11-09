@@ -4,7 +4,7 @@ import { REBASE } from '../../ts/convert/rebase.util.js'
 describe(
   'REBASE',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, from: string, base: number, toBase: number, expected: string }> = [
       { name: '0 base 10 → base 16', from: '0', base: 10, toBase: 16, expected: '0' },
       { name: '10 base 10 → base 16 (a)', from: '10', base: 10, toBase: 16, expected: 'a' },
       { name: 'ff base 16 → base 10 (255)', from: 'ff', base: 16, toBase: 10, expected: '255' },

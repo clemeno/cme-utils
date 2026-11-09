@@ -6,7 +6,7 @@ describe(
   () => {
     const hex = '0123456789abcdef'
 
-    const testCases = [
+    const testCases: Array<{ name: string, input: string, base: string, expected: number }> = [
       { name: '"0" in hex base', input: '0', base: hex, expected: 0 },
       { name: '"9" in hex base', input: '9', base: hex, expected: 9 },
       { name: '"a" in hex base', input: 'a', base: hex, expected: 10 },

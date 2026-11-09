@@ -4,7 +4,7 @@ import { BIG_ADD_10 } from '../../ts/convert/big-add-10.util.js'
 describe(
   'BIG_ADD_10',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, x: string | number, y: string | number, expected: string }> = [
       { name: '0 + 0', x: '0', y: '0', expected: '0' },
       { name: '1 + 1', x: '1', y: '1', expected: '2' },
       { name: '9 + 1 (carry)', x: '9', y: '1', expected: '10' },

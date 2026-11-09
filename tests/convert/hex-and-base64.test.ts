@@ -5,7 +5,7 @@ import { HEX_TO_BASE64 } from '../../ts/convert/hex-to-base64.util.js'
 describe(
   'HEX_TO_BASE64 (fallback — no Buffer)',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, hex: string, expected: string }> = [
       { name: 'empty hex', hex: '', expected: '' },
       { name: 'hex for "Hello"', hex: '48656c6c6f', expected: 'SGVsbG8=' },
       { name: 'single zero byte', hex: '00', expected: 'AA==' },
@@ -24,7 +24,7 @@ describe(
 describe(
   'BASE64_TO_HEX (fallback — no Buffer)',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, base64: string, expected: string }> = [
       { name: 'empty base64', base64: '', expected: '' },
       { name: 'base64 of "Hello"', base64: 'SGVsbG8=', expected: '48656c6c6f' },
       { name: 'single zero byte', base64: 'AA==', expected: '00' },
@@ -43,7 +43,7 @@ describe(
 describe(
   'HEX_TO_BASE64',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, hex: string, expected: string }> = [
       { name: 'empty hex', hex: '', expected: '' },
       { name: 'hex for "Hello"', hex: '48656c6c6f', expected: 'SGVsbG8=' },
       { name: 'single zero byte', hex: '00', expected: 'AA==' },
@@ -63,7 +63,7 @@ describe(
 describe(
   'BASE64_TO_HEX',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, base64: string, expected: string }> = [
       { name: 'empty base64', base64: '', expected: '' },
       { name: 'base64 of "Hello"', base64: 'SGVsbG8=', expected: '48656c6c6f' },
       { name: 'single zero byte', base64: 'AA==', expected: '00' },

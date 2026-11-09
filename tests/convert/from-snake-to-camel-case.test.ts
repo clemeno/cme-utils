@@ -4,7 +4,7 @@ import { FROM_SNAKE_TO_CAMEL_CASE } from '../../ts/convert/from-snake-to-camel-c
 describe(
   'FROM_SNAKE_TO_CAMEL_CASE',
   () => {
-    const testCases = [
+    const testCases: Array<{ input: string, expected: string }> = [
       { input: 'hello_world', expected: 'helloWorld' },
       { input: 'user_name', expected: 'userName' },
       { input: 'xml_http_request', expected: 'xmlHttpRequest' },

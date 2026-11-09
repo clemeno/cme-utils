@@ -4,7 +4,7 @@ import { FROM_JS_TO_SNAKE_CASE } from '../../ts/convert/from-js-to-snake-case.ut
 describe(
   'FROM_JS_TO_SNAKE_CASE',
   () => {
-    const testCases = [
+    const testCases: Array<{ input: string, expected: string }> = [
       { input: 'helloWorld', expected: 'hello_world' },
       { input: 'userName', expected: 'user_name' },
       { input: 'XMLHttpRequest', expected: '_x_m_l_http_request' },

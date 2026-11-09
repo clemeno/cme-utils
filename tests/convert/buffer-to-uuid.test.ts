@@ -4,7 +4,7 @@ import { BUFFER_TO_UUID } from '../../ts/convert/buffer-to-uuid.util.js'
 describe(
   'BUFFER_TO_UUID',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: Buffer<ArrayBuffer> | Uint8Array<ArrayBuffer> | number[], expected: string }> = [
       {
         name: 'all-zero bytes yields nil UUID',
         input: Buffer.from([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),

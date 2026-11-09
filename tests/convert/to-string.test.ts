@@ -4,7 +4,7 @@ import { TO_STRING } from '../../ts/convert/to-string.util.js'
 describe(
   'TO_STRING',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: unknown, expected: string }> = [
       { name: 'should convert string "hello" to "hello"', input: 'hello', expected: 'hello' },
       { name: 'should convert empty string to empty string', input: '', expected: '' },
       { name: 'should convert string "123" to "123"', input: '123', expected: '123' },

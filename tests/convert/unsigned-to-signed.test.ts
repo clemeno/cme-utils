@@ -4,7 +4,7 @@ import { UNSIGNED_TO_SIGNED } from '../../ts/convert/unsigned-to-signed.util.js'
 describe(
   'UNSIGNED_TO_SIGNED',
   () => {
-    const lowerHalfTestCases = [
+    const lowerHalfTestCases: Array<{ name: string, value: number, bits: number, expected: number }> = [
       { name: 'zero', value: 0, bits: 8, expected: 0 },
       { name: 'small positive', value: 5, bits: 8, expected: 5 },
       { name: 'max positive for 8-bit', value: 127, bits: 8, expected: 127 },
@@ -17,7 +17,7 @@ describe(
       }
     )
 
-    const upperHalfTestCases = [
+    const upperHalfTestCases: Array<{ name: string, value: number, bits: number, expected: number }> = [
       { name: '128 to -128', value: 128, bits: 8, expected: -128 },
       { name: '255 to -1', value: 255, bits: 8, expected: -1 },
       { name: '200 to -56', value: 200, bits: 8, expected: -56 },
@@ -30,7 +30,7 @@ describe(
       }
     )
 
-    const differentBitsTestCases = [
+    const differentBitsTestCases: Array<{ name: string, value: number, bits: number, expected: number }> = [
       { name: '16-bit max positive', value: 32767, bits: 16, expected: 32767 },
       { name: '16-bit min negative', value: 32768, bits: 16, expected: -32768 },
       { name: '16-bit max unsigned to -1', value: 65535, bits: 16, expected: -1 },
@@ -46,7 +46,7 @@ describe(
       }
     )
 
-    const edgeCaseTestCases = [
+    const edgeCaseTestCases: Array<{ name: string, value: number, bits: number, expected: number }> = [
       { name: '1-bit zero', value: 0, bits: 1, expected: 0 },
       { name: '1-bit one to -1', value: 1, bits: 1, expected: -1 },
     ]

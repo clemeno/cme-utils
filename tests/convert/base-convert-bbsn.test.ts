@@ -7,7 +7,7 @@ describe(
     describe(
       'from base 10',
       () => {
-        const testCases = [
+        const testCases: Array<{ name: string, n: string, from: number, to: number, expected: string }> = [
           { name: '0 in base 10 → base 16', n: '0', from: 10, to: 16, expected: '0' },
           { name: '255 in base 10 → base 16', n: '255', from: 10, to: 16, expected: 'ff' },
           { name: '256 in base 10 → base 16', n: '256', from: 10, to: 16, expected: '100' },
@@ -28,7 +28,7 @@ describe(
     describe(
       'from non-base-10 source',
       () => {
-        const testCases = [
+        const testCases: Array<{ name: string, n: string, from: number, to: number, expected: string }> = [
           { name: 'ff base 16 → base 10 (255)', n: 'ff', from: 16, to: 10, expected: '255' },
           { name: '1111 base 2 → base 10 (15)', n: '1111', from: 2, to: 10, expected: '15' },
           { name: 'a base 16 → base 10 (10)', n: 'a', from: 16, to: 10, expected: '10' },

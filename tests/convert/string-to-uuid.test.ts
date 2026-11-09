@@ -4,7 +4,7 @@ import { STRING_TO_UUID } from '../../ts/convert/string-to-uuid.util.js'
 describe(
   'STRING_TO_UUID',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: string, expected: string }> = [
       {
         name: 'empty string produces nil UUID',
         input: '',

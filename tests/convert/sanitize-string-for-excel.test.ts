@@ -4,7 +4,7 @@ import { SANITIZE_STRING_FOR_EXCEL } from '../../ts/convert/sanitize-string-for-
 describe(
   'SANITIZE_STRING_FOR_EXCEL',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: string, expected: string }> = [
       { label: '"Hello@#$%World!"', input: 'Hello@#$%World!', expected: 'Hello@World!' },
       { label: '"Test©®™String"', input: 'Test©®™String', expected: 'TestTMString' },
       { label: '"Data±×÷String"', input: 'Data±×÷String', expected: 'DataString' },

@@ -4,7 +4,7 @@ import { FROM_JS_TO_CONSTANT_CASE } from '../../ts/convert/from-js-to-constant-c
 describe(
   'FROM_JS_TO_CONSTANT_CASE',
   () => {
-    const testCases = [
+    const testCases: Array<{ input: string, expected: string }> = [
       { input: 'helloWorld', expected: 'HELLO_WORLD' },
       { input: 'userName', expected: 'USER_NAME' },
       { input: 'XMLHttpRequest', expected: '_X_M_L_HTTP_REQUEST' },

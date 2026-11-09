@@ -4,7 +4,7 @@ import { BYTE_ARRAY_LIKE_TO_BASE_256 } from '../../ts/convert/byte-array-like-to
 describe(
   'BYTE_ARRAY_LIKE_TO_BASE_256',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: number[] | null, expected: string }> = [
       { label: '[]', input: [], expected: '' },
       { label: '[0]', input: [0], expected: '0' },
       { label: '[10]', input: [10], expected: 'a' },

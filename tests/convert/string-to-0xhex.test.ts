@@ -4,7 +4,7 @@ import { STRING_TO_0XHEX } from '../../ts/convert/string-to-0xhex.util.js'
 describe(
   'STRING_TO_0XHEX',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: string, expected: string }> = [
       { label: '"A"', input: 'A', expected: '0x41' },
       { label: '"B"', input: 'B', expected: '0x42' },
       { label: '"a"', input: 'a', expected: '0x61' },

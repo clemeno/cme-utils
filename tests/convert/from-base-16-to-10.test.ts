@@ -4,7 +4,7 @@ import { FROM_BASE_16_TO_10 } from '../../ts/convert/from-base-16-to-10.util.js'
 describe(
   'FROM_BASE_16_TO_10',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: string, expected: string }> = [
       { name: '0 → 0', input: '0', expected: '0' },
       { name: 'a → 10', input: 'a', expected: '10' },
       { name: 'f → 15', input: 'f', expected: '15' },

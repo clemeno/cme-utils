@@ -4,7 +4,7 @@ import { STRING_TO_HEX } from '../../ts/convert/string-to-hex.util.js'
 describe(
   'STRING_TO_HEX',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: string, expected: string }> = [
       { label: '"A"', input: 'A', expected: '41' },
       { label: '"B"', input: 'B', expected: '42' },
       { label: '"a"', input: 'a', expected: '61' },

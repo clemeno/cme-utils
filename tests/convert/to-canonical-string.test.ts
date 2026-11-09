@@ -4,7 +4,7 @@ import { TO_CANONICAL_STRING } from '../../ts/convert/to-canonical-string.util.j
 describe(
   'TO_CANONICAL_STRING',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: string | number | { a: number } | null | undefined | boolean, expected: string }> = [
       { label: '"HELLO"', input: 'HELLO', expected: 'hello' },
       { label: '"Hello World"', input: 'Hello World', expected: 'hello world' },
       { label: '"café" (diacritics)', input: 'café', expected: 'cafe' },

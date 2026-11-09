@@ -4,7 +4,7 @@ import { FROM_BASE_10_TO_CARD_SERIAL } from '../../ts/convert/from-base-10-to-ca
 describe(
   'FROM_BASE_10_TO_CARD_SERIAL',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: string | number, expected: string }> = [
       { name: '0', input: '0', expected: '00000000 00000000' },
       { name: '255 → ff padded', input: '255', expected: '00000000 000000ff' },
       { name: '256 → 100 padded', input: '256', expected: '00000000 00000100' },
