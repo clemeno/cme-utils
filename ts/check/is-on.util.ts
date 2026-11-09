@@ -12,4 +12,6 @@ const IS_OFF = (v: any): boolean => (
 )
 
 /** CHECK (is `truthy`) */
-export const IS_ON = <T = any> (v: T | null | undefined | false | '' | 0): v is T => !IS_OFF(v)
+export function IS_ON<T = any> (v: T | null | undefined | false | '' | 0): v is T {
+  return !IS_OFF(v)
+}

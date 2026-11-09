@@ -1,5 +1,5 @@
 /** CHECK (is an even `numeric` value) */
-export const IS_EVEN = (v: any): boolean => {
+export function IS_EVEN (v: any): boolean {
   let res = false
 
   if (

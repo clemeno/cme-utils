@@ -23,4 +23,6 @@ const IS_NOT_EMPTY = (_: any): _ is any => {
   )
 }
 
-export const IS_EMPTY = (v: any): boolean => !IS_NOT_EMPTY(v)
+export function IS_EMPTY (v: any): boolean {
+  return !IS_NOT_EMPTY(v)
+}

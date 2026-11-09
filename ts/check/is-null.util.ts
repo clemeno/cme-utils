@@ -1,2 +1,4 @@
 /** CHECK (is `null`) */
-export const IS_NULL = (v: any): v is null => v === null
+export function IS_NULL (v: any): v is null {
+  return v === null
+}

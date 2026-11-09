@@ -1,5 +1,5 @@
 /** CHECK (is an odd `numeric` value) */
-export const IS_ODD = (v: any): boolean => {
+export function IS_ODD (v: any): boolean {
   let res = false
 
   if (

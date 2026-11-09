@@ -1,2 +1,4 @@
 /** CHECK (is `undefined`) */
-export const IS_UNDEFINED = (v: any): v is undefined => typeof v === 'undefined'
+export function IS_UNDEFINED (v: any): v is undefined {
+  return typeof v === 'undefined'
+}

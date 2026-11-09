@@ -1,1 +1,3 @@
-export const IS_A_FUNCTION = <T> (o: any): o is ((..._: any) => T) => typeof o === 'function'
+export function IS_A_FUNCTION<T> (o: any): o is ((..._: any) => T) {
+  return typeof o === 'function'
+}

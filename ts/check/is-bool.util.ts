@@ -1,6 +1,6 @@
 import type { bool } from '../bool.js'
 
-export const IS_BOOL = (v: any): v is bool => {
+export function IS_BOOL (v: any): v is bool {
   let res = (v === true) || (v === false)
 
   if ((
