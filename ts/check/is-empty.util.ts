@@ -1,4 +1,4 @@
-const IS_NOT_EMPTY = (_: any): _ is any => {
+function IS_NOT_EMPTY (_: any): _ is any {
   const bNotNull = _ !== null
   const bNotUndefined = typeof _ !== 'undefined'
   const bObject = typeof _ === 'object'

@@ -2,7 +2,7 @@ import { TO_STRING } from './to-string.util.js'
 
 type DateLike = { toISO: () => string | null } | { toISOString: () => string }
 
-const toIsoString = (value: DateLike | null | undefined): string | null | undefined => {
+function toIsoString (value: DateLike | null | undefined): string | null | undefined {
   return value == null ? undefined : (('toISO' in value) ? value.toISO() : value.toISOString())
 }
 
