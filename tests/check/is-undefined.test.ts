@@ -4,7 +4,7 @@ import { IS_UNDEFINED } from '../../ts/check/is-undefined.util.js'
 describe(
   'IS_UNDEFINED',
   () => {
-    const testCases: Array<{ name: string, input: undefined | null | number | string | {} | boolean, expected: boolean }> = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: 'undefined', input: undefined, expected: true },
       { name: 'null', input: null, expected: false },
       { name: '0', input: 0, expected: false },

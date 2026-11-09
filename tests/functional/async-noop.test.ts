@@ -4,7 +4,7 @@ import { ASYNC_NOOP } from '../../ts/functional/async-noop.util.js'
 describe(
   'ASYNC_NOOP',
   () => {
-    const returnPromiseTestCases: Array<{ name: string, args: {}[], expected: undefined }> = [
+    const returnPromiseTestCases: Array<{ name: string, args: unknown[], expected: undefined }> = [
       { name: 'no parameters', args: [], expected: undefined },
       { name: 'with parameters', args: ['ignored', 123, {}], expected: undefined },
     ]

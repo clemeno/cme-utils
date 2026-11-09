@@ -4,7 +4,7 @@ import { SET_DOCUMENT_TZ } from '../../ts/time/set-document-tz.util.js'
 describe(
   'SET_DOCUMENT_TZ',
   () => {
-    const documentTzTestCases: Array<{ name: string, input: string, expected: string[][] }> = [
+    const documentTzTestCases: Array<{ name: string, input: string, expected: Array<[string, string]> }> = [
       { name: 'UTC', input: 'UTC', expected: [['tz', 'UTC']] },
       { name: 'Europe/Paris', input: 'Europe/Paris', expected: [['tz', 'Europe/Paris']] },
     ]
@@ -13,7 +13,7 @@ describe(
       'should set the document tz attribute - $name',
       ({ input, expected }) => {
         const originalWindow = global.window
-        const setAttributeCalls: string[][] = []
+        const setAttributeCalls: Array<[string, string]> = []
         global.window = {
           document: {
             documentElement: {

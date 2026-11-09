@@ -9,7 +9,6 @@ describe(
       { name: 'zero', input: 0, expected: 0 },
       { name: 'negative number', input: -42, expected: -42 },
       { name: 'float', input: 3.14, expected: 3.14 },
-      { name: 'NaN', input: NaN, expected: NaN },
       { name: 'Infinity', input: Infinity, expected: Infinity },
       { name: 'negative Infinity', input: -Infinity, expected: -Infinity },
       { name: 'string', input: 'hello', expected: 'hello' },
@@ -24,21 +23,29 @@ describe(
     it.each(primitiveTestCases)(
       'should return the $name input value unchanged',
       async ({ input, expected }) => {
-        // toBe compares with Object.is, so NaN matches NaN
         expect(await ASYNC_IDENTITY(input)).toBe(expected)
       }
     )
 
-    // eslint-disable-next-line max-params
-    const symbolTestCases: Array<{ name: string, input: symbol, check: (result: unknown, input: symbol) => Promise<void> }> = [
+    const nanTestCases: Array<{ name: string, input: number }> = [
+      { name: 'NaN', input: NaN },
+    ]
+
+    it.each(nanTestCases)(
+      'should return the $name input value unchanged',
+      async ({ input }) => {
+        expect(await ASYNC_IDENTITY(input)).toBeNaN()
+      }
+    )
+
+    const symbolTestCases: Array<{ name: string, input: symbol, check: (_: { result: unknown, input: symbol }) => void }> = [
       {
         name: 'Symbol input value',
         input: Symbol('test'),
-        // eslint-disable-next-line max-params
-        check: async (result: unknown, input: symbol) => {
-          expect(result).toBe(input)
-          expect(typeof result).toBe('symbol')
-          expect((result as symbol).description).toBe('test')
+        check: (_: { result: unknown, input: symbol }) => {
+          expect(_.result).toBe(_.input)
+          expect(typeof _.result).toBe('symbol')
+          expect((_.result as symbol).description).toBe('test')
         },
       },
     ]
@@ -47,7 +54,7 @@ describe(
       'should return $name unchanged',
       async ({ input, check }) => {
         const result = await ASYNC_IDENTITY(input)
-        await check(result, input)
+        check({ result, input })
       }
     )
 
@@ -157,16 +164,14 @@ describe(
       }
     )
 
-    // eslint-disable-next-line max-params
-    const functionTestCases: Array<{ name: string, input: () => string, check: (result: unknown, input: () => string) => void }> = [
+    const functionTestCases: Array<{ name: string, input: () => string, check: (_: { result: unknown, input: () => string }) => void }> = [
       {
         name: 'functions',
         input: () => 'test function',
-        // eslint-disable-next-line max-params
-        check: (result: unknown, input: () => string) => {
-          expect(result).toBe(input)
-          expect(typeof result).toBe('function')
-          expect((result as () => string)()).toBe('test function')
+        check: (_: { result: unknown, input: () => string }) => {
+          expect(_.result).toBe(_.input)
+          expect(typeof _.result).toBe('function')
+          expect((_.result as () => string)()).toBe('test function')
         },
       },
     ]
@@ -175,7 +180,7 @@ describe(
       'should handle $name',
       async ({ input, check }) => {
         const result = await ASYNC_IDENTITY(input)
-        check(result, input)
+        check({ result, input })
       }
     )
 

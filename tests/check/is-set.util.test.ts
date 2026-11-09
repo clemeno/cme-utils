@@ -4,7 +4,7 @@ import { IS_SET } from '../../ts/check/is-set.util.js'
 describe(
   'IS_SET',
   () => {
-    const testCases: Array<{ label: string, input: number | string | {} | null | undefined | boolean, expected: boolean }> = [
+    const testCases: Array<{ label: string, input: unknown, expected: boolean }> = [
       { label: '0', input: 0, expected: true },
       { label: 'false', input: false, expected: true },
       { label: '""', input: '', expected: true },

@@ -4,7 +4,7 @@ import { IS_EVEN } from '../../ts/check/is-even.util.js'
 describe(
   'IS_EVEN',
   () => {
-    const testCases: Array<{ name: string, input: number | string | null | undefined | {} | boolean, expected: boolean }> = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: 'should return true for even number 0', input: 0, expected: true },
       { name: 'should return true for even number 2', input: 2, expected: true },
       { name: 'should return true for even number 4', input: 4, expected: true },

@@ -4,7 +4,7 @@ import { IS_ON } from '../../ts/check/is-on.util.js'
 describe(
   'IS_ON',
   () => {
-    const testCases: Array<{ name: string, input: number | string | {} | Date | null | undefined | boolean, expected: boolean }> = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: 'true', input: true, expected: true },
       { name: '1', input: 1, expected: true },
       { name: '-1', input: -1, expected: true },

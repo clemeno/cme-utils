@@ -4,7 +4,7 @@ import { TO_ABS_BIGINT_OR_NULL } from '../../ts/bigint/to-abs-bigint-or-null.uti
 describe(
   'TO_ABS_BIGINT_OR_NULL',
   () => {
-    const testCases: Array<{ name: string, input: bigint | number | string | {} | null | undefined, expected: bigint | null }> = [
+    const testCases: Array<{ name: string, input: unknown, expected: bigint | null }> = [
       { name: 'negative bigint: -42n', input: -42n, expected: 42n },
       { name: 'positive bigint: 42n', input: 42n, expected: 42n },
       { name: 'zero bigint: 0n', input: 0n, expected: 0n },

@@ -4,7 +4,7 @@ import { IS_A_NUMBER } from '../../ts/check/is-a-number.util.js'
 describe(
   'IS_A_NUMBER',
   () => {
-    const testCases: Array<{ name: string, input: number | string | null | undefined | {} | boolean, expected: boolean }> = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: 'should return true for number 0', input: 0, expected: true },
       { name: 'should return true for number 123', input: 123, expected: true },
       { name: 'should return true for number -123', input: -123, expected: true },

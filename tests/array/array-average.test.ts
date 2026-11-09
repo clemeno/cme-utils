@@ -4,9 +4,19 @@ import { ARRAY_AVERAGE } from '../../ts/array/array-average.util.js'
 describe(
   'ARRAY_AVERAGE',
   () => {
-    const testCases: Array<{ name: string, input: string[] | number[] | (string | number)[], expected: number }> = [
-      { name: 'empty array', input: [], expected: NaN },
-      { name: 'array with no numeric values', input: ['a', 'b', 'c'], expected: NaN },
+    const nanTestCases: Array<{ name: string, input: Array<string | number> }> = [
+      { name: 'empty array', input: [] },
+      { name: 'array with no numeric values', input: ['a', 'b', 'c'] },
+    ]
+
+    it.each(nanTestCases)(
+      '$name',
+      ({ input }) => {
+        expect(ARRAY_AVERAGE(input)).toBeNaN()
+      }
+    )
+
+    const testCases: Array<{ name: string, input: Array<string | number>, expected: number }> = [
       { name: 'positive numbers', input: [1, 2, 3, 4], expected: 2.5 },
       { name: 'negative numbers', input: [-1, -2, -3, -4], expected: -2.5 },
       { name: 'mixed positive and negative numbers', input: [1, -2, 3, -4], expected: -0.5 },
@@ -24,7 +34,6 @@ describe(
     it.each(testCases)(
       '$name',
       ({ input, expected }) => {
-        // toBe compares with Object.is, so NaN matches NaN
         expect(ARRAY_AVERAGE(input)).toBe(expected)
       }
     )

@@ -151,10 +151,7 @@ describe(
     it.each(basicFileTests)(
       '$name',
       async ({ input, expected }) => {
-        const file = input()
-        const result = await READ_FILE_CONTENT(file)
-        expect(result.exception).toBe(expected.exception)
-        expect(result.result).toBe(expected.result)
+        expect(await READ_FILE_CONTENT(input())).toEqual(expected)
       }
     )
 
@@ -557,10 +554,7 @@ describe(
     it.each(edgeCaseTests)(
       '$name',
       async ({ input, expected }) => {
-        const file = input()
-        const result = await READ_FILE_CONTENT(file)
-        expect(result.exception).toBe(expected.exception)
-        expect(result.result).toBe(expected.result)
+        expect(await READ_FILE_CONTENT(input())).toEqual(expected)
       }
     )
 
@@ -581,9 +575,7 @@ describe(
     it.each(mockCoverageTests)(
       '$name',
       async ({ input, expected }) => {
-        const result = await READ_FILE_CONTENT(input())
-        expect(result.exception).toBe(expected.exception)
-        expect(result.result).toBe(expected.result)
+        expect(await READ_FILE_CONTENT(input())).toEqual(expected)
       }
     )
   }

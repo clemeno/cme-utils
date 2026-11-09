@@ -100,7 +100,7 @@ describe(
       }
     )
 
-    const depthLimitTestCases: Array<{ name: string, input: unknown, options: { depth: number }, expected: { level1: { a: number, level2: {} } } }> = [
+    const depthLimitTestCases: Array<{ name: string, input: unknown, options: { depth: number }, expected: { level1: { a: number, level2: Record<string, never> } } }> = [
       {
         name: 'depth limit',
         input: {
@@ -133,7 +133,7 @@ describe(
       }
     )
 
-    const emptyObjectsTestCases: Array<{ name: string, input: {}, expected: {} }> = [
+    const emptyObjectsTestCases: Array<{ name: string, input: Record<string, never>, expected: Record<string, never> }> = [
       { name: 'empty objects', input: {}, expected: {} },
     ]
 
@@ -145,7 +145,7 @@ describe(
       }
     )
 
-    const nullUndefinedInputTestCases: Array<{ name: string, input: null | undefined, expected: {} }> = [
+    const nullUndefinedInputTestCases: Array<{ name: string, input: null | undefined, expected: Record<string, never> }> = [
       { name: 'null input', input: null, expected: {} },
       { name: 'undefined input', input: undefined, expected: {} },
     ]

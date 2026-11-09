@@ -4,7 +4,7 @@ import { IS_A_STRING_AND_EMPTY } from '../../ts/string/is-a-string-and-empty.uti
 describe(
   'IS_A_STRING_AND_EMPTY',
   () => {
-    const testCases: Array<{ name: string, input: string | number | null | undefined | {} | boolean, expected: boolean }> = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: '""', input: '', expected: true },
       { name: '"hello"', input: 'hello', expected: false },
       { name: '" "', input: ' ', expected: false },

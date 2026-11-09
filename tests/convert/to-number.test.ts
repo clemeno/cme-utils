@@ -9,7 +9,6 @@ describe(
       { name: 'zero', input: 0, expected: 0 },
       { name: 'negative integer', input: -123, expected: -123 },
       { name: 'decimal', input: 123.45, expected: 123.45 },
-      { name: 'NaN', input: NaN, expected: NaN },
       { name: 'positive infinity', input: Infinity, expected: Infinity },
       { name: 'negative infinity', input: -Infinity, expected: -Infinity },
     ]
@@ -17,7 +16,6 @@ describe(
     it.each(numberTestCases)(
       'should return $name as-is',
       ({ input, expected }) => {
-        // toBe compares with Object.is, so NaN matches NaN
         expect(TO_NUMBER(input)).toBe(expected)
       }
     )
@@ -68,20 +66,20 @@ describe(
       { name: 'object with number valueOf', input: { valueOf: () => 42 }, expected: 42 },
       { name: 'object with boolean valueOf', input: { valueOf: () => true }, expected: 1 },
       { name: 'object with BigInt valueOf', input: { valueOf: () => 42n }, expected: 42 },
-      { name: 'object with invalid string valueOf', input: { valueOf: () => 'abc' }, expected: NaN },
-      { name: 'object with null valueOf', input: { valueOf: () => null }, expected: NaN },
-      { name: 'object with undefined valueOf', input: { valueOf: () => undefined }, expected: NaN },
     ]
 
     it.each(valueOfTestCases)(
       'should handle $name',
       ({ input, expected }) => {
-        // toBe compares with Object.is, so NaN matches NaN
         expect(TO_NUMBER(input)).toBe(expected)
       }
     )
 
-    const nullUndefinedObjectTestCases: Array<{ name: string, input: null | undefined | {} }> = [
+    const nullUndefinedObjectTestCases: Array<{ name: string, input: unknown }> = [
+      { name: 'NaN as-is', input: NaN },
+      { name: 'object with invalid string valueOf', input: { valueOf: () => 'abc' } },
+      { name: 'object with null valueOf', input: { valueOf: () => null } },
+      { name: 'object with undefined valueOf', input: { valueOf: () => undefined } },
       { name: 'null', input: null },
       { name: 'undefined', input: undefined },
       { name: 'empty object', input: {} },

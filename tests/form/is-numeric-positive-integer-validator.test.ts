@@ -93,7 +93,7 @@ describe(
       }
     )
 
-    const nonNumberNonStringTestCases: Array<{ name: string, value: {} | boolean }> = [
+    const nonNumberNonStringTestCases: Array<{ name: string, value: unknown }> = [
       { name: 'true', value: true },
       { name: 'empty object', value: {} },
       { name: 'empty array', value: [] },

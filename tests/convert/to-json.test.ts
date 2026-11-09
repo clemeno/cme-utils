@@ -4,7 +4,7 @@ import { TO_JSON } from '../../ts/convert/to-json.util.js'
 describe(
   'TO_JSON',
   () => {
-    const objectTestCases: Array<{ name: string, input: { a: number, b: number } | {}, expected: string }> = [
+    const objectTestCases: Array<{ name: string, input: unknown, expected: string }> = [
       { name: 'object with properties', input: { a: 1, b: 2 }, expected: '{"a":1,"b":2}' },
       { name: 'empty object', input: {}, expected: '{}' },
     ]

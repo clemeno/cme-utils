@@ -18,7 +18,7 @@ describe(
       }
     )
 
-    const falseCases: Array<{ name: string, input: number | string | null | undefined | {} | boolean, expected: boolean }> = [
+    const falseCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: 'integer number (0)', input: 0, expected: false },
       { name: 'integer number (1)', input: 1, expected: false },
       { name: 'negative integer number (-1)', input: -1, expected: false },

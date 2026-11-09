@@ -11,7 +11,6 @@ describe(
       { name: 'zero', input: 0, expected: 0 },
       { name: 'negative number', input: -42, expected: -42 },
       { name: 'float', input: 3.14, expected: 3.14 },
-      { name: 'NaN', input: NaN, expected: NaN },
       { name: 'Infinity', input: Infinity, expected: Infinity },
       { name: 'negative Infinity', input: -Infinity, expected: -Infinity },
       { name: 'string', input: 'hello', expected: 'hello' },
@@ -26,8 +25,18 @@ describe(
     it.each(primitiveTestCases)(
       'should return the $name input value unchanged',
       ({ input, expected }) => {
-        // toBe compares with Object.is, so NaN matches NaN
         expect(IDENTITY(input)).toBe(expected)
+      }
+    )
+
+    const nanTestCases: Array<{ name: string, input: number }> = [
+      { name: 'NaN', input: NaN },
+    ]
+
+    it.each(nanTestCases)(
+      'should return the $name input value unchanged',
+      ({ input }) => {
+        expect(IDENTITY(input)).toBeNaN()
       }
     )
 
@@ -219,7 +228,7 @@ describe(
       }
     )
 
-    const primitiveWrapperTestCases: Array<{ name: string, inputs: any[], check: (results: unknown[]) => void }> = [
+    const primitiveWrapperTestCases: Array<{ name: string, inputs: unknown[], check: (results: unknown[]) => void }> = [
       {
         name: 'primitive wrapper objects',
         inputs: [

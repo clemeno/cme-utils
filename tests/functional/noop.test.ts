@@ -4,7 +4,7 @@ import { NOOP } from '../../ts/functional/noop.util.js'
 describe(
   'NOOP',
   () => {
-    const returnUndefinedTestCases: Array<{ name: string, args: string[] | {}[], expected: undefined }> = [
+    const returnUndefinedTestCases: Array<{ name: string, args: unknown[], expected: undefined }> = [
       { name: 'no parameters', args: [], expected: undefined },
       { name: 'with parameters', args: ['test'], expected: undefined },
       { name: 'with multiple parameters', args: [1, 2, 3, 'four', {}], expected: undefined },

@@ -4,8 +4,18 @@ import { ARRAY_MEDIAN } from '../../ts/array/array-median.util.js'
 describe(
   'ARRAY_MEDIAN',
   () => {
-    const testCases: Array<{ name: string, input: number[] | string[] | (string | number)[], expected: number }> = [
-      { name: 'empty array', input: [], expected: NaN },
+    const nanTestCases: Array<{ name: string, input: Array<string | number> }> = [
+      { name: 'empty array', input: [] },
+    ]
+
+    it.each(nanTestCases)(
+      '$name',
+      ({ input }) => {
+        expect(ARRAY_MEDIAN(input)).toBeNaN()
+      }
+    )
+
+    const testCases: Array<{ name: string, input: Array<string | number>, expected: number }> = [
       { name: 'odd-length arrays', input: [1, 3, 5], expected: 3 },
       { name: 'even-length arrays', input: [1, 2, 3, 4], expected: 2.5 },
       { name: 'even-length example of the JSDoc: (3 + 5) / 2', input: [1, 3, 5, 7], expected: 4 },
@@ -26,7 +36,6 @@ describe(
     it.each(testCases)(
       '$name',
       ({ input, expected }) => {
-        // toBe compares with Object.is, so NaN matches NaN
         expect(ARRAY_MEDIAN(input)).toBe(expected)
       }
     )

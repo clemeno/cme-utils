@@ -72,7 +72,7 @@ describe(
       }
     )
 
-    const falsyValueTestCases: Array<{ name: string, input: null | undefined | {} | { value: boolean } }> = [
+    const falsyValueTestCases: Array<{ name: string, input: unknown }> = [
       { name: 'null', input: null },
       { name: 'undefined', input: undefined },
       { name: 'empty object', input: {} },

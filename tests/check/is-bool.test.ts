@@ -4,7 +4,7 @@ import { IS_BOOL } from '../../ts/check/is-bool.util.js'
 describe(
   'IS_BOOL',
   () => {
-    const testCases: Array<{ label: string, input: number | string | null | undefined | {} | boolean, expected: boolean }> = [
+    const testCases: Array<{ label: string, input: unknown, expected: boolean }> = [
       { label: 'true', input: true, expected: true },
       { label: 'false', input: false, expected: true },
       { label: '0', input: 0, expected: true },

@@ -4,7 +4,7 @@ import { IS_NUMERIC_AND_UNSAFE } from '../../ts/number/is-numeric-and-unsafe.uti
 describe(
   'IS_NUMERIC_AND_UNSAFE',
   () => {
-    const testCases: Array<{ label: string, input: number | string | null | undefined | {}, expected: boolean }> = [
+    const testCases: Array<{ label: string, input: unknown, expected: boolean }> = [
       { label: 'Number.EPSILON - ε (below safe threshold)', input: Number.EPSILON - 0.0000000000000001, expected: true },
       { label: '-(Number.EPSILON - ε)', input: -(Number.EPSILON - 0.0000000000000001), expected: true },
       { label: 'Number.MAX_SAFE_INTEGER + 1', input: Number.MAX_SAFE_INTEGER + 1, expected: true },

@@ -47,7 +47,7 @@ describe(
       }
     )
 
-    const nonNumericTestCases: Array<{ name: string, value: string | {} }> = [
+    const nonNumericTestCases: Array<{ name: string, value: unknown }> = [
       { name: 'non-numeric string', value: 'abc' },
       { name: 'object', value: {} },
     ]
