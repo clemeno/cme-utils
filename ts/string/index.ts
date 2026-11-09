@@ -1,3 +1,4 @@
+export { EXTRACT_ALL_UUIDS_FROM_STRING } from './extract-all-uuids-from-string.util.js'
 export { EXTRACT_UUID_FROM_STRING } from './extract-uuid-from-string.util.js'
 export { GET_CLOUDFRONT_DARK_LINK_FROM_UUID } from './get-cloudfront-dark-link-from-uuid.util.js'
 export { GET_CLOUDFRONT_LIGHT_LINK_FROM_UUID } from './get-cloudfront-light-link-from-uuid.util.js'
