@@ -4,7 +4,7 @@ import { TRIM_OBJECT } from '../../ts/object/trim-object.util.js'
 describe(
   'TRIM_OBJECT',
   () => {
-    const removeNullUndefinedTestCases = [
+    const removeNullUndefinedTestCases: Array<{ name: string, input: unknown, expected: { a: number, d: string, e: number, f: boolean } }> = [
       {
         name: 'null and undefined properties',
         input: {
@@ -32,7 +32,7 @@ describe(
       }
     )
 
-    const nestedObjectsTestCases = [
+    const nestedObjectsTestCases: Array<{ name: string, input: unknown, expected: unknown }> = [
       {
         name: 'nested objects recursively',
         input: {
@@ -70,7 +70,7 @@ describe(
       }
     )
 
-    const arraysTestCases = [
+    const arraysTestCases: Array<{ name: string, input: unknown, expected: unknown }> = [
       {
         name: 'arrays by trimming each element',
         input: {
@@ -100,7 +100,7 @@ describe(
       }
     )
 
-    const depthLimitTestCases = [
+    const depthLimitTestCases: Array<{ name: string, input: unknown, options: { depth: number }, expected: { level1: { a: number, level2: {} } } }> = [
       {
         name: 'depth limit',
         input: {
@@ -133,7 +133,7 @@ describe(
       }
     )
 
-    const emptyObjectsTestCases = [
+    const emptyObjectsTestCases: Array<{ name: string, input: {}, expected: {} }> = [
       { name: 'empty objects', input: {}, expected: {} },
     ]
 
@@ -145,7 +145,7 @@ describe(
       }
     )
 
-    const nullUndefinedInputTestCases = [
+    const nullUndefinedInputTestCases: Array<{ name: string, input: null | undefined, expected: {} }> = [
       { name: 'null input', input: null, expected: {} },
       { name: 'undefined input', input: undefined, expected: {} },
     ]
@@ -158,7 +158,7 @@ describe(
       }
     )
 
-    const primitiveValuesTestCases = [
+    const primitiveValuesTestCases: Array<{ name: string, input: string, expected: unknown }> = [
       {
         name: 'primitive values',
         input: 'string',
@@ -181,7 +181,7 @@ describe(
       }
     )
 
-    const newInstanceTestCases = [
+    const newInstanceTestCases: Array<{ name: string, input: { a: number, b: null }, expected: { a: number } }> = [
       {
         name: 'create a new object instance',
         input: { a: 1, b: null },
@@ -198,7 +198,7 @@ describe(
       }
     )
 
-    const unlimitedDepthTestCases = [
+    const unlimitedDepthTestCases: Array<{ name: string, input: { a: { b: { c: { d: number, e: null } } } }, expected: { a: { b: { c: { d: number } } } } }> = [
       {
         name: 'default to unlimited depth',
         input: {

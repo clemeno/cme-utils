@@ -4,7 +4,7 @@ import { IS_AN_OBJECT_AND_EMPTY } from '../../ts/object/is-an-object-and-empty.u
 describe(
   'IS_AN_OBJECT_AND_EMPTY',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: '{}', input: {}, expected: true },
       { name: '[] (no enumerable keys)', input: [], expected: true },
       { name: 'new Set() (no enumerable keys)', input: new Set(), expected: true },

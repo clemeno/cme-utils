@@ -4,7 +4,7 @@ import { IS_AN_OBJECT } from '../../ts/object/is-an-object.util.js'
 describe(
   'IS_AN_OBJECT',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: '{}', input: {}, expected: true },
       { name: '{ a: 1 }', input: { a: 1 }, expected: true },
       { name: '[]', input: [], expected: true },

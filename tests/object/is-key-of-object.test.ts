@@ -4,7 +4,7 @@ import { IS_KEY_OF_OBJECT } from '../../ts/object/is-key-of-object.util.js'
 describe(
   'IS_KEY_OF_OBJECT',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: { key: string | number, of: unknown }, expected: boolean }> = [
       { label: 'key "a" in { a:1, b:2 }', input: { key: 'a', of: { a: 1, b: 2 } }, expected: true },
       { label: 'key 0 in { 0:"zero", 1:"one" }', input: { key: 0, of: { 0: 'zero', 1: 'one' } }, expected: true },
       { label: 'key 1 (numeric) in { 1:"one" }', input: { key: 1, of: { 1: 'one' } }, expected: true },

@@ -19,7 +19,7 @@ describe(
       }
     )
 
-    it.each([
+    it.each<{ name: string, input: null | undefined }>([
       { name: 'null', input: null },
       { name: 'undefined', input: undefined },
     ])(

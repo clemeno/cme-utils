@@ -4,7 +4,7 @@ import { IS_AN_OBJECT_AND_NOT_EMPTY } from '../../ts/object/is-an-object-and-not
 describe(
   'IS_AN_OBJECT_AND_NOT_EMPTY',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: unknown, expected: boolean }> = [
       { label: '{ a: 1 }', input: { a: 1 }, expected: true },
       { label: '{ key: "value" }', input: { key: 'value' }, expected: true },
       { label: '{ x: 1, y: 2 }', input: { x: 1, y: 2 }, expected: true },
