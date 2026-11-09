@@ -1,4 +1,4 @@
-export const GET_BASE_URI = () => {
+export function GET_BASE_URI () {
   let baseURI = ''
 
   try {
