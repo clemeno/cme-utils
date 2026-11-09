@@ -5,7 +5,24 @@ import { createMockAxiosForWS } from '../mocks/ws-mocks.js'
 describe(
   'WS_AXIOS_SP_REQUEST',
   () => {
-    const testCases = [
+    // a node:https stand-in: the util builds its Agent with the TLS options
+    class MockAgent {
+      constructor (config: any) {
+        this.config = config
+      }
+
+      config: any
+    }
+
+    const https = { Agent: MockAgent }
+
+    const okResult = { exception: undefined, result: { data: 'response' } }
+
+    const testCases: Array<{
+      name: string
+      input: Parameters<typeof WS_AXIOS_SP_REQUEST>[0] & { axios: ReturnType<typeof createMockAxiosForWS> }
+      expected: { result: { exception: unknown, result: unknown }, request: unknown }
+    }> = [
       {
         name: 'request with axios',
         input: {
@@ -15,10 +32,8 @@ describe(
           method: 'GET',
         },
         expected: {
-          bHasResult: true,
-          resultData: { data: 'response' },
-          method: 'GET',
-          url: 'http://example.com/api',
+          result: okResult,
+          request: { method: 'GET', url: 'http://example.com/api' },
         },
       },
       {
@@ -30,11 +45,8 @@ describe(
           method: 'POST',
         },
         expected: {
-          bHasResult: true,
-          resultData: { data: 'response' },
-          method: 'POST',
-          url: 'http://0.0.31.144/api',
-          hostHeader: 'host',
+          result: okResult,
+          request: { method: 'POST', url: 'http://0.0.31.144/api', headers: { Host: 'host' } },
         },
       },
       {
@@ -46,11 +58,8 @@ describe(
           method: 'GET',
         },
         expected: {
-          bHasResult: true,
-          resultData: { data: 'response' },
-          method: 'GET',
-          url: 'http://realhost/api',
-          hostHeader: 'spoofhost:8080',
+          result: okResult,
+          request: { method: 'GET', url: 'http://realhost/api', headers: { Host: 'spoofhost:8080' } },
         },
       },
       {
@@ -62,63 +71,45 @@ describe(
           method: 'POST',
         },
         expected: {
-          bHasResult: true,
-          resultData: { data: 'response' },
-          method: 'POST',
-          url: 'http://realhost:9090/api',
-          hostHeader: 'spoofhost:8080',
+          result: okResult,
+          request: { method: 'POST', url: 'http://realhost:9090/api', headers: { Host: 'spoofhost:8080' } },
         },
       },
       {
         name: 'https URL',
         input: {
           axios: createMockAxiosForWS({ data: 'response' }),
-          https: {
-            Agent: class MockAgent {
-              constructor (config: any) {
-                this.config = config
-              }
-
-              config: any
-            },
-          },
+          https,
           wsResolve: 'secure.example.com',
           wsUrl: 'https://secure.example.com/api',
           method: 'GET',
         },
         expected: {
-          bHasResult: true,
-          resultData: { data: 'response' },
-          method: 'GET',
-          url: 'https://secure.example.com/api',
-          bHasHttpsAgent: true,
+          result: okResult,
+          request: {
+            method: 'GET',
+            url: 'https://secure.example.com/api',
+            httpsAgent: new MockAgent({ rejectUnauthorized: false }),
+          },
         },
       },
       {
         name: 'https URL with wsResolve',
         input: {
           axios: createMockAxiosForWS({ data: 'response' }),
-          https: {
-            Agent: class MockAgent {
-              constructor (config: any) {
-                this.config = config
-              }
-
-              config: any
-            },
-          },
+          https,
           wsResolve: 'spoofhost:443:realhost',
           wsUrl: 'https://example.com/api',
           method: 'GET',
         },
         expected: {
-          bHasResult: true,
-          resultData: { data: 'response' },
-          method: 'GET',
-          url: 'https://realhost/api',
-          hostHeader: 'spoofhost:443',
-          bHasHttpsAgent: true,
-          agentServername: 'spoofhost:443',
+          result: okResult,
+          request: {
+            method: 'GET',
+            url: 'https://realhost/api',
+            headers: { Host: 'spoofhost:443' },
+            httpsAgent: new MockAgent({ rejectUnauthorized: false, servername: 'spoofhost:443' }),
+          },
         },
       },
       {
@@ -130,10 +121,8 @@ describe(
           method: 'GET',
         },
         expected: {
-          bHasResult: true,
-          resultData: { data: 'response' },
-          method: 'GET',
-          url: 'http://example.com:3000/api',
+          result: okResult,
+          request: { method: 'GET', url: 'http://example.com:3000/api' },
         },
       },
       {
@@ -146,40 +135,32 @@ describe(
           dataObject: { key: 'value' },
         },
         expected: {
-          bHasResult: true,
-          resultData: { data: 'response' },
-          method: 'POST',
-          url: 'http://example.com/api',
-          data: '{"key":"value"}',
-          contentType: 'application/json',
-          bHasContentLength: true,
+          result: okResult,
+          request: {
+            method: 'POST',
+            url: 'http://example.com/api',
+            data: '{"key":"value"}',
+            headers: { 'Content-Length': 15, 'Content-Type': 'application/json' },
+          },
         },
       },
       {
         name: 'https URL with wsResolve 4 parts port 443',
         input: {
           axios: createMockAxiosForWS({ data: 'response' }),
-          https: {
-            Agent: class MockAgent {
-              constructor (config: any) {
-                this.config = config
-              }
-
-              config: any
-            },
-          },
+          https,
           wsResolve: 'spoofhost:443:realhost:443',
           wsUrl: 'https://example.com/api',
           method: 'GET',
         },
         expected: {
-          bHasResult: true,
-          resultData: { data: 'response' },
-          method: 'GET',
-          url: 'https://realhost/api',
-          hostHeader: 'spoofhost:443',
-          bHasHttpsAgent: true,
-          agentServername: 'spoofhost:443',
+          result: okResult,
+          request: {
+            method: 'GET',
+            url: 'https://realhost/api',
+            headers: { Host: 'spoofhost:443' },
+            httpsAgent: new MockAgent({ rejectUnauthorized: false, servername: 'spoofhost:443' }),
+          },
         },
       },
       {
@@ -192,13 +173,13 @@ describe(
           dataString: 'key=value&other=test',
         },
         expected: {
-          bHasResult: true,
-          resultData: { data: 'response' },
-          method: 'POST',
-          url: 'http://example.com/api',
-          data: 'key=value&other=test',
-          contentType: 'application/x-www-form-urlencoded',
-          bHasContentLength: true,
+          result: okResult,
+          request: {
+            method: 'POST',
+            url: 'http://example.com/api',
+            data: 'key=value&other=test',
+            headers: { 'Content-Length': 20, 'Content-Type': 'application/x-www-form-urlencoded' },
+          },
         },
       },
       {
@@ -212,13 +193,13 @@ describe(
           contentType: 'application/xml',
         },
         expected: {
-          bHasResult: true,
-          resultData: { data: 'response' },
-          method: 'POST',
-          url: 'http://example.com/api',
-          data: '{"key":"value"}',
-          contentType: 'application/xml',
-          bHasContentLength: true,
+          result: okResult,
+          request: {
+            method: 'POST',
+            url: 'http://example.com/api',
+            data: '{"key":"value"}',
+            headers: { 'Content-Length': 15, 'Content-Type': 'application/xml' },
+          },
         },
       },
       {
@@ -229,10 +210,8 @@ describe(
           wsUrl: 'http://example.com/api',
         },
         expected: {
-          bHasResult: true,
-          resultData: { data: 'response' },
-          method: 'POST',
-          url: 'http://example.com/api',
+          result: okResult,
+          request: { method: 'POST', url: 'http://example.com/api' },
         },
       },
       {
@@ -244,10 +223,8 @@ describe(
           method: 'GET',
         },
         expected: {
-          bHasException: true,
-          exceptionMessage: 'Network error',
-          method: 'GET',
-          url: 'http://example.com/api',
+          result: { exception: new Error('Network error'), result: undefined },
+          request: { method: 'GET', url: 'http://example.com/api' },
         },
       },
       {
@@ -260,13 +237,13 @@ describe(
           dataObject: {},
         },
         expected: {
-          bHasResult: true,
-          resultData: { data: 'response' },
-          method: 'POST',
-          url: 'http://example.com/api',
-          data: '{}',
-          contentType: 'application/json',
-          bHasContentLength: true,
+          result: okResult,
+          request: {
+            method: 'POST',
+            url: 'http://example.com/api',
+            data: '{}',
+            headers: { 'Content-Length': 2, 'Content-Type': 'application/json' },
+          },
         },
       },
       {
@@ -279,11 +256,8 @@ describe(
           dataObject: null,
         },
         expected: {
-          bHasResult: true,
-          resultData: { data: 'response' },
-          method: 'POST',
-          url: 'http://example.com/api',
-          bHasData: false,
+          result: okResult,
+          request: { method: 'POST', url: 'http://example.com/api' },
         },
       },
       {
@@ -296,11 +270,8 @@ describe(
           dataString: '',
         },
         expected: {
-          bHasResult: true,
-          resultData: { data: 'response' },
-          method: 'POST',
-          url: 'http://example.com/api',
-          bHasData: false,
+          result: okResult,
+          request: { method: 'POST', url: 'http://example.com/api' },
         },
       },
       {
@@ -312,11 +283,8 @@ describe(
           method: 'GET',
         },
         expected: {
-          bHasResult: true,
-          resultData: { data: 'response' },
-          method: 'GET',
-          url: 'http://realhost/api',
-          hostHeader: 'host',
+          result: okResult,
+          request: { method: 'GET', url: 'http://realhost/api', headers: { Host: 'host' } },
         },
       },
       {
@@ -328,11 +296,8 @@ describe(
           method: 'GET',
         },
         expected: {
-          bHasResult: true,
-          resultData: { data: 'response' },
-          method: 'GET',
-          url: 'http://0.0.31.144/api?param1=value1&param2=value2',
-          hostHeader: 'host',
+          result: okResult,
+          request: { method: 'GET', url: 'http://0.0.31.144/api?param1=value1&param2=value2', headers: { Host: 'host' } },
         },
       },
     ]
@@ -341,54 +306,9 @@ describe(
       'should handle $name',
       async ({ input, expected }) => {
         const result = await WS_AXIOS_SP_REQUEST(input)
-        const axiosInstance = input.axios
-        const requestCalls = axiosInstance.getRequestCalls()
-        const requestConfig = requestCalls[0]
 
-        // Check result/exception
-        if (true === expected.bHasResult) {
-          expect(result.exception).toBeUndefined()
-          expect(result.result).toEqual(expected.resultData)
-        }
-
-        if (true === expected.bHasException) {
-          expect(result.exception).toBeDefined()
-          expect(result.exception?.message).toBe(expected.exceptionMessage)
-          expect(result.result).toBeUndefined()
-        }
-
-        // Check axios request configuration
-        expect(requestConfig.method).toBe(expected.method)
-        expect(requestConfig.url).toBe(expected.url)
-
-        if (typeof expected.data !== 'undefined') {
-          expect(requestConfig.data).toBe(expected.data)
-        }
-
-        if (false === expected.bHasData) {
-          expect(requestConfig.data).toBeUndefined()
-        }
-
-        if (typeof expected.contentType !== 'undefined') {
-          expect(requestConfig.headers['Content-Type']).toBe(expected.contentType)
-        }
-
-        if (true === expected.bHasContentLength) {
-          expect(requestConfig.headers).toHaveProperty('Content-Length')
-          expect(typeof requestConfig.headers['Content-Length']).toBe('number')
-        }
-
-        if (typeof expected.hostHeader !== 'undefined') {
-          expect(requestConfig.headers.Host).toBe(expected.hostHeader)
-        }
-
-        if (true === expected.bHasHttpsAgent) {
-          expect(requestConfig.httpsAgent).toBeDefined()
-
-          if (typeof expected.agentServername !== 'undefined') {
-            expect(requestConfig.httpsAgent.config.servername).toBe(expected.agentServername)
-          }
-        }
+        expect(result).toEqual(expected.result)
+        expect(input.axios.getRequestCalls()).toEqual([expected.request])
       }
     )
   }
