@@ -1,2 +1,2 @@
 /** Unicode Character 'ZERO WIDTH SPACE' (U+200B) */
-export const ZWSP = '​'
+export const ZWSP = '\u200B'

@@ -26,6 +26,45 @@ const tsRules = {
   ],
 }
 
+const restrictedSyntax = [
+  {
+    selector: 'BreakStatement',
+    message: 'break is forbidden — refactor with if or array methods (find/some/every/findIndex). For a justified case use // eslint-disable-next-line no-restricted-syntax with a comment explaining why.',
+  },
+  {
+    selector: 'SwitchStatement',
+    message: 'switch is forbidden — use an if/else-if chain or a key→handler lookup map. For a justified case use // eslint-disable-next-line no-restricted-syntax with a comment explaining why.',
+  },
+  {
+    selector: 'CallExpression[callee.property.name="forEach"]',
+    message: 'forEach is forbidden — use a for...of loop, over GET_OBJECT_ENTRY_LIST or Array.entries() when the key or index is used.',
+  },
+  {
+    selector: 'TSEnumDeclaration',
+    message: 'TypeScript enum is forbidden — use export const values instead. No magic numbers or strings, just named constants.',
+  },
+]
+
+// the mechanical rules of AGENTS.md (Testing Pattern) and .github/instructions/new-utility.instructions.md (section 6)
+const testRestrictedSyntax = [
+  {
+    selector: 'CallExpression[callee.property.name="toBe"] > Identifier.arguments[name="NaN"]',
+    message: 'toBe(NaN) — assert NaN with toBeNaN(), in a table of its own.',
+  },
+  {
+    selector: 'CallExpression[callee.callee.property.name="each"] > Literal.arguments[value=/%s/]',
+    message: 'bun prints %s literally for an object row — give each row a name and use \'$name\' as the title.',
+  },
+  {
+    selector: ':matches(CallExpression[callee.name=/^(it|test)$/], CallExpression[callee.callee.object.name=/^(it|test)$/]) > :function IfStatement',
+    message: 'no if inside a test body — split the rows into separate tables, one per kind of assertion.',
+  },
+  {
+    selector: 'VariableDeclarator[id.name=/Cases$/][init.type="ArrayExpression"]:not([id.typeAnnotation])',
+    message: 'type the table rows: const testCases: Array<{ name: string, input: ..., expected: ... }> = [',
+  },
+]
+
 const optionList = [
   ...neostandard({
     ignores: resolveIgnoresFromGitignore(),
@@ -38,25 +77,9 @@ const optionList = [
       'no-dupe-else-if': 'error',
       'no-lonely-if': 'error',
       'no-continue': 'error',
-      'no-restricted-syntax': [
-        'error',
-        {
-          selector: 'BreakStatement',
-          message: 'break is forbidden — refactor with if or array methods (find/some/every/findIndex). For a justified case use // eslint-disable-next-line no-restricted-syntax with a comment explaining why.',
-        },
-        {
-          selector: 'SwitchStatement',
-          message: 'switch is forbidden — use an if/else-if chain or a key→handler lookup map. For a justified case use // eslint-disable-next-line no-restricted-syntax with a comment explaining why.',
-        },
-        {
-          selector: 'CallExpression[callee.property.name="forEach"]',
-          message: 'forEach is forbidden — use a for...of loop, over GET_OBJECT_ENTRY_LIST or Array.entries() when the key or index is used.',
-        },
-        {
-          selector: 'TSEnumDeclaration',
-          message: 'TypeScript enum is forbidden — use export const values instead. No magic numbers or strings, just named constants.',
-        },
-      ],
+      // an invisible character in a string or template is written as an escape (\u202f, \u200B), so it shows in the diff
+      'no-irregular-whitespace': ['error', { skipStrings: false, skipTemplates: false }],
+      'no-restricted-syntax': ['error', ...restrictedSyntax],
       yoda: 0,
       'max-params': ['warn', 1],
       '@stylistic/arrow-parens': ['error', 'as-needed'],
@@ -100,7 +123,10 @@ const optionList = [
         project: './tsconfig.tests.json',
       },
     },
-    rules: tsRules,
+    rules: {
+      ...tsRules,
+      'no-restricted-syntax': ['error', ...restrictedSyntax, ...testRestrictedSyntax],
+    },
   },
   {
     files: ['examples/**/*.ts', 'examples/**/*.tsx'],
