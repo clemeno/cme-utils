@@ -8,12 +8,12 @@ import { IS_A_URL } from './is-a-url.util.js'
  * * provide basename -> import { basename } from 'node:path'
  * @returns {string} (path|url)?`filename` -> ./uploads/`filename`
  */
-export const GET_UPLOADED_FILE_FROM_ANY_STRING = <TypeofBasename extends (s: string) => string> (_: {
+export function GET_UPLOADED_FILE_FROM_ANY_STRING<TypeofBasename extends (s: string) => string> (_: {
   basename: TypeofBasename
   s: string
   fileUploadFolder: string
   publicStaticImageFolder: string
-}): string => {
+}): string {
   const s = _.s
 
   const uuid = EXTRACT_UUID_FROM_STRING(s)

@@ -8,13 +8,13 @@ import { IS_A_URL } from './is-a-url.util.js'
  * * provide basename -> import { basename } from 'node:path'
  * @returns {string} (path|url)?`filename` -> https:\//subdomain.cloudfront.com/`filename`
  */
-export const GET_CLOUDFRONT_URL_FROM_ANY_STRING = <TypeofBasename = any> (_: {
+export function GET_CLOUDFRONT_URL_FROM_ANY_STRING<TypeofBasename = any> (_: {
   basename: TypeofBasename
   s: string
   cloudfrontUri: string
   fileUploadFolder: string
   publicStaticImageFolder: string
-}): string => {
+}): string {
   const s = _.s
 
   const uuid = EXTRACT_UUID_FROM_STRING(s)

@@ -6,7 +6,7 @@ import { IS_UUID } from './is-uuid.util.js'
  * Extracts a UUID from a string `s`, if any substring is a UUID
  * @returns {string} the first UUID found or '' (empty string) if no UUID is found
  */
-export const EXTRACT_UUID_FROM_STRING = (s: string): string => {
+export function EXTRACT_UUID_FROM_STRING (s: string): string {
   let res = ''
 
   if (IS_UUID(s)) {
