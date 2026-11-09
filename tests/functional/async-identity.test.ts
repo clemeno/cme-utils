@@ -4,7 +4,7 @@ import { ASYNC_IDENTITY } from '../../ts/functional/async-identity.util.js'
 describe(
   'ASYNC_IDENTITY',
   () => {
-    const primitiveTestCases = [
+    const primitiveTestCases: Array<{ name: string, input: number | string | null | undefined | bigint | boolean, expected: number | string | null | undefined | bigint | boolean }> = [
       { name: 'number', input: 42, expected: 42 },
       { name: 'zero', input: 0, expected: 0 },
       { name: 'negative number', input: -42, expected: -42 },
@@ -24,22 +24,13 @@ describe(
     it.each(primitiveTestCases)(
       'should return the $name input value unchanged',
       async ({ input, expected }) => {
-        const result = await ASYNC_IDENTITY(input)
-        if (expected === null) {
-          expect(result).toBeNull()
-        } else if (expected === undefined) {
-          expect(result).toBeUndefined()
-        } else if (Number.isNaN(expected)) {
-          expect(result).toBeNaN()
-        } else if (typeof expected === 'bigint') {
-          expect(result).toBe(expected)
-        } else {
-          expect(result).toBe(expected)
-        }
+        // toBe compares with Object.is, so NaN matches NaN
+        expect(await ASYNC_IDENTITY(input)).toBe(expected)
       }
     )
 
-    const symbolTestCases = [
+    // eslint-disable-next-line max-params
+    const symbolTestCases: Array<{ name: string, input: symbol, check: (result: unknown, input: symbol) => Promise<void> }> = [
       {
         name: 'Symbol input value',
         input: Symbol('test'),
@@ -60,7 +51,7 @@ describe(
       }
     )
 
-    const objectTestCases = [
+    const objectTestCases: Array<{ name: string, input: unknown, expected: unknown }> = [
       { name: 'object', input: { key: 'value' }, expected: { key: 'value' } },
       { name: 'empty object', input: {}, expected: {} },
       { name: 'array', input: [1, 2, 3], expected: [1, 2, 3] },
@@ -79,63 +70,34 @@ describe(
       'should return the $name input value unchanged',
       async ({ input, expected }) => {
         const result = await ASYNC_IDENTITY(input)
-        if (expected instanceof Date) {
-          expect(result).toEqual(expected)
-          expect(result).toBeInstanceOf(Date)
-        } else if (expected instanceof RegExp) {
-          expect(result).toEqual(expected)
-          expect(result).toBeInstanceOf(RegExp)
-        } else if (expected instanceof Map) {
-          expect(result).toEqual(expected)
-          expect(result).toBeInstanceOf(Map)
-        } else if (expected instanceof Set) {
-          expect(result).toEqual(expected)
-          expect(result).toBeInstanceOf(Set)
-        } else if (expected instanceof Uint8Array) {
-          expect(result).toEqual(expected)
-          expect(result).toBeInstanceOf(Uint8Array)
-        } else if (expected instanceof Error) {
-          expect(result).toEqual(expected)
-          expect(result).toBeInstanceOf(Error)
-        } else {
-          expect(result).toEqual(expected)
-        }
+        expect(result).toBe(input)
+        expect(result).toEqual(expected)
       }
     )
 
-    const promiseTestCases = [
-      {
-        name: 'a Promise',
-        input: 'test',
-        check: (result: unknown) => {
-          expect(result).toBeInstanceOf(Promise)
-        },
-        bAwaitResult: false,
-      },
-      {
-        name: 'be awaitable',
-        input: 'test',
-        // eslint-disable-next-line max-params
-        check: async (result: unknown, input: string) => {
-          expect(result).toBe(input)
-        },
-        bAwaitResult: true,
-      },
+    const promiseTestCases: Array<{ name: string, input: string }> = [
+      { name: 'return a Promise', input: 'test' },
     ]
 
     it.each(promiseTestCases)(
       'should $name',
-      async ({ input, check, bAwaitResult }) => {
-        const result = ASYNC_IDENTITY(input)
-        if (bAwaitResult) {
-          await check(await result, input)
-        } else {
-          ;(check as (result: unknown) => void)(result)
-        }
+      ({ input }) => {
+        expect(ASYNC_IDENTITY(input)).toBeInstanceOf(Promise)
       }
     )
 
-    const complexObjectTestCases = [
+    const awaitTestCases: Array<{ name: string, input: string }> = [
+      { name: 'be awaitable', input: 'test' },
+    ]
+
+    it.each(awaitTestCases)(
+      'should $name',
+      async ({ input }) => {
+        expect(await ASYNC_IDENTITY(input)).toBe(input)
+      }
+    )
+
+    const complexObjectTestCases: Array<{ name: string, input: unknown, check: (_: { result: unknown, input: unknown }) => void }> = [
       {
         name: 'complex objects reference equality',
         input: {
@@ -195,7 +157,8 @@ describe(
       }
     )
 
-    const functionTestCases = [
+    // eslint-disable-next-line max-params
+    const functionTestCases: Array<{ name: string, input: () => string, check: (result: unknown, input: () => string) => void }> = [
       {
         name: 'functions',
         input: () => 'test function',
@@ -216,7 +179,7 @@ describe(
       }
     )
 
-    const circularReferenceTestCases = [
+    const circularReferenceTestCases: Array<{ name: string, input: Record<string, unknown>, check: (result: unknown) => void }> = [
       {
         name: 'circular references',
         input: (() => {

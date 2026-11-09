@@ -6,7 +6,7 @@ import { IDENTITY } from '../../ts/functional/identity.util.js'
 describe(
   'IDENTITY',
   () => {
-    const primitiveTestCases = [
+    const primitiveTestCases: Array<{ name: string, input: number | string | null | undefined | bigint | boolean, expected: number | string | null | undefined | bigint | boolean }> = [
       { name: 'number', input: 42, expected: 42 },
       { name: 'zero', input: 0, expected: 0 },
       { name: 'negative number', input: -42, expected: -42 },
@@ -26,22 +26,12 @@ describe(
     it.each(primitiveTestCases)(
       'should return the $name input value unchanged',
       ({ input, expected }) => {
-        const result = IDENTITY(input)
-        if (expected === null) {
-          expect(result).toBeNull()
-        } else if (expected === undefined) {
-          expect(result).toBeUndefined()
-        } else if (Number.isNaN(expected)) {
-          expect(result).toBeNaN()
-        } else if (typeof expected === 'bigint') {
-          expect(result).toBe(expected)
-        } else {
-          expect(result).toBe(expected)
-        }
+        // toBe compares with Object.is, so NaN matches NaN
+        expect(IDENTITY(input)).toBe(expected)
       }
     )
 
-    const symbolTestCases = [
+    const symbolTestCases: Array<{ name: string, input: symbol, check: (result: unknown, input: symbol) => void }> = [
       {
         name: 'Symbol input value',
         input: Symbol('test'),
@@ -61,7 +51,7 @@ describe(
       }
     )
 
-    const objectTestCases = [
+    const objectTestCases: Array<{ name: string, input: unknown, expected: unknown }> = [
       { name: 'object', input: { key: 'value' }, expected: { key: 'value' } },
       { name: 'empty object', input: {}, expected: {} },
       { name: 'array', input: [1, 2, 3], expected: [1, 2, 3] },
@@ -80,31 +70,12 @@ describe(
       'should return the $name input value unchanged',
       ({ input, expected }) => {
         const result = IDENTITY(input)
-        if (expected instanceof Date) {
-          expect(result).toEqual(expected)
-          expect(result).toBeInstanceOf(Date)
-        } else if (expected instanceof RegExp) {
-          expect(result).toEqual(expected)
-          expect(result).toBeInstanceOf(RegExp)
-        } else if (expected instanceof Map) {
-          expect(result).toEqual(expected)
-          expect(result).toBeInstanceOf(Map)
-        } else if (expected instanceof Set) {
-          expect(result).toEqual(expected)
-          expect(result).toBeInstanceOf(Set)
-        } else if (expected instanceof Uint8Array) {
-          expect(result).toEqual(expected)
-          expect(result).toBeInstanceOf(Uint8Array)
-        } else if (expected instanceof Error) {
-          expect(result).toEqual(expected)
-          expect(result).toBeInstanceOf(Error)
-        } else {
-          expect(result).toEqual(expected)
-        }
+        expect(result).toBe(input)
+        expect(result).toEqual(expected)
       }
     )
 
-    const complexObjectTestCases = [
+    const complexObjectTestCases: Array<{ name: string, input: unknown, check: (_: { result: unknown, input: unknown }) => void }> = [
       {
         name: 'complex objects reference equality',
         input: {
@@ -164,7 +135,7 @@ describe(
       }
     )
 
-    const functionTestCases = [
+    const functionTestCases: Array<{ name: string, input: unknown, check: (result: unknown, input: any) => void | Promise<void> }> = [
       {
         name: 'functions',
         input: () => 'test function',
@@ -216,7 +187,7 @@ describe(
       }
     )
 
-    const weakCollectionTestCases = [
+    const weakCollectionTestCases: Array<{ name: string, inputs: (WeakMap<object, any> | WeakSet<object>)[], expectedTypes: (WeakMapConstructor | WeakSetConstructor)[] }> = [
       {
         name: 'WeakMap and WeakSet',
         inputs: [
@@ -248,7 +219,7 @@ describe(
       }
     )
 
-    const primitiveWrapperTestCases = [
+    const primitiveWrapperTestCases: Array<{ name: string, inputs: any[], check: (results: unknown[]) => void }> = [
       {
         name: 'primitive wrapper objects',
         inputs: [
@@ -273,7 +244,7 @@ describe(
       }
     )
 
-    const proxyTestCases = [
+    const proxyTestCases: Array<{ name: string, input: { value: number }, check: (result: unknown) => void }> = [
       {
         name: 'Proxy objects',
         input: (() => {
@@ -300,7 +271,7 @@ describe(
       }
     )
 
-    const typedArrayTestCases = [
+    const typedArrayTestCases: Array<{ name: string, inputs: ArrayBufferView[], expectedTypes: unknown[], check: (result: unknown) => void }> = [
       {
         name: 'Int8Array and other typed arrays',
         inputs: [
@@ -309,6 +280,9 @@ describe(
           new Float32Array([1.1, 2.2, 3.3]),
         ],
         expectedTypes: [Int8Array, Uint16Array, Float32Array],
+        check: (result: unknown) => {
+          expect(Array.from(result as Int8Array)).toEqual([1, 2, 3])
+        },
       },
       {
         name: 'DataView',
@@ -335,13 +309,11 @@ describe(
           expect(result).toBe(input)
           expect(result).toBeInstanceOf(expectedTypes[index])
         }
-        if (check != null) {
-          check(IDENTITY(inputs[0]))
-        }
+        check(IDENTITY(inputs[0]))
       }
     )
 
-    const promiseTestCases = [
+    const promiseTestCases: Array<{ name: string, input: Promise<string>, expectedType: PromiseConstructor }> = [
       {
         name: 'Promise objects',
         input: Promise.resolve('test'),
@@ -358,7 +330,7 @@ describe(
       }
     )
 
-    const classInstanceTestCases = [
+    const classInstanceTestCases: Array<{ name: string, input: { value: string }, check: (result: unknown) => void }> = [
       {
         name: 'class instances',
         input: (() => {
@@ -383,7 +355,7 @@ describe(
       }
     )
 
-    const circularReferenceTestCases = [
+    const circularReferenceTestCases: Array<{ name: string, input: Record<string, unknown>, check: (result: unknown) => void }> = [
       {
         name: 'circular references',
         input: (() => {
@@ -406,7 +378,7 @@ describe(
       }
     )
 
-    const arrayTestCases = [
+    const arrayTestCases: Array<{ name: string, input: unknown, expected: unknown }> = [
       { name: 'mixed array', input: [1, 'two', { three: 3 }], expected: [1, 'two', { three: 3 }] },
       { name: 'array with primitives', input: [42, 'hello', true, null, undefined], expected: [42, 'hello', true, null, undefined] },
       { name: 'nested arrays', input: [[1, 2], [3, 4, [5, 6]]], expected: [[1, 2], [3, 4, [5, 6]]] },

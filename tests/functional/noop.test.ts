@@ -4,7 +4,7 @@ import { NOOP } from '../../ts/functional/noop.util.js'
 describe(
   'NOOP',
   () => {
-    const returnUndefinedTestCases = [
+    const returnUndefinedTestCases: Array<{ name: string, args: string[] | {}[], expected: undefined }> = [
       { name: 'no parameters', args: [], expected: undefined },
       { name: 'with parameters', args: ['test'], expected: undefined },
       { name: 'with multiple parameters', args: [1, 2, 3, 'four', {}], expected: undefined },
@@ -18,7 +18,7 @@ describe(
       }
     )
 
-    const noThrowTestCases = [
+    const noThrowTestCases: Array<{ name: string, args: (number | null | undefined)[] }> = [
       { name: 'no parameters', args: [] },
       { name: 'with null and undefined', args: [null, undefined, NaN] },
     ]
@@ -30,7 +30,7 @@ describe(
       }
     )
 
-    const multipleCallsTestCases = [
+    const multipleCallsTestCases: Array<{ name: string, callCount: number }> = [
       { name: 'first call', callCount: 1 },
       { name: 'second call', callCount: 2 },
       { name: 'third call', callCount: 3 },
