@@ -4,7 +4,7 @@ import { IS_NUMERIC_AND_SAFE } from '../../ts/number/is-numeric-and-safe.util.js
 describe(
   'IS_NUMERIC_AND_SAFE',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: number | string | null | undefined, expected: boolean }> = [
       { label: '0', input: 0, expected: true },
       { label: '1', input: 1, expected: true },
       { label: '100', input: 100, expected: true },

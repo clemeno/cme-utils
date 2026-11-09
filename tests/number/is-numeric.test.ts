@@ -4,7 +4,7 @@ import { IS_NUMERIC } from '../../ts/number/is-numeric.util.js'
 describe(
   'IS_NUMERIC',
   () => {
-    const testCases = [
+    const testCases: Array<{ input: number | string | null | undefined | {}, expected: boolean }> = [
       { input: 123, expected: true },
       { input: 0, expected: true },
       { input: -123, expected: true },

@@ -8,7 +8,7 @@ describe(
     const frFR = { locale: 'fr-FR' }
     const deDE = { locale: 'de-DE' }
 
-    const testCases = [
+    const testCases: Array<{ label: string, Settings: { locale: string }, x: number | string | null | undefined | {}, expected: string }> = [
       { label: '123.456 (en-US)', Settings: enUS, x: 123.456, expected: '123,46' },
       { label: '123 (en-US)', Settings: enUS, x: 123, expected: '123,00' },
       { label: '0 (en-US)', Settings: enUS, x: 0, expected: '0,00' },
