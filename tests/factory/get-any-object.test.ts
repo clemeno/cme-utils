@@ -4,7 +4,7 @@ import { GET_ANY_OBJECT } from '../../ts/factory/get-any-object.util.js'
 describe(
   'GET_ANY_OBJECT',
   () => {
-    const emptyObjectTestCases = [
+    const emptyObjectTestCases: Array<{ name: string, check: (result: any) => boolean }> = [
       { name: 'equal empty object', check: (result: any) => Object.keys(result).length === 0 },
       { name: 'is object type', check: (result: any) => typeof result === 'object' },
       { name: 'not null', check: (result: any) => result !== null },
@@ -18,7 +18,7 @@ describe(
       }
     )
 
-    const newInstanceTestCases = [
+    const newInstanceTestCases: Array<{ name: string, check: (_: { result1: any, result2: any }) => boolean }> = [
       { name: 'different instances', check: ({ result1, result2 }: { result1: any, result2: any }) => result1 !== result2 },
       { name: 'equal content', check: ({ result1, result2 }: { result1: any, result2: any }) => JSON.stringify(result1) === JSON.stringify(result2) },
     ]
@@ -32,7 +32,7 @@ describe(
       }
     )
 
-    const flexiblePropertiesTestCases = [
+    const flexiblePropertiesTestCases: Array<{ name: string, check: (result: any) => boolean }> = [
       {
         name: 'accepts number property',
         check: (result: any) => {

@@ -4,7 +4,7 @@ import { GET_ANY_ARRAY } from '../../ts/factory/get-any-array.util.js'
 describe(
   'GET_ANY_ARRAY',
   () => {
-    const emptyArrayTestCases = [
+    const emptyArrayTestCases: Array<{ name: string, check: (result: any[]) => boolean }> = [
       { name: 'equal empty array', check: (result: any[]) => result.length === 0 },
       { name: 'is array', check: (result: any[]) => Array.isArray(result) },
     ]
@@ -17,7 +17,7 @@ describe(
       }
     )
 
-    const newInstanceTestCases = [
+    const newInstanceTestCases: Array<{ name: string, check: (_: { result1: any[], result2: any[] }) => boolean }> = [
       { name: 'different instances', check: ({ result1, result2 }: { result1: any[], result2: any[] }) => result1 !== result2 },
       { name: 'equal content', check: ({ result1, result2 }: { result1: any[], result2: any[] }) => result1.length === result2.length },
     ]
@@ -31,7 +31,7 @@ describe(
       }
     )
 
-    const typeTestCases = [
+    const typeTestCases: Array<{ name: string, check: (result: any[]) => boolean }> = [
       {
         name: 'instance of Array',
         check: (result: any[]) => result instanceof Array,
