@@ -4,7 +4,7 @@ import { GET_AES_GCM_KEY_BUFFER } from '../../ts/aes/get-aes-gcm-key-buffer.util
 describe(
   'GET_AES_GCM_KEY_BUFFER',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, base64Key: string, filePath: string, chunks: Buffer<ArrayBuffer>[], expected: Buffer<ArrayBuffer> }> = [
       {
         name: 'should read and decode base64 AES key from file',
         base64Key: 'SGVsbG8gV29ybGQ=',

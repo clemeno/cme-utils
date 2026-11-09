@@ -9,7 +9,7 @@ describe(
     describe(
       'CIPHER_AES_GCM_TO_BUFFER and DECIPHER_AES_GCM_TO_UTF8',
       () => {
-        const testCases = [
+        const testCases: Array<{ name: string, input: string }> = [
           { name: 'should encrypt and decrypt a string correctly', input: 'Hello, world!' },
           { name: 'should handle empty string', input: '' },
           { name: 'should handle special characters', input: '🚀 Test with émojis and spéciâl chârs!' },

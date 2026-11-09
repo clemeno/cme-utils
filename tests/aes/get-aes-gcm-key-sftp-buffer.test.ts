@@ -4,7 +4,7 @@ import { GET_AES_GCM_KEY_SFTP_BUFFER } from '../../ts/aes/get-aes-gcm-key-sftp-b
 describe(
   'GET_AES_GCM_KEY_SFTP_BUFFER',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, base64Key: string, filePath: string, chunks: Buffer<ArrayBuffer>[], expected: Buffer<ArrayBuffer> }> = [
       {
         name: 'should read and decode base64 AES SFTP key from file',
         base64Key: 'U0ZUUCBLZXkgQ29udGVudA==',
