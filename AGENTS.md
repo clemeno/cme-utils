@@ -3,21 +3,12 @@
 ## Commands
 
 ```bash
-bun run prepare        # Transpile ts/ → m/ (tsc)
-bun run lint           # Check code style (ESLint + neostandard)
-bun run lint:fix       # Auto-fix linting issues
-bun test               # Run all tests
-bun test:watch         # Run tests in watch mode
-bun test:coverage      # Run tests with coverage
-bun run test:types     # Typecheck tests/ and examples/ (tsc --noEmit)
+bun run check          # build, lint, tests with the 100% coverage gate, typecheck of tests/ and examples/
+bun run lint:fix       # auto-fix lint issues
+bun test tests/array/array-sum.test.ts   # one test file
 ```
 
-Run a single test file:
-```bash
-bun test tests/array/array-sum.test.ts
-```
-
-**After any file change:** run `bun run prepare` first (lint loads the return-count plugin from its build in `m/`), then `bun run lint:fix`, `bun run lint`, `bun test` and `bun run test:types`. Resolve all errors and warnings.
+**After any file change:** run `bun run check` and resolve every error and warning. It builds first because lint loads the return-count plugin from its build in `m/`. CI (`.github/workflows/check.yml`) runs the same command.
 
 ## Architecture
 
@@ -46,33 +37,15 @@ The library has **zero runtime dependencies**. All `devDependencies` are build/t
 - Parameter: `_` for the single object parameter, `v` for a single plain value
 - Source files: `kebab-case.util.ts` for utilities, `kebab-case.test.ts` for tests
 
-### Code Style (enforced by ESLint)
-- No semicolons at end of statements
-- Single quotes for strings
-- `const` over `let`, never `var`
-- Always use explicit braces `{}` for all blocks
-- Strict equality (`===` / `!==`); `== null` / `!= null` is the one exception, to match both `null` and `undefined`
-- No `switch` — use object literal lookup instead
-- No `break` or `continue`
-- Use `+= 1` / `-= 1` instead of `++` / `--`
-- No TypeScript `enum` — use explicit `const` objects
-
-### Code Style (not linted: check by hand)
-- Template literals over concatenation
-- No implicit coercion: convert explicitly
-- No `forEach` — use `for...of` loops, over `GET_OBJECT_ENTRY_LIST` or `Array.entries()` when the key or index is used
-- Index `for` loops only for arrays of more than 1e6 items, or when the loop condition carries an early exit (a flag or status check)
-- `async` / `await` over callbacks and `.then()` / `.catch()`
-- Optional chaining and nullish coalescing for safe property access
-- Destructure objects and arrays, except a value used only once
-
-### Function Rules (critical)
-- **Max 1 parameter per function** — if multiple inputs are needed, wrap them in a single object parameter; that parameter is optional only when all its fields are optional
-- **Max 1 return statement per function** — throwing errors is allowed outside the nominal path; never return from inside a loop
-- Exports are named `function` declarations (`export function NAME (_: { ... }): T { ... }`), for clear stack traces; arrow functions only for anonymous callbacks. One exception: a const typed with a function type stays a const arrow (`export const IS_INT_UNSIGNED_VALIDATOR: AppValidatorFn = control => { ... }`), since a declaration cannot carry that type
-- Explicit return types on all named functions and methods
-- Prefer `unknown` with type guards over `any`
-- Prefer an `interface` for a complex object type used in several places
+### Code Style
+`bun run check` lints the mechanical rules (`eslint.config.mjs` on top of neostandard); its messages say how to fix each one. What lint cannot check:
+- Convert with `TO_NUMBER(x)` and `TO_STRING(x)`, not `+x`, `Number(x)` or `'' + x`: one strict definition everywhere (a string is a number only when `Number` and `parseFloat` agree). `IS_NUMERIC` uses the same test.
+- `== null` / `!= null` is the one loose comparison, to match both `null` and `undefined`.
+- Loops: `for...of`, over `GET_OBJECT_ENTRY_LIST` or `Array.entries()` when the key or index is used. An index `for` loop only for arrays of more than 1e6 items, or when the loop condition carries an early exit (a flag or status check).
+- `async` / `await` over callbacks and `.then()` / `.catch()`; nullish coalescing for defaults; destructure objects and arrays, except a value used only once.
+- Several inputs go in one object parameter, named `_`; it is optional only when all its fields are optional. Throwing is allowed outside the nominal path of the one `return`.
+- A const typed with a function type (`export const IS_INT_UNSIGNED_VALIDATOR: AppValidatorFn = control => { ... }`) stays a const arrow; every other named function is a `function` declaration.
+- `unknown` with type guards over `any`; an `interface` for a complex object type used in several places.
 
 ### Testing Pattern
 Template: section 6 of [.github/instructions/new-utility.instructions.md](.github/instructions/new-utility.instructions.md). These rules cover every test file; older files that break them are fixed by [01a1bf8ff2d8718c9e178403db3dbda0](.scratch/conventions-backlog/issues/01a1bf8ff2d8718c9e178403db3dbda0-bring-test-tables-to-the-rules.md).
@@ -83,17 +56,10 @@ Template: section 6 of [.github/instructions/new-utility.instructions.md](.githu
 - Prefer exact assertions (`toEqual` / `toBe` of the whole value) over `toContain` or `typeof` spot checks.
 - No runtime tests for type-only files (interfaces, type aliases).
 - `tests/mocks/*.test.ts` follow the same table rules.
-- Keep coverage at 100% lines and functions (`bun test:coverage`); bun reports no branches, so check them by hand.
+- `bunfig.toml` fails the run below 100% lines and functions; bun reports no branches, so check them by hand.
 
 ### ESLint Config
-`eslint.config.mjs` is authoritative — do not modify it unless explicitly instructed. Key rules in effect:
-- `max-return-statements-per-function`: 1 (custom plugin, built from `ts/` and loaded from `m/`)
-- `max-params`: warn at 2+ params
-- `@typescript-eslint/strict-boolean-expressions`: strings and numbers disallowed in boolean context
-- `curly`: always required
-- `no-plusplus`: enforced
-
-Avoid disable comments. The allowed ones:
+`eslint.config.mjs` is authoritative — do not modify it unless explicitly instructed. Avoid disable comments. The allowed ones:
 - `// eslint-disable-next-line no-restricted-syntax` for a justified `break` or `switch`, with a comment explaining why (the config's own message asks for it)
 - `// eslint-disable-next-line max-params` for a callback, sort function or type definition whose signature an external API fixes, and for mocks whose signature the mocked API fixes
 - `// @ts-ignore` for runtime-environment differences (browser vs Node, Node versions) or broken third-party type definitions

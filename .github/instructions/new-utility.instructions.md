@@ -93,10 +93,7 @@ Rules:
 
 ## 7. After Creating Files
 
-Run in order and fix every error before committing:
+Run it and fix every error before committing (it builds, lints, tests with the coverage gate and typechecks):
 ```bash
-bun run prepare
-bun run lint
-bun test
-bun run test:types
+bun run check
 ```
