@@ -68,7 +68,7 @@ import { MY_UTIL } from '../../ts/<category>/my-util.util.js'
 describe(
   'MY_UTIL',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: InputType, expected: ReturnType }> = [
       { name: 'descriptive name for happy path', input: ..., expected: ... },
       { name: 'edge case: null', input: null, expected: ... },
     ]
@@ -86,6 +86,7 @@ describe(
 Rules:
 - Import from `../../ts/` source, **not** `../../m/`
 - Every test case must have a descriptive `name` string
+- Type the rows, so `bun run test:types` stays at 0 errors
 - Use `$name` (not `%s`) as the test title template
 - Split into separate `testCases` arrays when grouping by logical scenario helps clarity
 - Use `toBeNaN()` for NaN assertions (not `.toBe(NaN)`)
@@ -94,7 +95,8 @@ Rules:
 
 Run in order and fix every error before committing:
 ```bash
+bun run prepare
 bun run lint
 bun test
-bun run prepare
+bun run test:types
 ```

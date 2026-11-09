@@ -8,6 +8,9 @@
 # Only exists if Bazel was run
 /bazel-out
 
+# agent scratch files (tickets in .scratch/ stay tracked)
+/.scratch/tmp/
+
 # dependencies
 /node_modules
 package-lock.json
