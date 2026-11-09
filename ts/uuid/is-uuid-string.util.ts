@@ -1,4 +1,4 @@
-export const IS_UUID_STRING = (v: any): v is string => {
+export function IS_UUID_STRING (v: any): v is string {
   return (
     (typeof v === 'string') &&
     (v !== '') &&

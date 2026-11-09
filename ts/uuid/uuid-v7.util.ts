@@ -3,7 +3,7 @@ import { BYTE_ARRAY_TO_UUID } from './byte-array-to-uuid.util.js'
 /**
  * Generate a standard RFC 9652 UUID v7 string
  */
-export const UUID_V7 = (): string => {
+export function UUID_V7 (): string {
   const randomByteArrayLength = 16
   let randomByteArray = new Uint8Array(randomByteArrayLength)
 

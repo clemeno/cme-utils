@@ -1,7 +1,7 @@
 /**
  * From hex string to UUID v4
  */
-export const UUID_HEX_TO_V4 = (hex: string): string => {
+export function UUID_HEX_TO_V4 (hex: string): string {
   const cleanHex = hex.replace(/^0x/, '').toLowerCase().padStart(32, '0')
   // Set version to 4 (13th char = '4')
   const versionedHex = cleanHex.substring(0, 12) + '4' + cleanHex.substring(13)

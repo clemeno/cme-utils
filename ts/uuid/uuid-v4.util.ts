@@ -3,7 +3,7 @@ import { BYTE_ARRAY_TO_UUID } from './byte-array-to-uuid.util.js'
 /**
  * Generate a standard RFC 4122 UUID v4 string
  */
-export const UUID_V4 = (): string => {
+export function UUID_V4 (): string {
   let res = ''
 
   let bErr = false

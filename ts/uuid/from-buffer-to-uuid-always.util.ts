@@ -1,7 +1,7 @@
 import { TO_STRING } from '../convert/to-string.util.js'
 
 /** defaults to the string '00000000-0000-0000-0000-000000000000' (= the NIL UUID) */
-export const FROM_BUFFER_TO_UUID_ALWAYS = (b: any): string => {
+export function FROM_BUFFER_TO_UUID_ALWAYS (b: any): string {
   let hex = ''
   try { hex = TO_STRING(b?.toString('hex')).padStart(32, '0') } catch { }
 
