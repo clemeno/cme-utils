@@ -13,13 +13,13 @@ Forms to handle (counts from `grep` on 2026-11-09):
 - generic arrows, e.g. `CIPHER_AES_GCM_TO_BUFFER = <Buffer = any, ...> (_: {...})`: move the type parameters after the name;
 - 19 `async` arrows: `export async function NAME`.
 
-## Open point
+## Typed consts stay
 
-Consts annotated with a function type keep that type only as consts: `IS_INT_UNSIGNED_VALIDATOR: AppValidatorFn = control => {`, `NOOP: (..._: any) => void = () => {}`. A `function` declaration cannot take that annotation, so it needs the parameter and return types written inline. Proposed: inline them, and check the `.d.ts` against `AppValidatorFn`. Confirm with the user before changing these.
+Consts annotated with a function type keep that type only as consts: `IS_INT_UNSIGNED_VALIDATOR: AppValidatorFn = control => {`, `NOOP: (..._: any) => void = () => {}`. A `function` declaration cannot take that annotation. User decision, 2026-11-09: keep typed const arrows as they are. Kept: `NOOP` and the four `ts/form/*-validator.util.ts`.
 
 ## Acceptance
 
-- No `export const NAME = (...) =>` left in `ts/`, except any the open point keeps.
+- No `export const NAME = (...) =>` left in `ts/`, except the typed consts above.
 - The public API is unchanged for callers: compare the `m/**/*.d.ts` before and after (`declare const X: (...) => T` becomes `declare function X(...): T`).
 - `bun install`, then `bun run prepare`, `bun run lint`, `bun test`, `bun run test:types` pass; coverage stays at 100% lines and functions.
 - One commit per `ts/` category folder, `refactor:` type.

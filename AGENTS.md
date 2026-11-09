@@ -69,7 +69,7 @@ The library has **zero runtime dependencies**. All `devDependencies` are build/t
 ### Function Rules (critical)
 - **Max 1 parameter per function** — if multiple inputs are needed, wrap them in a single object parameter; that parameter is optional only when all its fields are optional
 - **Max 1 return statement per function** — throwing errors is allowed outside the nominal path; never return from inside a loop
-- Exports are named `function` declarations (`export function NAME (_: { ... }): T { ... }`), for clear stack traces; arrow functions only for anonymous callbacks. The older `export const NAME = (...) =>` exports are migrated by [01a1bf8ff29e765a994f7eca358c1d96](.scratch/conventions-backlog/issues/01a1bf8ff29e765a994f7eca358c1d96-migrate-const-arrow-exports-to-function.md)
+- Exports are named `function` declarations (`export function NAME (_: { ... }): T { ... }`), for clear stack traces; arrow functions only for anonymous callbacks. One exception: a const typed with a function type stays a const arrow (`export const IS_INT_UNSIGNED_VALIDATOR: AppValidatorFn = control => { ... }`), since a declaration cannot carry that type
 - Explicit return types on all named functions and methods
 - Prefer `unknown` with type guards over `any`
 - Prefer an `interface` for a complex object type used in several places
