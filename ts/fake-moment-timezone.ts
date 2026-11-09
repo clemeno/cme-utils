@@ -1,4 +1,3 @@
-import { IS_A_DATE_AND_NOT_EMPTY } from './time/is-a-date-and-not-empty.util.js'
 import { IS_A_STRING_AND_NOT_EMPTY } from './string/is-a-string-and-not-empty.util.js'
 import { IS_NUMERIC } from './number/is-numeric.util.js'
 import { IS_ON } from './check/is-on.util.js'
@@ -27,7 +26,7 @@ export class FakeMomentTimezone<DateTime = any, TypeofDateTime = any> {
 
   // eslint-disable-next-line max-params
   tz (timestampMs?: number | Date, tz?: string): this {
-    const _ms = IS_A_DATE_AND_NOT_EMPTY(timestampMs) ? TO_NUMBER(timestampMs) : TO_NUMBER(timestampMs)
+    const _ms = TO_NUMBER(timestampMs)
 
     const _options = IS_A_STRING_AND_NOT_EMPTY(tz) ? { zone: tz } : undefined
 
