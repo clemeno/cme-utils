@@ -4,8 +4,13 @@ import neostandard, { resolveIgnoresFromGitignore } from 'neostandard'
 import { MAX_RETURN_STATEMENTS_PER_FUNCTION_PLUGIN } from './m/max-return-statements-per-function.plugin.js'
 
 const tsRules = {
+  'func-style': ['error', 'declaration', { allowTypeAnnotation: true }],
+  'no-implicit-coercion': 'error',
+  'prefer-template': 'error',
   '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'separate-type-imports' }],
+  '@typescript-eslint/explicit-function-return-type': ['error', { allowExpressions: true }],
   '@typescript-eslint/no-floating-promises': 'error',
+  '@typescript-eslint/prefer-optional-chain': 'error',
   '@typescript-eslint/strict-boolean-expressions': ['error', { allowString: false, allowNumber: false, allowNullableObject: false }],
   '@typescript-eslint/restrict-template-expressions': [
     'error',
@@ -42,6 +47,10 @@ const optionList = [
         {
           selector: 'SwitchStatement',
           message: 'switch is forbidden — use an if/else-if chain or a key→handler lookup map. For a justified case use // eslint-disable-next-line no-restricted-syntax with a comment explaining why.',
+        },
+        {
+          selector: 'CallExpression[callee.property.name="forEach"]',
+          message: 'forEach is forbidden — use a for...of loop, over GET_OBJECT_ENTRY_LIST or Array.entries() when the key or index is used.',
         },
         {
           selector: 'TSEnumDeclaration',
