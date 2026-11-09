@@ -3,8 +3,10 @@ import type { numeric } from '../numeric.js'
 /** CHECK (is a `numeric` value where `abs(v) ≠ 0` and `abs(v) ∉ [ε, MAX_SAFE_INTEGER]`) */
 export function IS_NUMERIC_AND_UNSAFE (v: any): v is numeric {
   return (
-    ((typeof v === 'number') && !Number.isNaN(v)) ||
-    ((typeof v === 'string') && (v !== '') && !Number.isNaN(Number(v)) && !Number.isNaN(Number.parseFloat(v)))
-  ) &&
-  (Math.abs(+v) !== 0) && ((Math.abs(+v) < Number.EPSILON) || (Number.MAX_SAFE_INTEGER < Math.abs(+v)))
+    (
+      ((typeof v === 'number') && !Number.isNaN(v)) ||
+      ((typeof v === 'string') && (v !== '') && !Number.isNaN(Number(v)) && !Number.isNaN(Number.parseFloat(v)))
+    ) &&
+    (Math.abs(+v) !== 0) && ((Math.abs(+v) < Number.EPSILON) || (Number.MAX_SAFE_INTEGER < Math.abs(+v)))
+  )
 }
