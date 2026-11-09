@@ -60,6 +60,11 @@ describe(
           { name: 'base from > 256 (SYMBOLS_LENGTH)', n: '10', from: 257, to: 16 },
           { name: 'base to <= 0', n: '10', from: 10, to: 0 },
           { name: 'base to > 256 (SYMBOLS_LENGTH)', n: '10', from: 10, to: 257 },
+          { name: 'base to 1 (n would never shrink)', n: '10', from: 10, to: 1 },
+          { name: 'base from 1', n: '0', from: 1, to: 10 },
+          { name: 'fractional base to 2.5', n: '10', from: 10, to: 2.5 },
+          { name: 'base-10 n with letters "12abc"', n: '12abc', from: 10, to: 16 },
+          { name: 'base-10 n "abc" to base 10', n: 'abc', from: 10, to: 10 },
         ])(
           '$name returns empty string',
           ({ n, from, to }) => {

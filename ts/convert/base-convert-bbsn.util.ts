@@ -15,11 +15,11 @@ export function BASE_CONVERT_BBSN (_: { n: numeric, from: numeric, to: numeric }
   const baseFrom = TO_NUMBER(from)
   const baseTo = TO_NUMBER(to)
 
-  // written as "not inside the range" so that a NaN base fails too
-  if (!((baseFrom > 0) && (baseFrom <= SYMBOLS_LENGTH))) {
-    console.log(`Base from ${from} not in 1..${SYMBOLS_LENGTH}`)
-  } else if (!((baseTo > 0) && (baseTo <= SYMBOLS_LENGTH))) {
-    console.log(`Base to ${to} not in 1..${SYMBOLS_LENGTH}`)
+  // a base is an integer in 2..SYMBOLS_LENGTH (base 1 never shrinks n and loops forever), tested as "not inside" so NaN fails too
+  if (!(Number.isInteger(baseFrom) && (baseFrom >= 2) && (baseFrom <= SYMBOLS_LENGTH))) {
+    console.log(`Base from ${from} not in 2..${SYMBOLS_LENGTH}`)
+  } else if (!(Number.isInteger(baseTo) && (baseTo >= 2) && (baseTo <= SYMBOLS_LENGTH))) {
+    console.log(`Base to ${to} not in 2..${SYMBOLS_LENGTH}`)
   } else {
     // ! here from and to are valid bases, but n may still be invalid for the from base, which is checked in the loop below
     let bError = false
@@ -27,6 +27,8 @@ export function BASE_CONVERT_BBSN (_: { n: numeric, from: numeric, to: numeric }
     let nBaseTen = 0
 
     if (baseFrom === 10) {
+      // the other bases check each symbol in the loop below; base 10 checks the whole string here
+      bError = !/^-?\d+$/.test(N)
       nBaseTen = Number.parseInt(N)
     } else {
       const sizeN = N.length
