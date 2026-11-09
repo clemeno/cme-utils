@@ -1,0 +1,274 @@
+import { afterAll, beforeAll, describe, expect, it, spyOn } from 'bun:test'
+import { Glob } from 'bun'
+import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { DateTime, Duration, Interval, Settings } from 'luxon'
+import ts from 'typescript'
+import * as lib from '../ts/index.js'
+
+// The public API: every export of a ts/ file is re-exported by its folder's index.ts and by ts/index.ts, and every
+// exported function has a JSDoc (AGENTS.md, JSDoc) whose example lines state what the call returns.
+
+const repoDir = join(import.meta.dir, '..')
+
+// exports reached by their own path rather than the barrels: the ESLint plugin entry points, and a deprecated util
+const notInBarrels = new Set([
+  'ts/max-return-statements-per-function.plugin.ts MAX_RETURN_STATEMENTS_PER_FUNCTION_PLUGIN',
+  'ts/max-return-statements-per-function.rule.ts MAX_RETURN_STATEMENTS_PER_FUNCTION_RULE',
+  'ts/check/check.util.ts CHECK',
+])
+
+// outside APIs an example names without this test providing them (a knex query builder, files, HTTP, the browser): those lines are skipped
+const outsideApis = new Set(['qb', 'createReadStream', 'writeFile', 'axios', 'FileReader'])
+
+// the names every example runs with, besides its own module's exports; luxon is set as the examples assume:
+// en-US, Europe/Paris, now 2024-03-15T15:30:45+01:00
+const scope: Record<string, unknown> = { ...lib, DateTime, Duration, Interval, Settings, createCipheriv, createDecipheriv, randomBytes }
+const exampleNow = DateTime.fromISO('2024-03-15T15:30:45.000+01:00').toMillis()
+const luxonDefaults = { defaultLocale: Settings.defaultLocale, defaultZone: Settings.defaultZone, now: Settings.now }
+
+const transpiler = new Bun.Transpiler({ loader: 'ts', deadCodeElimination: false, trimUnusedImports: false })
+
+interface ExportedFunction {
+  file: string
+  name: string
+  bTakesParameter: boolean
+  tags: readonly ts.JSDocTag[]
+}
+
+interface CheckedLine {
+  label: string
+  call: () => Promise<unknown>
+  expected?: () => unknown
+}
+
+/* Parses a file of the repo */
+function sourceOf (path: string): ts.SourceFile {
+  return ts.createSourceFile(path, readFileSync(join(repoDir, path), 'utf8'), ts.ScriptTarget.Latest, true)
+}
+
+/* Tells whether a statement carries the export keyword */
+function isExported (statement: ts.Statement): boolean {
+  return (ts.canHaveModifiers(statement) ? ts.getModifiers(statement) ?? [] : []).some(m => m.kind === ts.SyntaxKind.ExportKeyword)
+}
+
+/* Lists the names a statement exports, re-exports included */
+function namesOf (statement: ts.Statement): string[] {
+  let names: string[] = []
+
+  if (ts.isExportDeclaration(statement) && (statement.exportClause != null) && ts.isNamedExports(statement.exportClause)) {
+    names = statement.exportClause.elements.map(e => e.name.text)
+  } else if (isExported(statement) && ts.isVariableStatement(statement)) {
+    names = statement.declarationList.declarations.map(d => d.name.getText())
+  } else if (isExported(statement) && (ts.isFunctionDeclaration(statement) || ts.isClassDeclaration(statement) || ts.isInterfaceDeclaration(statement) || ts.isTypeAliasDeclaration(statement))) {
+    names = (statement.name != null) ? [statement.name.text] : []
+  }
+
+  return names
+}
+
+/* Lists the names a file exports */
+function exportedNamesOf (path: string): string[] {
+  return sourceOf(path).statements.flatMap(statement => namesOf(statement))
+}
+
+const moduleFiles = [...new Glob('ts/**/*.ts').scanSync(repoDir)]
+  .map(f => f.replace(/\\/g, '/'))
+  .filter(f => !f.endsWith('/index.ts'))
+  .sort()
+const rootNames = new Set(exportedNamesOf('ts/index.ts'))
+
+/* Lists the exports of a file that its folder's index.ts or ts/index.ts misses */
+function barrelGapsOf (path: string): string[] {
+  const folder = path.slice(0, path.lastIndexOf('/'))
+  const folderNames = (folder === 'ts') ? rootNames : new Set(exportedNamesOf(`${folder}/index.ts`))
+
+  return exportedNamesOf(path)
+    .filter(name => !(folderNames.has(name) && rootNames.has(name)))
+    .map(name => `${path} ${name}`)
+    .filter(key => !notInBarrels.has(key))
+}
+
+/* Lists the exported functions of a statement: a function declaration, or consts whose value is a function */
+function functionsOf (_: { file: string, statement: ts.Statement }): ExportedFunction[] {
+  const tags = ts.getJSDocTags(_.statement)
+  let functions: ExportedFunction[] = []
+
+  if (isExported(_.statement) && ts.isFunctionDeclaration(_.statement) && (_.statement.name != null)) {
+    functions = [{ file: _.file, name: _.statement.name.text, bTakesParameter: _.statement.parameters.length > 0, tags }]
+  } else if (isExported(_.statement) && ts.isVariableStatement(_.statement)) {
+    functions = _.statement.declarationList.declarations
+      .map(d => ({ name: d.name.getText(), value: scope[d.name.getText()] }))
+      .filter(({ value }) => typeof value === 'function')
+      .map(({ name, value }) => ({ file: _.file, name, bTakesParameter: (value as (...args: unknown[]) => unknown).length > 0, tags }))
+  }
+
+  return functions
+}
+
+/* Extracts the code of a ```typescript fence from an @example tag */
+function exampleCodeOf (tag: ts.JSDocTag): string {
+  return (ts.getTextOfJSDocComment(tag.comment) ?? '').match(/```typescript\r?\n([\s\S]*?)```/)?.[1] ?? ''
+}
+
+/* Lists the JSDoc tags an exported function lacks */
+function missingTagsOf (fn: ExportedFunction): string[] {
+  const tagNames = new Set(fn.tags.map(t => t.tagName.text))
+  const bExample = fn.tags.some(t => (t.tagName.text === 'example') && (exampleCodeOf(t) !== ''))
+
+  return [
+    (fn.bTakesParameter && !tagNames.has('param')) ? '@param' : '',
+    tagNames.has('returns') ? '' : '@returns',
+    bExample ? '' : '@example with a ```typescript fence',
+  ].filter(tag => tag !== '')
+}
+
+const exportedFunctions = moduleFiles.flatMap(file => sourceOf(file).statements.flatMap(statement => functionsOf({ file, statement })))
+
+const exampleBlocks: Array<{ name: string, file: string, code: string }> = exportedFunctions.flatMap(fn => fn.tags
+  .filter(t => t.tagName.text === 'example')
+  .map(t => ({ name: `${fn.name} @example (${fn.file})`, file: fn.file, code: exampleCodeOf(t) })))
+
+/* Tells whether a text parses as a JavaScript expression, rather than prose */
+function isExpression (code: string): boolean {
+  let bExpression = true
+
+  try {
+    transpiler.transformSync(`;(${code})`)
+  } catch {
+    bExpression = false
+  }
+
+  return bExpression
+}
+
+/* Turns `CALL // returns VALUE` and `CALL // throws ...` into checked calls; any other line runs as written */
+function checkedLineOf (_: { line: string, label: string }): string {
+  const match = _.line.match(/^(.*?\S)\s*\/\/\s*(returns|throws)\b\s*(.*)$/)
+  let out = _.line
+
+  if (match != null) {
+    const [, left, verb, right] = match
+    const call = left.replace(/;\s*$/, '')
+    const label = JSON.stringify(_.label)
+
+    if (verb === 'throws') {
+      out = `await __throws({ label: ${label}, call: async () => (${call}) });`
+    } else if (isExpression(right)) {
+      out = `await __returns({ label: ${label}, call: async () => (${call}), expected: () => (${right}) });`
+    } else {
+      out = `await __runs({ label: ${label}, call: async () => (${call}) });`
+    }
+  }
+
+  return out
+}
+
+/* Runs an example block and lists the lines whose result differs from what they state */
+async function failuresOf (_: { name: string, file: string, code: string }): Promise<string[]> {
+  const failures: string[] = []
+  // its own module too: an export left out of the barrels, such as the deprecated CHECK
+  const blockScope: Record<string, unknown> = { ...scope, ...(await import(join(repoDir, _.file))) }
+  const blockNames = Object.keys(blockScope)
+
+  /* Records an error, unless it is a reference to an outside API the test does not provide */
+  function fail (error: { label: string, error: unknown }): void {
+    const missingName = (error.error instanceof ReferenceError) ? (error.error.message.match(/^(\S+) is not defined/)?.[1] ?? '') : ''
+
+    if (!outsideApis.has(missingName)) {
+      failures.push(`${error.label}\n  ${String(error.error)}`)
+    }
+  }
+
+  /* Checks a `// returns` line */
+  async function returns (line: CheckedLine): Promise<void> {
+    try {
+      const expected = line.expected?.()
+      const actual = await line.call()
+
+      if (!Bun.deepEquals(actual, expected, true) && !Object.is(actual, expected)) {
+        failures.push(`${line.label}\n  returned ${Bun.inspect(actual)}`)
+      }
+    } catch (error) {
+      fail({ label: line.label, error })
+    }
+  }
+
+  /* Checks a `// throws` line */
+  async function throws (line: CheckedLine): Promise<void> {
+    try {
+      const actual = await line.call()
+      failures.push(`${line.label}\n  did not throw, returned ${Bun.inspect(actual)}`)
+    } catch (error) {
+      if (error instanceof ReferenceError) {
+        fail({ label: line.label, error })
+      }
+    }
+  }
+
+  /* Runs a line whose stated result is prose */
+  async function runs (line: CheckedLine): Promise<void> {
+    try {
+      await line.call()
+    } catch (error) {
+      fail({ label: line.label, error })
+    }
+  }
+
+  const body = transpiler.transformSync([..._.code.split('\n').entries()].map(([i, line]) => checkedLineOf({ line, label: `${_.name}:${i + 1}: ${line.trim()}` })).join('\n'))
+
+  Settings.defaultLocale = 'en-US'
+  Settings.defaultZone = 'Europe/Paris'
+  Settings.now = () => exampleNow
+
+  try {
+    // eslint-disable-next-line no-new-func -- the example text is the input under test: running it is the check
+    const run = new Function('__returns', '__throws', '__runs', ...blockNames, `return (async () => {\n${body}\n})()`)
+    await run(returns, throws, runs, ...blockNames.map(n => blockScope[n]))
+  } catch (error) {
+    fail({ label: `${_.name} (setup)`, error })
+  }
+
+  return failures
+}
+
+describe(
+  'exports',
+  () => {
+    // some examples show an invalid input that the util reports on the console
+    const consoleLog = spyOn(console, 'log')
+
+    beforeAll(() => {
+      consoleLog.mockImplementation(() => {})
+    })
+
+    afterAll(() => {
+      consoleLog.mockRestore()
+      Settings.defaultLocale = luxonDefaults.defaultLocale
+      Settings.defaultZone = luxonDefaults.defaultZone
+      Settings.now = luxonDefaults.now
+    })
+
+    it(
+      're-exports every export of a ts/ file from its folder index.ts and from ts/index.ts',
+      () => {
+        expect(moduleFiles.flatMap(file => barrelGapsOf(file))).toEqual([])
+      }
+    )
+
+    it(
+      'documents every exported function with @param, @returns and a typescript @example',
+      () => {
+        expect(exportedFunctions.filter(fn => missingTagsOf(fn).length > 0).map(fn => `${fn.file} ${fn.name}: ${missingTagsOf(fn).join(', ')}`)).toEqual([])
+      }
+    )
+
+    it.each(exampleBlocks)(
+      '$name',
+      async ({ name, file, code }) => {
+        expect(await failuresOf({ name, file, code })).toEqual([])
+      }
+    )
+  }
+)

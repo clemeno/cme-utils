@@ -40,10 +40,14 @@ Rules:
 
 ## 3. JSDoc (required on every export)
 
-- `@param` for each parameter, `@returns`, and at least one `@example` block
+- `@param` for each parameter, `@returns`, and at least one `@example` block in a ```` ```typescript ```` fence
 - The example must show at least the happy path and one edge case (e.g. `null`, empty array)
+- `tests/exports.test.ts` runs every example: a `CALL // returns VALUE` line must return VALUE, a `CALL // throws ...` line must throw. Write VALUE as a JavaScript expression (`'abc'`, `[1, 2]`, `NaN`, `42n`), with any note on its own `//` line above; multi-word prose (`// returns a 32-byte Buffer`) only runs the call. One call per checked line, setup (`const list = [1, 2]`) on the lines above.
+- The examples run with the library, luxon (`DateTime`, `Settings`, `Duration`, `Interval`) and `node:crypto` in scope, luxon set to `en-US`, `Europe/Paris` and the time `2024-03-15T15:30:45+01:00`. A line naming `qb`, `axios`, `createReadStream`, `writeFile` or `FileReader` is skipped
 
 ## 4. Barrel — Subfolder `ts/<category>/index.ts`
+
+`tests/exports.test.ts` fails on an export that a barrel misses. A type is re-exported with `type` (`export { type MyType, MY_UTIL }`): `isolatedModules` requires it.
 
 Add the new export in **alphabetical order**. Use the `.js` extension (ESM output):
 

@@ -15,7 +15,8 @@ import type { numeric } from '../numeric.js'
  * @example
  * ```typescript
  * NORMALIZE_N_1({ n: 5, min: 1, max: 10 }) // returns '5'
- * NORMALIZE_N_1({ n: 15, min: 1, max: 10 }) // returns '10' (clamped)
+ * // above max: clamped
+ * NORMALIZE_N_1({ n: 15, min: 1, max: 10 }) // returns '10'
  * NORMALIZE_N_1({ n: 'invalid', min: 1, max: 10, def: 5 }) // returns '5'
  * ```
  */

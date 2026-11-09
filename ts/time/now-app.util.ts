@@ -10,9 +10,9 @@ import { NOW } from './now.util.js'
  * @returns The current `DateTime` in the global timezone, 'UTC' when it has none
  * @example
  * ```typescript
- * // with Settings.defaultZone = 'Europe/Paris'
+ * Settings.defaultZone = 'Europe/Paris'
  * NOW_APP({ DateTime, Settings }).zoneName // returns 'Europe/Paris'
- * // with Settings.defaultZone = 'UTC'
+ * Settings.defaultZone = 'UTC'
  * NOW_APP({ DateTime, Settings }).zoneName // returns 'UTC'
  * ```
  */

@@ -11,6 +11,7 @@ import { TO_STRING } from '../convert/to-string.util.js'
  * @returns The deciphered text
  * @example
  * ```typescript
+ * const keyBuffer = randomBytes(16)
  * const cipheredBuffer = CIPHER_AES_GCM_TO_BUFFER({ Buffer, createCipheriv, randomBytes, plainString: 'Hello', keyBuffer })
  * DECIPHER_AES_GCM_TO_UTF8({ Buffer, createDecipheriv, cipheredBuffer, keyBuffer }) // returns 'Hello'
  * // an empty text round-trips too
