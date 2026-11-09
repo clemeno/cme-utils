@@ -120,18 +120,6 @@ class MockBlob {
   }
 }
 
-function isErrorTestResult (obj: unknown): obj is {
-  file: File
-  originalFileReader: typeof FileReader
-} {
-  return obj !== null &&
-    typeof obj === 'object' &&
-    'file' in obj &&
-    'originalFileReader' in obj &&
-    obj.file instanceof File &&
-    typeof obj.originalFileReader === 'function'
-}
-
 // Setup global mocks for testing (type assertions needed for test environment)
 Object.assign(global as any, {
   FileReader: MockFileReader,
@@ -142,7 +130,7 @@ Object.assign(global as any, {
 describe(
   'READ_FILE_CONTENT',
   () => {
-    const basicFileTests = [
+    const basicFileTests: Array<{ name: string, input: (() => File) | (() => Blob), expected: { exception: undefined, result: string } }> = [
       {
         name: 'should read text content from a File',
         input: () => new File(['Hello, World!'], 'test.txt', { type: 'text/plain' }),
@@ -170,7 +158,7 @@ describe(
       }
     )
 
-    const edgeCaseTests = [
+    const edgeCaseTests: Array<{ name: string, input: (() => File) | (() => Blob), expected: { exception: undefined, result: string } }> = [
       {
         name: 'should handle empty files',
         input: () => new File([], 'empty.txt', { type: 'text/plain' }),
@@ -441,7 +429,7 @@ describe(
         expected: { exception: undefined, result: 'content' },
       },
     ]
-    const errorHandlingTests = [
+    const errorHandlingTests: Array<{ name: string, input: () => { file: File, originalFileReader: typeof FileReader }, expected: { exception: unknown, result: string | undefined } }> = [
       {
         name: 'should handle FileReader error event',
         input: () => {
@@ -464,10 +452,9 @@ describe(
           return {
             file: new File(['test'], 'error-event.txt'),
             originalFileReader,
-            bIsErrorTestResult: true,
           }
         },
-        expected: { exception: 'Error', result: undefined },
+        expected: { exception: expect.any(Error), result: undefined },
       },
       {
         name: 'should handle FileReader abort scenario',
@@ -501,14 +488,13 @@ describe(
           return {
             file: new File(['test'], 'abort-test.txt'),
             originalFileReader,
-            bIsErrorTestResult: true,
           }
         },
         expected: { exception: undefined, result: 'test' }, // Abort doesn't trigger error in our implementation
       },
     ]
 
-    const mockCoverageTests = [
+    const mockCoverageTests: Array<{ name: string, input: () => File, expected: { exception: undefined, result: string } }> = [
       {
         name: 'should handle File with webkitRelativePath',
         input: () => {
@@ -581,27 +567,13 @@ describe(
     it.each(errorHandlingTests)(
       '$name',
       async ({ input, expected }) => {
-        const inputResult = await input()
-
-        // Handle different input result types
-        const file = isErrorTestResult(inputResult) ? inputResult.file : inputResult
-        const originalFileReader = isErrorTestResult(inputResult) ? inputResult.originalFileReader : undefined
+        const { file, originalFileReader } = input()
 
         try {
-          const result = await READ_FILE_CONTENT(file)
-
-          if (expected.exception === 'Error') {
-            expect(result.exception).toBeInstanceOf(Error)
-            expect(result.result).toBe(expected.result)
-          } else {
-            expect(result.exception).toBe(expected.exception)
-            expect(result.result).toBe(expected.result)
-          }
+          expect(await READ_FILE_CONTENT(file)).toEqual(expected)
         } finally {
-          // Restore FileReader if it was replaced
-          if (originalFileReader !== undefined) {
-            global.FileReader = originalFileReader
-          }
+          // each input replaces the global FileReader
+          global.FileReader = originalFileReader
         }
       }
     )
@@ -609,28 +581,9 @@ describe(
     it.each(mockCoverageTests)(
       '$name',
       async ({ input, expected }) => {
-        const inputResult = await input()
-
-        // Handle different input result types
-        const file = isErrorTestResult(inputResult) ? inputResult.file : inputResult
-        const originalFileReader = isErrorTestResult(inputResult) ? inputResult.originalFileReader : undefined
-
-        try {
-          const result = await READ_FILE_CONTENT(file)
-
-          if (expected.exception === 'Error') {
-            expect(result.exception).toBeInstanceOf(Error)
-            expect(result.result).toBe(expected.result)
-          } else {
-            expect(result.exception).toBe(expected.exception)
-            expect(result.result).toBe(expected.result)
-          }
-        } finally {
-          // Restore FileReader if it was replaced
-          if (originalFileReader !== undefined) {
-            global.FileReader = originalFileReader
-          }
-        }
+        const result = await READ_FILE_CONTENT(input())
+        expect(result.exception).toBe(expected.exception)
+        expect(result.result).toBe(expected.result)
       }
     )
   }
