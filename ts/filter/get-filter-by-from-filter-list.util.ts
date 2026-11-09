@@ -4,10 +4,10 @@ import { TO_STRING } from '../convert/to-string.util.js'
 import { IS_AN_ARRAY } from '../array/is-an-array.util.js'
 import { IS_A_STRING_AND_NOT_EMPTY } from '../string/is-a-string-and-not-empty.util.js'
 
-export const GET_FILTER_BY_FROM_FILTER_LIST = (_: {
+export function GET_FILTER_BY_FROM_FILTER_LIST (_: {
   filterList: AppFilter[]
   conceptSet?: Set<string>
-}): Record<string, AppFilter[]> => {
+}): Record<string, AppFilter[]> {
   const filterBy: Record<string, AppFilter[]> = {}
 
   for (const f of _.filterList) {
