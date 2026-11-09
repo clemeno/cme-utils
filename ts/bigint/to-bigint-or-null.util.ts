@@ -6,7 +6,8 @@ export function TO_BIGINT_OR_NULL (v: any): bigint | null {
 
   if (IS_A_BIGINT(v)) {
     res = v
-  } else if (IS_NUMERIC(v)) {
+  } else if ((typeof v === 'string') ? (v.trim() !== '') : IS_NUMERIC(v)) {
+    // a non-blank string goes to BigInt's own exact parser, which takes '0xff' and rejects '1.5'
     try { res = BigInt(v) } catch { }
   }
 

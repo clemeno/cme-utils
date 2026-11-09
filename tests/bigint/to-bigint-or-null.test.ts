@@ -14,6 +14,8 @@ describe(
       { name: 'numeric string "0"', input: '0', expected: 0n },
       { name: 'numeric string "42"', input: '42', expected: 42n },
       { name: 'negative numeric string "-7"', input: '-7', expected: -7n },
+      { name: 'hex string "0xff" (BigInt syntax)', input: '0xff', expected: 255n },
+      { name: 'hex string beyond 2^53 "0x20000000000000"', input: '0x20000000000000', expected: 9007199254740992n },
     ]
 
     it.each(bigintCases)(
@@ -38,6 +40,7 @@ describe(
       { name: 'boolean true', input: true },
       { name: 'boolean false', input: false },
       { name: 'empty string', input: '' },
+      { name: 'blank string', input: '  ' },
     ]
 
     it.each(nullCases)(
