@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { BIGINT_DIV_TRUNC } from '../../ts/bigint/bigint-div-trunk.util.js'
+import { BIGINT_DIV_TRUNC } from '../../ts/bigint/bigint-div-trunc.util.js'
 
 describe(
   'BIGINT_DIV_TRUNC',
