@@ -6,7 +6,7 @@ class MockFileReader {
   onload: ((event: { target: { result: string | null } }) => void) | null = null
   onerror: ((error: any) => void) | null = null
 
-  readAsText (file: Blob | File) {
+  readAsText (file: Blob | File): void {
     // Simulate async reading by directly calling onload with file content
     setTimeout(() => {
       try {
@@ -36,7 +36,7 @@ class MockFileReaderWithError {
   onerror: ((error: any) => void) | null = null
 
   // eslint-disable-next-line max-params
-  readAsText (file: Blob | File, encoding?: string) {
+  readAsText (file: Blob | File, encoding?: string): void {
     // This method should be counted in coverage - make it synchronous for testing
     // Add unique logic to distinguish from MockFileReader.readAsText
     const uniqueErrorLogic = 'error_simulation_with_encoding'
@@ -46,33 +46,33 @@ class MockFileReaderWithError {
   }
 
   // Add a unique method to ensure this class is treated separately
-  triggerError () {
+  triggerError (): void {
     if (this.onerror != null) {
       this.onerror(new Error('Direct error trigger'))
     }
   }
 
-  simulateError () {
+  simulateError (): string {
     return 'error_simulated'
   }
 
   // Add another unique method to ensure this class is treated separately
-  getErrorMessage () {
+  getErrorMessage (): string {
     return 'MockFileReaderWithError error'
   }
 
   // Another unique method
-  isErrorReader () {
+  isErrorReader (): boolean {
     return true
   }
 
   // Final unique method
-  getErrorType () {
+  getErrorType (): string {
     return 'FileReaderError'
   }
 
   // One more unique method
-  hasErrorHandler () {
+  hasErrorHandler (): boolean {
     return this.onerror != null
   }
 }
@@ -252,10 +252,9 @@ describe(
         name: 'should handle large binary data',
         input: () => {
           const data = new Uint8Array(1024)
-          // eslint-disable-next-line max-params
-          data.forEach((_, index) => {
+          for (const index of data.keys()) {
             data[index] = index % 256
-          })
+          }
           return new File([data], 'large-binary.dat', { type: 'application/octet-stream' })
         },
         expected: {
@@ -276,7 +275,7 @@ describe(
       {
         name: 'should handle File with very long filename',
         input: () => {
-          const longName = 'a'.repeat(200) + '.txt'
+          const longName = `${'a'.repeat(200)}.txt`
           return new File(['content'], longName, { type: 'text/plain' })
         },
         expected: { exception: undefined, result: 'content' },
@@ -373,10 +372,9 @@ describe(
         input: () => {
           const data = new Uint8Array(1024)
 
-          // eslint-disable-next-line max-params
-          data.forEach((_, index) => {
+          for (const index of data.keys()) {
             data[index] = index % 256
-          })
+          }
 
           return new File([data], 'large-binary.dat', { type: 'application/octet-stream' })
         },
@@ -398,7 +396,7 @@ describe(
       {
         name: 'should handle File with very long filename',
         input: () => {
-          const longName = 'a'.repeat(200) + '.txt'
+          const longName = `${'a'.repeat(200)}.txt`
           return new File(['content'], longName, { type: 'text/plain' })
         },
         expected: { exception: undefined, result: 'content' },
@@ -453,7 +451,7 @@ describe(
             onload: ((event: { target: { result: string | null } }) => void) | null = null
             onerror: ((error: any) => void) | null = null
 
-            readAsText (file: Blob | File) {
+            readAsText (file: Blob | File): void {
               // Simulate an error by triggering onerror event
               setTimeout(() => {
                 if (this.onerror != null) {
@@ -482,7 +480,7 @@ describe(
             onabort: ((event: any) => void) | null = null
             abortCalled = false
 
-            readAsText (file: Blob | File) {
+            readAsText (file: Blob | File): void {
               // Simulate abort before completion
               setTimeout(() => {
                 if (this.abortCalled) {
@@ -495,7 +493,7 @@ describe(
               }, 0)
             }
 
-            abort () {
+            abort (): void {
               this.abortCalled = true
             }
           } as any

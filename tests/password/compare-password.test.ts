@@ -30,7 +30,7 @@ describe(
     it(
       'should propagate compareFn errors',
       async () => {
-        const mockCompareFn = async () => {
+        async function mockCompareFn (): Promise<never> {
           throw new Error('Comparison failed')
         }
 

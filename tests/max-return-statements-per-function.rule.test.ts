@@ -97,7 +97,7 @@ describe(
         }
         const hooks = MAX_RETURN_STATEMENTS_PER_FUNCTION_RULE.create(mockContext)
         hooks[mockNode.type](mockNode)
-        Array.from({ length: returnCount }).forEach(() => hooks.ReturnStatement(undefined))
+        Array.from({ length: returnCount }, () => hooks.ReturnStatement(undefined))
         hooks[`${mockNode.type}:exit`](mockNode)
         expect(reports).toEqual(expected.map(inReport => ({ node: mockNode, ...inReport })))
       }

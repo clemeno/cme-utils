@@ -1,4 +1,17 @@
-export function createMockAxios (options: { data?: Buffer; shouldThrow?: boolean; errorMessage?: string } = {}) {
+/** An axios-like `get` that records its calls */
+interface MockAxios {
+  // eslint-disable-next-line max-params
+  get: (url: string, options: Record<string, unknown>) => Promise<{ data: Buffer }>
+  getCalls: () => Array<[string, any]>
+}
+
+/** A writeFile-like function that records its calls */
+interface MockWriteFile {
+  (path: string, data: Buffer): Promise<void>
+  getCalls: () => Array<[string, Buffer]>
+}
+
+export function createMockAxios (options: { data?: Buffer; shouldThrow?: boolean; errorMessage?: string } = {}): MockAxios {
   const { data = Buffer.from('mock data'), shouldThrow = false, errorMessage = 'mock error' } = options
   const getCalls: Array<[string, any]> = []
   const mock = {
@@ -15,11 +28,11 @@ export function createMockAxios (options: { data?: Buffer; shouldThrow?: boolean
   return mock
 }
 
-export function createMockWriteFile (options: { shouldThrow?: boolean; errorMessage?: string } = {}) {
+export function createMockWriteFile (options: { shouldThrow?: boolean; errorMessage?: string } = {}): MockWriteFile {
   const { shouldThrow = false, errorMessage = 'mock error' } = options
   const calls: Array<[string, Buffer]> = []
   // eslint-disable-next-line max-params
-  const fn = async (path: string, data: Buffer) => {
+  async function fn (path: string, data: Buffer): Promise<void> {
     calls.push([path, data])
     if (shouldThrow) {
       throw new Error(errorMessage)
@@ -33,7 +46,7 @@ export function createMockWriteFile (options: { shouldThrow?: boolean; errorMess
  * Returns an async-iterable stream that yields the provided `chunks` in order.
  * Suitable for use as the return value of a `createReadStream` mock.
  */
-export function createMockReadStream (chunks: Array<Buffer | string>) {
+export function createMockReadStream (chunks: Array<Buffer | string>): AsyncIterable<Buffer | string> {
   return {
     async * [Symbol.asyncIterator] () {
       for (const chunk of chunks) {

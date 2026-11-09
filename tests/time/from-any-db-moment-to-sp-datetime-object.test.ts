@@ -10,10 +10,10 @@ describe(
     // Build an instance that passes `instanceof MockDateTime` (the DateTimeClass)
     // and exposes the instance methods the util calls after setZone().
     class DateTimeSubInstance extends MockDateTime {
-      setZone (_tz: string) { return this }
-      toSQL (_opts?: any) { return '2023-01-01 00:00:00' }
-      get zoneName () { return 'UTC' }
-      get isValid () { return true }
+      setZone (_tz: string): this { return this }
+      toSQL (_opts?: any): string { return '2023-01-01 00:00:00' }
+      get zoneName (): string { return 'UTC' }
+      get isValid (): boolean { return true }
     }
 
     it.each<{ name: string, from: unknown, expected: AppSpDate | null }>([

@@ -29,7 +29,9 @@ describe(
           '$name',
           ({ attributes }) => {
             const mock = createMockDocument()
-            attributes.forEach(inAttribute => { mock.documentElement.setAttribute(...inAttribute) })
+            for (const inAttribute of attributes) {
+              mock.documentElement.setAttribute(...inAttribute)
+            }
             expect(mock.getSetAttributeCalls()).toEqual(attributes)
           }
         )

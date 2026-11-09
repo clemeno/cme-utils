@@ -18,7 +18,7 @@ class MockDateTimeInstance extends Date {
     super(millis)
   }
 
-  toMillis () {
+  toMillis (): number {
     return this.getTime()
   }
 
@@ -27,7 +27,7 @@ class MockDateTimeInstance extends Date {
     return !isNaN(this.getTime())
   }
 
-  plus (duration: DurationObjectUnits) {
+  plus (duration: DurationObjectUnits): MockDateTimeInstance {
     const totalMs = (duration.years ?? 0) * 31536000000 +
       (duration.quarters ?? 0) * 7776000000 +
       (duration.months ?? 0) * 2592000000 +
@@ -40,7 +40,7 @@ class MockDateTimeInstance extends Date {
     return new MockDateTimeInstance(this.getTime() + totalMs)
   }
 
-  minus (duration: DurationObjectUnits) {
+  minus (duration: DurationObjectUnits): MockDateTimeInstance {
     const totalMs = (duration.years ?? 0) * 31536000000 +
       (duration.quarters ?? 0) * 7776000000 +
       (duration.months ?? 0) * 2592000000 +
@@ -53,7 +53,7 @@ class MockDateTimeInstance extends Date {
     return new MockDateTimeInstance(this.getTime() - totalMs)
   }
 
-  startOf (unit: string) {
+  startOf (unit: string): MockDateTimeInstance {
     const d = new Date(this.getTime())
     if (unit === 'day') {
       d.setHours(0, 0, 0, 0)
@@ -61,7 +61,7 @@ class MockDateTimeInstance extends Date {
     return new MockDateTimeInstance(d.getTime())
   }
 
-  endOf (unit: string) {
+  endOf (unit: string): MockDateTimeInstance {
     const d = new Date(this.getTime())
     if (unit === 'day') {
       d.setHours(23, 59, 59, 999)
@@ -69,21 +69,21 @@ class MockDateTimeInstance extends Date {
     return new MockDateTimeInstance(d.getTime())
   }
 
-  toISO () {
+  toISO (): string {
     return this.toISOString()
   }
 
   // like Luxon: an invalid DateTime has no SQL representation
-  toSQL (options?: { includeOffset?: boolean }) {
+  toSQL (options?: { includeOffset?: boolean }): string | null {
     return this.isValid ? this.toISOString().replace('T', ' ').replace('Z', '') : null
   }
 
-  setZone (tz: string) {
+  setZone (tz: string): this {
     // For simplicity, return this
     return this
   }
 
-  toFormat (format: string) {
+  toFormat (format: string): string {
     const year = this.getFullYear().toString()
     const month = (this.getMonth() + 1).toString().padStart(2, '0')
     const day = this.getDate().toString().padStart(2, '0')
@@ -97,41 +97,43 @@ class MockDateTimeInstance extends Date {
     return formatMap[format] ?? `${year}-${month}-${day}`
   }
 
-  valueOf () {
+  valueOf (): number {
     return this.getTime()
   }
 
-  toUnixInteger () {
+  toUnixInteger (): number {
     return Math.floor(this.getTime() / 1000)
   }
 
-  get year () {
+  get year (): number {
     return this.getFullYear()
   }
 
-  get month () {
+  get month (): number {
     return this.getMonth() + 1
   }
 
-  get day () {
+  get day (): number {
     return this.getDate()
   }
 
-  get hour () {
+  get hour (): number {
     return this.getHours()
   }
 
-  get minute () {
+  get minute (): number {
     return this.getMinutes()
   }
 
-  get second () {
+  get second (): number {
     return this.getSeconds()
   }
 }
 
 // Mock Luxon DateTime with proper date formatting
-export const mockDateTime = (millis: number) => new MockDateTimeInstance(millis)
+export function mockDateTime (millis: number): MockDateTimeInstance {
+  return new MockDateTimeInstance(millis)
+}
 
 // Mock DateTime class with static methods
 export class MockDateTimeClass {
@@ -139,43 +141,43 @@ export class MockDateTimeClass {
   constructor () {}
 
   // like Luxon: invalid() returns a DateTime instance whose isValid is false, not null
-  static invalid (reason: string) {
+  static invalid (reason: string): MockDateTimeInstance {
     return mockDateTime(NaN)
   }
 
-  static fromMillis (millis: number) {
+  static fromMillis (millis: number): MockDateTimeInstance {
     return mockDateTime(millis)
   }
 
-  static fromISO (iso: string) {
+  static fromISO (iso: string): MockDateTimeInstance {
     const date = new Date(iso)
 
     return mockDateTime(date.getTime())
   }
 
   // eslint-disable-next-line max-params
-  static fromSQL (sql: string, options?: { zone?: string }) {
+  static fromSQL (sql: string, options?: { zone?: string }): MockDateTimeInstance {
     const date = new Date(sql)
 
     return mockDateTime(date.getTime())
   }
 
-  static fromSeconds (seconds: number) {
+  static fromSeconds (seconds: number): MockDateTimeInstance {
     return mockDateTime(seconds * 1000)
   }
 
-  static local () {
+  static local (): MockDateTimeInstance {
     return mockDateTime(Date.now())
   }
 
-  static utc () {
+  static utc (): MockDateTimeInstance {
     return mockDateTime(Date.now())
   }
 }
 
 export const MockDateTime = MockDateTimeClass
 
-export function createMockSettings ({ initialZone = 'UTC', initialLocale = 'en' } = {}) {
+export function createMockSettings ({ initialZone = 'UTC', initialLocale = 'en' } = {}): { defaultZone: { name: string }, defaultLocale: string } {
   return {
     defaultZone: { name: initialZone },
     defaultLocale: initialLocale,

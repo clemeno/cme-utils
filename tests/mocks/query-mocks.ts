@@ -27,17 +27,18 @@ export interface QbCall {
   args: any[]
 }
 
-export function makeMockQb () {
+export function makeMockQb (): { qb: any, calls: QbCall[] } {
   const calls: QbCall[] = []
   const qb: any = {}
 
-  const buildMethod = (method: QbMethod) =>
-    (...args: any[]) => {
+  function buildMethod (method: QbMethod) {
+    return (...args: any[]) => {
       calls.push({ method, args })
       if (typeof args[0] === 'function') {
         args[0](qb)
       }
     }
+  }
 
   for (const m of QB_METHODS) {
     qb[m] = buildMethod(m)

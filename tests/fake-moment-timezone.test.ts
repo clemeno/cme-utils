@@ -2,7 +2,7 @@ import { describe, expect, it } from 'bun:test'
 import { FakeMomentTimezone } from '../ts/fake-moment-timezone.js'
 
 /** Minimal Luxon-like DateTime mock; `fromMillis` echoes its arguments so its result can't be mistaken for `now()` */
-function makeMockDateTime (overrides: { offset?: number; isValid?: boolean } = {}) {
+function makeMockDateTime (overrides: { offset?: number; isValid?: boolean } = {}): any {
   const offset = overrides.offset ?? 60
   const isValid = overrides.isValid ?? true
 

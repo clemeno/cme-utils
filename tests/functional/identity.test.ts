@@ -240,11 +240,11 @@ describe(
     it.each(weakCollectionTestCases)(
       'should handle $name',
       ({ inputs, expectedTypes }) => {
-        inputs.forEach((input, index) => {
+        for (const [index, input] of inputs.entries()) {
           const result = IDENTITY(input)
           expect(result).toBe(input)
           expect(result).toBeInstanceOf(expectedTypes[index])
-        })
+        }
       }
     )
 
@@ -257,10 +257,10 @@ describe(
           Object(true), // Alternative to new Boolean()
         ],
         check: (results: unknown[]) => {
-          results.forEach((result, index) => {
+          for (const [index, result] of results.entries()) {
             expect(result).toBe(results[index])
             expect(typeof result).toBe('object')
-          })
+          }
         },
       },
     ]
@@ -330,11 +330,11 @@ describe(
     it.each(typedArrayTestCases)(
       'should handle $name',
       ({ inputs, expectedTypes, check }) => {
-        inputs.forEach((input, index) => {
+        for (const [index, input] of inputs.entries()) {
           const result = IDENTITY(input)
           expect(result).toBe(input)
           expect(result).toBeInstanceOf(expectedTypes[index])
-        })
+        }
         if (check != null) {
           check(IDENTITY(inputs[0]))
         }

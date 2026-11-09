@@ -47,7 +47,7 @@ for (const p of products) {
 
 // Using SORT_OBJECTS for dynamic sorting
 // eslint-disable-next-line max-params
-const sortBy = (key: keyof Product, order: 'asc' | 'desc' = 'asc') => {
+function sortBy (key: keyof Product, order: 'asc' | 'desc' = 'asc'): (a: Product, b: Product) => number {
   return SORT_OBJECTS({
     on: (item: Product) => item[key],
     order,
@@ -64,7 +64,7 @@ for (const p of products) {
 console.log('\n=== Data Processing Pipeline ===')
 
 // Simulate processing user input with validation and normalization
-const processUserInput = (inputs: any[]) => {
+function processUserInput (inputs: any[]): number[] {
   return inputs
     .map(input => TO_NUMBER(input))        // Convert to numbers
     .filter(IS_NUMERIC)                    // Remove invalid numbers
@@ -107,7 +107,7 @@ const users: User[] = [
 ]
 
 // Custom CSV export function
-const exportToCSV = (data: User[]): string => {
+function exportToCSV (data: User[]): string {
   const headers = ['ID', 'Name', 'Email', 'Average Score', 'Registered', 'Active']
 
   const rows = data.map(user => [
@@ -142,7 +142,7 @@ console.log('Use Intl.DateTimeFormat for locale-specific formatting')
 console.log('\n=== Error Handling Patterns ===')
 
 // Safe data processing with fallbacks
-const safeProcessData = (data: any) => {
+function safeProcessData (data: any): number {
   let result = 0
   try {
     const num = TO_NUMBER(data)

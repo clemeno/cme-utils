@@ -38,7 +38,7 @@ describe(
           () => {
             const { qb, calls } = makeMockQb()
             let callbackCalledWith: any = null
-            const vCallback = (innerQb: any): void => {
+            function vCallback (innerQb: any): void {
               callbackCalledWith = innerQb
               innerQb.orWhere('x', '=', 1)
             }

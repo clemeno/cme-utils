@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from 'bun:test'
 import { GET_BASE_URI } from '../../ts/http/base-uri.util.js'
 
 /** Installs a fake global window whose document.documentElement is inDocumentElement. */
-const setDocumentElement = (inDocumentElement: object): void => {
+function setDocumentElement (inDocumentElement: object): void {
   global.window = { document: { documentElement: inDocumentElement } } as any
 }
 

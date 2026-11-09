@@ -15,7 +15,7 @@ describe(
       crypto.getRandomValues = originalGetRandomValues
     })
 
-    const notSupported = (): never => {
+    function notSupported (): never {
       throw new Error('Not supported')
     }
 

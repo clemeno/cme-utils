@@ -2,12 +2,14 @@ import { describe, expect, it } from 'bun:test'
 import { PERIOD_IMPORT } from '../../ts/convert/period-import.util.js'
 
 /** Minimal Luxon-compatible DateTime stub */
-const makeMockDateTime = (validPrefixes: string[] = []) => ({
-  fromISO: (iso: string) => ({
-    isValid: validPrefixes.length === 0 ? !iso.startsWith('invalid') : validPrefixes.some(p => iso.startsWith(p)),
-    _iso: iso,
-  }),
-})
+function makeMockDateTime (validPrefixes: string[] = []): { fromISO: (iso: string) => { isValid: boolean, _iso: string } } {
+  return ({
+    fromISO: (iso: string) => ({
+      isValid: validPrefixes.length === 0 ? !iso.startsWith('invalid') : validPrefixes.some(p => iso.startsWith(p)),
+      _iso: iso,
+    }),
+  })
+}
 
 describe(
   'PERIOD_IMPORT',

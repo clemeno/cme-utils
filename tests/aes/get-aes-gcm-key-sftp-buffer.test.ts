@@ -39,7 +39,9 @@ describe(
           },
         }
 
-        const mockCreateReadStream = (filePath: string) => mockReadStream
+        function mockCreateReadStream (filePath: string): AsyncIterable<Buffer> {
+          return mockReadStream
+        }
 
         const result = await GET_AES_GCM_KEY_SFTP_BUFFER({
           Buffer,

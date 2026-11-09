@@ -17,7 +17,7 @@ describe(
       '$name',
       async ({ openStream, filePath, expected }) => {
         const vPathList: string[] = []
-        const mockCreateReadStream = (inFilePath: string): AsyncIterable<Buffer | string> => {
+        function mockCreateReadStream (inFilePath: string): AsyncIterable<Buffer | string> {
           vPathList.push(inFilePath)
           return openStream()
         }
