@@ -1,6 +1,6 @@
 # 01a1bf8ff29e765a994f7eca358c1d96: Migrate const arrow exports to function declarations
 
-Status: ready-for-agent
+Status: resolved
 Blocked by: none
 
 ## What
@@ -23,3 +23,7 @@ Consts annotated with a function type keep that type only as consts: `IS_INT_UNS
 - The public API is unchanged for callers: compare the `m/**/*.d.ts` before and after (`declare const X: (...) => T` becomes `declare function X(...): T`).
 - `bun install`, then `bun run prepare`, `bun run lint`, `bun test`, `bun run test:types` pass; coverage stays at 100% lines and functions.
 - One commit per `ts/` category folder, `refactor:` type.
+
+## Comments
+
+2026-11-09: done. 224 exports migrated in 25 `refactor:` commits (one per `ts/` folder); `NOOP` and the four form validators stay typed consts. Every runtime export (453) has an identical type before and after (identical-type check of the 3dc4905 build against the new one); lint, 2980 tests at 100% lines and functions, and `test:types` pass. The review added: parens and indent kept on multi-line returns, the three private helpers (`IS_NOT_EMPTY`, `IS_OFF`, `toIsoString`) converted too, and explicit `: string` on `GET_BASE_URI` and `BYTE_ARRAY_TO_UUID`.

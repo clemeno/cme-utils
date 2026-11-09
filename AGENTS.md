@@ -34,7 +34,7 @@ To add a utility, follow [.github/instructions/new-utility.instructions.md](.git
 
 The library has **zero runtime dependencies**. All `devDependencies` are build/test only. Use no deprecated package and no version with a known vulnerability.
 
-`ts/` imports nothing from outside `ts/`, not even `node:` built-ins: a utility that needs a platform or library API (`createReadStream`, `createCipheriv`, luxon's `DateTime`) takes it through its object parameter. `package.json` sets `"sideEffects": false`, so no module may run code at import time.
+`ts/` imports nothing from outside `ts/`, not even `node:` built-ins: a utility that needs a platform or library API (`createReadStream`, `createCipheriv`, luxon's `DateTime`) takes it through its object parameter. `package.json` sets `"sideEffects": false`, so no module may have an observable effect at import time (no global writes, I/O or timers); building a module-local table, as `byte-array-to-uuid.util.ts` does, is fine.
 
 ## Key Conventions
 
