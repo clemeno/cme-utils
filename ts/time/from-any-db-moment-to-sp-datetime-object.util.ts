@@ -8,7 +8,19 @@ import { NULL_DATE } from './null-date.util.js'
 import { TO_NUMBER } from '../convert/to-number.util.js'
 
 /**
+ * Converts a database moment (`DateTime`, `Date`, timestamp in ms, ISO or SQL string) into an `AppSpDate` in the database timezone.
  * * provide DateTime -> import { DateTime } from 'luxon'
+ * @param _ - The conversion parameters
+ * @param _.DateTime - The luxon `DateTime` class
+ * @param _.from - The moment to convert
+ * @param _.dbTz - The IANA timezone of the database (e.g. 'UTC')
+ * @returns The `AppSpDate`, or `null` when `from` is the null date '0000-01-01 00:00:00' or cannot be parsed
+ * @example
+ * ```typescript
+ * FROM_ANY_DB_MOMENT_TO_SP_DATETIME_OBJECT({ DateTime, from: '2024-03-15 14:30:45', dbTz: 'UTC' }) // returns { date: '2024-03-15 14:30:45.000', timezone_type: 3, timezone: 'UTC' }
+ * FROM_ANY_DB_MOMENT_TO_SP_DATETIME_OBJECT({ DateTime, from: '0000-01-01 00:00:00', dbTz: 'UTC' }) // returns null
+ * FROM_ANY_DB_MOMENT_TO_SP_DATETIME_OBJECT({ DateTime, from: 'not a date', dbTz: 'UTC' }) // returns null
+ * ```
  */
 export function FROM_ANY_DB_MOMENT_TO_SP_DATETIME_OBJECT<TypeofDateTime = any, DateTime = any> (_: {
   DateTime: TypeofDateTime
