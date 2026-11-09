@@ -4,7 +4,7 @@ import { SAME_MOMENT } from '../../ts/compare/same-moment.util.js'
 describe(
   'SAME_MOMENT',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, a: unknown, b: unknown, expected: boolean }> = [
       { label: 'two Date objects with the same value', a: new Date('2023-01-01T12:00:00Z'), b: new Date('2023-01-01T12:00:00Z'), expected: true },
       { label: 'identical timestamps', a: 1672531200000, b: 1672531200000, expected: true },
       { label: 'Date and equivalent timestamp', a: new Date('2023-01-01T00:00:00Z'), b: 1672531200000, expected: true },
