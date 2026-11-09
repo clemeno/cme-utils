@@ -13,7 +13,7 @@ import type { numeric } from '../numeric.js'
  * * type AE = AxiosError
  * * type AR = AxiosResponse
  */
-export const WS_AXIOS_SP_REQUEST = async <AxiosStatic = any, NodeHttps = any, AxiosResult = any, AxiosError = any> (_: {
+export async function WS_AXIOS_SP_REQUEST<AxiosStatic = any, NodeHttps = any, AxiosResult = any, AxiosError = any> (_: {
   axios: AxiosStatic
   https?: NodeHttps
   wsResolve: string
@@ -22,7 +22,7 @@ export const WS_AXIOS_SP_REQUEST = async <AxiosStatic = any, NodeHttps = any, Ax
   dataObject?: unknown
   dataString?: string
   contentType?: string
-}): Promise<AppExceptionResult<AxiosError, AxiosResult>> => {
+}): Promise<AppExceptionResult<AxiosError, AxiosResult>> {
   const method = _.method ?? 'POST'
 
   const envWsResolvePartList = _.wsResolve.split(':')
