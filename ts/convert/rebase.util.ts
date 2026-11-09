@@ -4,7 +4,7 @@ import type { numeric } from '../numeric.js'
 /**
  * from pure numeric string in base [2,36] to base [2,36] else throws
  */
-export const REBASE = (_: { from: numeric, base: number, toBase: number }): string => {
+export function REBASE (_: { from: numeric, base: number, toBase: number }): string {
   const { from, base, toBase } = _
 
   const range = SYMBOLS.split('')

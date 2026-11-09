@@ -13,7 +13,7 @@
  * TO_NUMBER(null) // returns NaN
  * ```
  */
-export const TO_NUMBER = (v: any): number => {
+export function TO_NUMBER (v: any): number {
   let res = NaN
 
   if (typeof v === 'number') {

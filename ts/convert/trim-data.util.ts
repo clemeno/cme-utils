@@ -4,7 +4,7 @@ import { IS_SET } from '../check/is-set.util.js'
  * Removes `null`/`undefined` properties recursively and turns `Date` values into ISO strings.
  * `depth` is the number of levels to trim (an array counts as a level); below it values are returned as-is.
  */
-export const TRIM_DATA = (_: { object: any, depth?: number }): any => {
+export function TRIM_DATA (_: { object: any, depth?: number }): any {
   const o: any = _.object
   const depth = _.depth ?? Number.MAX_SAFE_INTEGER
 

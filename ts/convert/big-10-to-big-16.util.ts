@@ -1,7 +1,7 @@
 import { IS_SET } from '../check/is-set.util.js'
 import type { numeric } from '../numeric.js'
 
-export const BIG_10_TO_BIG_16 = (_s: numeric): string => {
+export function BIG_10_TO_BIG_16 (_s: numeric): string {
   const hex: Array<string | undefined> = []
 
   const sStr = (IS_SET(_s) && (((typeof _s === 'number') && !isNaN(_s)) || (_s !== 'NaN'))) ? `${_s}` : ''

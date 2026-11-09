@@ -7,7 +7,7 @@ import { TO_STRING } from './to-string.util.js'
  * @param v must be a boolean, `true` or `false`, or a numeric number
  * @returns `true` or `false` or **throws** an error when the input is not strct enough
  */
-export const PARSE_BOOLEAN_STRICT_OR_THROW = (v: any): boolean => {
+export function PARSE_BOOLEAN_STRICT_OR_THROW (v: any): boolean {
   let bRes = false
 
   if (typeof v === 'boolean') {

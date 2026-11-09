@@ -1,10 +1,10 @@
 import { IS_SET } from '../check/is-set.util.js'
 import { TO_STRING } from './to-string.util.js'
 
-export const HEX_TO_BASE64 = <TypeofBuffer = any> (_: {
+export function HEX_TO_BASE64<TypeofBuffer = any> (_: {
   Buffer: TypeofBuffer,
   hex: any
-}): string => {
+}): string {
   let res = ''
 
   let error: any

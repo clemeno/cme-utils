@@ -1,6 +1,6 @@
 import type { numeric } from '../numeric.js'
 
-export const BIG_ADD_10 = (_: { x: numeric, y: numeric }): string => {
+export function BIG_ADD_10 (_: { x: numeric, y: numeric }): string {
   let c = 0
   const r: number[] = []
   const x = `${_.x}`.split('').map(Number)

@@ -3,10 +3,10 @@ import { IS_ON } from '../check/is-on.util.js'
 /**
  * * provide DateTime -> import { DateTime } from 'luxon'
  */
-export const PERIOD_IMPORT = <TypeofDateTime = any> (_: {
+export function PERIOD_IMPORT<TypeofDateTime = any> (_: {
   DateTime: TypeofDateTime
   input: string
-}): { min: any, max: any, label: string } => {
+}): { min: any, max: any, label: string } {
   const [minIso, maxIso, label] = _.input.split('_§§_')
 
   const { fromISO } = _.DateTime as any

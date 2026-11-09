@@ -3,7 +3,7 @@ import { FROM_BASE_16_TO_10 } from './from-base-16-to-10.util.js'
 import { FROM_BASE_16_TO_CARD_SERIAL } from './from-base-16-to-card-serial.util.js'
 import { TO_STRING } from './to-string.util.js'
 
-export const FROM_BASE_16_TO_CSN_DISPLAY = (_: { from: numeric, bCsnHexCard: boolean, bCsnDecNumber: boolean }): string => {
+export function FROM_BASE_16_TO_CSN_DISPLAY (_: { from: numeric, bCsnHexCard: boolean, bCsnDecNumber: boolean }): string {
   let res = TO_STRING(_.from)
 
   if (_.bCsnHexCard) {

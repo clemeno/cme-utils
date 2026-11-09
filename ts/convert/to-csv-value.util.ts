@@ -15,7 +15,7 @@ import { IS_SET } from '../check/is-set.util.js'
  * TO_CSV_VALUE(null) // returns ''
  * ```
  */
-export const TO_CSV_VALUE = (v: any): string => {
+export function TO_CSV_VALUE (v: any): string {
   let res: string = ''
 
   if (IS_SET(v)) {

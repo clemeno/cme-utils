@@ -5,7 +5,7 @@ import type { numeric } from '../numeric.js'
 /**
  * base convert big base small numbers
  */
-export const BASE_CONVERT_BBSN = (_: { n: numeric, from: numeric, to: numeric }): string | null => {
+export function BASE_CONVERT_BBSN (_: { n: numeric, from: numeric, to: numeric }): string | null {
   let res = ''
 
   const N = `${_.n}`

@@ -1,3 +1,5 @@
 import { IS_EMPTY } from '../check/is-empty.util.js'
 
-export const TO_BOOLEAN = (v: any): boolean => (typeof v === 'boolean') ? v : !IS_EMPTY(v)
+export function TO_BOOLEAN (v: any): boolean {
+  return (typeof v === 'boolean') ? v : !IS_EMPTY(v)
+}

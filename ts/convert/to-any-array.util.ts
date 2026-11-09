@@ -1,6 +1,6 @@
 import { IS_AN_ARRAY } from '../array/is-an-array.util.js'
 
-export const TO_ANY_ARRAY = (from: any): any[] => {
+export function TO_ANY_ARRAY (from: any): any[] {
   let res: any[] = []
 
   if (IS_AN_ARRAY(from)) {

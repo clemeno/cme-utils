@@ -1,7 +1,7 @@
 import { IS_A_FUNCTION } from '../check/is-a-function.util.js'
 import { IS_SET } from '../check/is-set.util.js'
 
-export const TO_STRING = (_: any): string => {
+export function TO_STRING (_: any): string {
   let res = ''
 
   if (IS_SET(_) && !Number.isNaN(_)) {

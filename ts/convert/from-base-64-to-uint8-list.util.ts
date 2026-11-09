@@ -1,7 +1,7 @@
-export const FROM_BASE_64_TO_UINT8_LIST = <TypeofBuffer = any> (_: {
+export function FROM_BASE_64_TO_UINT8_LIST<TypeofBuffer = any> (_: {
   Buffer?: TypeofBuffer
   base64: string
-}): number[] => {
+}): number[] {
   let res = new Uint8Array(0)
 
   let bErr = false

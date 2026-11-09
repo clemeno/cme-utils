@@ -6,6 +6,8 @@ import { FROM_LIST_TO_A_B_RECORD } from './from-list-to-a-b-record.util.js'
  * @returns a `Record` where the keys are the stringified values and the values are the stringified labels
  * @example `[{ value: 1, label: 'One' }, { value: 2, label: 'Two' }]` -> `{ '1': 'One', '2': 'Two' }`
  */
-export const FROM_LIST_TO_VALUE_LABEL_RECORD = <T extends Record<PropertyKey, any>> (
+export function FROM_LIST_TO_VALUE_LABEL_RECORD<T extends Record<PropertyKey, any>> (
   list: T[] | ReadonlyArray<T>
-): Record<T['value'], T['label']> => FROM_LIST_TO_A_B_RECORD({ list, keyA: 'value', keyB: 'label' })
+): Record<T['value'], T['label']> {
+  return FROM_LIST_TO_A_B_RECORD({ list, keyA: 'value', keyB: 'label' })
+}

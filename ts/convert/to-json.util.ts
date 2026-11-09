@@ -1,6 +1,6 @@
 import { IS_SET } from '../check/is-set.util.js'
 
-export const TO_JSON = (v: unknown): string => {
+export function TO_JSON (v: unknown): string {
   let res: string = ''
 
   if (IS_SET(v)) {

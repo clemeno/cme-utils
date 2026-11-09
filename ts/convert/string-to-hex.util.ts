@@ -1,7 +1,7 @@
 /**
  * Convert a string to hex without using Buffer
  */
-export const STRING_TO_HEX = (str: string): string => {
+export function STRING_TO_HEX (str: string): string {
   let hex = ''
 
   for (let i = 0; i < str.length; i += 1) {
