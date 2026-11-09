@@ -1,2 +1,4 @@
 /** CHECK (is a `Map` instance) */
-export const IS_A_MAP = <T = any, U = any> (o: any): o is Map<T, U> => o instanceof Map
+export function IS_A_MAP<T = any, U = any> (o: any): o is Map<T, U> {
+  return o instanceof Map
+}
