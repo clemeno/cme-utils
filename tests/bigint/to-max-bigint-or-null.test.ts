@@ -4,7 +4,7 @@ import { TO_MAX_BIGINT_OR_NULL } from '../../ts/bigint/to-max-bigint-or-null.uti
 describe(
   'TO_MAX_BIGINT_OR_NULL',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: Iterable<unknown>, expected: bigint | null }> = [
       { name: 'bigint array: picks largest', input: [3n, 1n, 2n], expected: 3n },
       { name: 'single element array', input: [5n], expected: 5n },
       { name: 'negative bigints: picks least negative', input: [-1n, -3n, -2n], expected: -1n },

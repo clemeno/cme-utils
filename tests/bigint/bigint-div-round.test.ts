@@ -4,7 +4,7 @@ import { BIGINT_DIV_ROUND } from '../../ts/bigint/bigint-div-round.util.js'
 describe(
   'BIGINT_DIV_ROUND',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: { dividend: bigint, divisor: bigint }, expected: bigint }> = [
       { name: 'exact division returns quotient unchanged', input: { dividend: 20n, divisor: 10n }, expected: 2n },
       { name: 'remainder below half rounds down', input: { dividend: 24n, divisor: 10n }, expected: 2n },
       { name: 'remainder equal to half rounds up', input: { dividend: 25n, divisor: 10n }, expected: 3n },

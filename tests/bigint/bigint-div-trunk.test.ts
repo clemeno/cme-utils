@@ -4,7 +4,7 @@ import { BIGINT_DIV_TRUNC } from '../../ts/bigint/bigint-div-trunk.util.js'
 describe(
   'BIGINT_DIV_TRUNC',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: { dividend: bigint, divisor: bigint }, expected: bigint }> = [
       { name: 'exact division', input: { dividend: 10n, divisor: 2n }, expected: 5n },
       { name: 'positive truncation discards remainder', input: { dividend: 10n, divisor: 3n }, expected: 3n },
       { name: 'negative dividend truncates toward zero', input: { dividend: -10n, divisor: 3n }, expected: -3n },

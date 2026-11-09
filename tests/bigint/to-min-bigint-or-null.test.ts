@@ -4,7 +4,7 @@ import { TO_MIN_BIGINT_OR_NULL } from '../../ts/bigint/to-min-bigint-or-null.uti
 describe(
   'TO_MIN_BIGINT_OR_NULL',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: Iterable<unknown>, expected: bigint | null }> = [
       { name: 'bigint array: picks smallest', input: [3n, 1n, 2n], expected: 1n },
       { name: 'single element array', input: [5n], expected: 5n },
       { name: 'negative bigints: picks most negative', input: [-1n, -3n, -2n], expected: -3n },

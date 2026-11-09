@@ -4,7 +4,7 @@ import { TO_BIGINT_OR_NULL } from '../../ts/bigint/to-bigint-or-null.util.js'
 describe(
   'TO_BIGINT_OR_NULL',
   () => {
-    const bigintCases = [
+    const bigintCases: Array<{ name: string, input: bigint | number | string, expected: bigint }> = [
       { name: 'bigint passthrough (0n)', input: 0n, expected: 0n },
       { name: 'bigint passthrough (42n)', input: 42n, expected: 42n },
       { name: 'bigint passthrough (-7n)', input: -7n, expected: -7n },
@@ -25,7 +25,7 @@ describe(
       }
     )
 
-    const nullCases = [
+    const nullCases: Array<{ name: string, input: unknown }> = [
       { name: 'float number 1.5', input: 1.5 },
       { name: 'float string "1.5"', input: '1.5' },
       { name: 'non-numeric string "abc"', input: 'abc' },

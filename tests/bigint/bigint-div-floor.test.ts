@@ -4,7 +4,7 @@ import { BIGINT_DIV_FLOOR } from '../../ts/bigint/bigint-div-floor.util.js'
 describe(
   'BIGINT_DIV_FLOOR',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: { dividend: bigint, divisor: bigint }, expected: bigint }> = [
       { name: 'exact division returns quotient unchanged', input: { dividend: 10n, divisor: 2n }, expected: 5n },
       { name: 'positive quotient with remainder stays unchanged', input: { dividend: 10n, divisor: 3n }, expected: 3n },
       { name: 'negative quotient with remainder rounds down', input: { dividend: -10n, divisor: 3n }, expected: -4n },

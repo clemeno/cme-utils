@@ -4,7 +4,7 @@ import { BIGINT_DIV } from '../../ts/bigint/bigint-div.util.js'
 describe(
   'BIGINT_DIV',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: { dividend: bigint, divisor: bigint }, expected: { q: bigint, r: bigint } }> = [
       { name: 'exact division', input: { dividend: 10n, divisor: 2n }, expected: { q: 5n, r: 0n } },
       { name: 'positive dividend with remainder', input: { dividend: 10n, divisor: 3n }, expected: { q: 3n, r: 1n } },
       { name: 'negative dividend', input: { dividend: -10n, divisor: 3n }, expected: { q: -3n, r: -1n } },
