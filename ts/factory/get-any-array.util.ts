@@ -1,2 +1,4 @@
 /** generates a new empty `Array` `[]` instance of `any[]` type */
-export const GET_ANY_ARRAY = (): any[] => []
+export function GET_ANY_ARRAY (): any[] {
+  return []
+}
