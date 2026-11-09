@@ -9,11 +9,11 @@ import { NULL_DATE } from './null-date.util.js'
 /**
  * * provide DateTime -> import { DateTime } from 'luxon'
  */
-export const FROM_ANY_DB_MOMENT_TO_SP_DATETIME_OBJECT = <TypeofDateTime = any, DateTime = any> (_: {
+export function FROM_ANY_DB_MOMENT_TO_SP_DATETIME_OBJECT<TypeofDateTime = any, DateTime = any> (_: {
   DateTime: TypeofDateTime
   from: any
   dbTz: string
-}): AppSpDate | null => {
+}): AppSpDate | null {
   let res: AppSpDate | null = null
 
   const DateTimeClass = _.DateTime as any

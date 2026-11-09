@@ -4,8 +4,10 @@ import { LUXON_FORMAT_LOCAL_YMD } from './luxon.util.js'
 /**
  * * provide DateTime ans Settings -> import { DateTime, Settings } from 'luxon'
  */
-export const FROM_ISO_TO_LOCAL_D = <TypeofDateTime = any, TypeofSettings = any> (_: {
+export function FROM_ISO_TO_LOCAL_D<TypeofDateTime = any, TypeofSettings = any> (_: {
   DateTime: TypeofDateTime
   Settings: TypeofSettings
   iso: any
-}): string => FROM_ISO_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_YMD })
+}): string {
+  return FROM_ISO_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_YMD })
+}

@@ -4,6 +4,6 @@ import { LUXON_IS_SAME_YM } from './luxon-is-same-ym.util.js'
  * `Luxon` `DateTime` both occured during the same day
  * * provide DateTime -> import { DateTime } from 'luxon'
  */
-export const LUXON_IS_SAME_YMD = <DateTime = any> (_: { ma: DateTime, mb: DateTime }): boolean => {
+export function LUXON_IS_SAME_YMD<DateTime = any> (_: { ma: DateTime, mb: DateTime }): boolean {
   return ((_.ma as any).day === (_.mb as any).day) && LUXON_IS_SAME_YM(_)
 }

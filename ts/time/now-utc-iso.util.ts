@@ -1,2 +1,4 @@
 /** `Date` `toISOString` */
-export const NOW_UTC_ISO = (): string => (new Date()).toISOString()
+export function NOW_UTC_ISO (): string {
+  return (new Date()).toISOString()
+}

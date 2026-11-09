@@ -5,10 +5,10 @@ import { SET_DOCUMENT_TZ } from './set-document-tz.util.js'
  * set the global timezone to `Luxon` `Settings`
  * * provide Settings -> import { Settings } from 'luxon'
  */
-export const SET_TZ = <TypeofSettings = any> (_: {
+export function SET_TZ<TypeofSettings = any> (_: {
   Settings: TypeofSettings
   tz: string
-}): void => {
+}): void {
   const tz = IS_A_STRING_AND_NOT_EMPTY(_.tz) ? _.tz : 'UTC'
 
   const SettingsClass: any = _.Settings

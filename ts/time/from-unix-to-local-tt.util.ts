@@ -4,8 +4,10 @@ import { LUXON_FORMAT_LOCAL_HMS } from './luxon.util.js'
 /**
  * * provide DateTime and Settings -> import { DateTime, Settings } from 'luxon'
  */
-export const FROM_UNIX_TO_LOCAL_TT = <TypeofDateTime = any, TypeofSettings = any> (_: {
+export function FROM_UNIX_TO_LOCAL_TT<TypeofDateTime = any, TypeofSettings = any> (_: {
   DateTime: TypeofDateTime
   Settings: TypeofSettings
   unix: number
-}): string => FROM_UNIX_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_HMS })
+}): string {
+  return FROM_UNIX_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_HMS })
+}

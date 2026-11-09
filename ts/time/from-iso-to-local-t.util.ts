@@ -4,8 +4,10 @@ import { LUXON_FORMAT_LOCAL_HM } from './luxon.util.js'
 /**
  * * provide DateTime and Settings -> import { DateTime, Settings } from 'luxon'
  */
-export const FROM_ISO_TO_LOCAL_T = <TypeofDateTime = any, TypeofSettings = any> (_: {
+export function FROM_ISO_TO_LOCAL_T<TypeofDateTime = any, TypeofSettings = any> (_: {
   DateTime: TypeofDateTime
   Settings: TypeofSettings
   iso: string
-}): string => FROM_ISO_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_HM })
+}): string {
+  return FROM_ISO_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_HM })
+}
