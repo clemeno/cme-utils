@@ -1,2 +1,4 @@
 /** asynchronous identity function */
-export const ASYNC_IDENTITY = async (_: unknown): Promise<unknown> => _
+export async function ASYNC_IDENTITY (_: unknown): Promise<unknown> {
+  return _
+}

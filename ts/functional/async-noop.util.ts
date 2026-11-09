@@ -1,2 +1,2 @@
 /** asynchronous no operation function */
-export const ASYNC_NOOP = async (): Promise<void> => {}
+export async function ASYNC_NOOP (): Promise<void> {}

@@ -1,2 +1,4 @@
 /** identity function */
-export const IDENTITY = (_: unknown): unknown => _
+export function IDENTITY (_: unknown): unknown {
+  return _
+}
