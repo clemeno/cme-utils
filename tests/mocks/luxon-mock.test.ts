@@ -10,7 +10,7 @@ describe(
     describe(
       'mockDateTime',
       () => {
-        const testCases = [
+        const testCases: Array<{ name: string, millis: number }> = [
           { name: 'creates instance from positive millis', millis: 1000 },
           { name: 'creates instance from zero millis', millis: 0 },
           { name: 'creates instance from large millis', millis: BASE_MS },
@@ -162,7 +162,7 @@ describe(
         // 2022-02-03T00:00:00.000Z
         const FEB_03_MS = 1643846400000
 
-        const testCases = [
+        const testCases: Array<{ name: string, millis: number, format: string, expected: string }> = [
           { name: 'formats yyyy-MM-dd (fallback path)', millis: BASE_MS, format: 'yyyy-MM-dd', expected: '2022-01-01' },
           { name: 'formats MM/dd/yyyy', millis: FEB_03_MS, format: 'MM/dd/yyyy', expected: '02/03/2022' },
           { name: 'formats dd/MM/yyyy', millis: FEB_03_MS, format: 'dd/MM/yyyy', expected: '03/02/2022' },
@@ -199,7 +199,7 @@ describe(
     describe(
       'toUnixInteger method',
       () => {
-        const testCases = [
+        const testCases: Array<{ name: string, millis: number, expected: number }> = [
           { name: 'floors partial seconds', millis: 1500, expected: 1 },
           { name: 'handles exact seconds', millis: 1000, expected: 1 },
           { name: 'handles zero', millis: 0, expected: 0 },
@@ -221,7 +221,7 @@ describe(
         // 2022-01-01T00:01:01.500Z
         const NON_ZERO_TIME_MS = BASE_MS + 61500
 
-        const testCases = [
+        const testCases: Array<{ name: string, millis: number, getter: 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second', expected: number }> = [
           { name: 'returns correct year', millis: BASE_MS, getter: 'year' as const, expected: 2022 },
           { name: 'returns correct month', millis: BASE_MS, getter: 'month' as const, expected: 1 },
           { name: 'returns correct day', millis: BASE_MS, getter: 'day' as const, expected: 1 },
