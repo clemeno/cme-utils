@@ -5,6 +5,20 @@ import { NORMALIZE_PAGE } from './normalize-page.util.js'
 import { NORMALIZE_PAGES } from './normalize-pages.util.js'
 import { NORMALIZE_PER_PAGE } from './normalize-per-page.util.js'
 
+/**
+ * Normalizes pagination inputs into the page, per-page, page count, SQL offset and SQL limit, all as strings
+ * @param _ - The pagination inputs
+ * @param _.page - The requested page number
+ * @param _.perPage - The requested number of rows per page
+ * @param _.filteredCount - The number of rows after filtering
+ * @returns The normalized `normalizedPage`, `normalizedPerPage`, `normalizedPages`, `normalizedOffset` and `normalizedLimit`
+ * @example
+ * ```typescript
+ * NORMALIZE_PAGINATION({ page: '3', perPage: '10', filteredCount: '25' }) // returns { normalizedPage: '3', normalizedPerPage: '10', normalizedPages: '3', normalizedOffset: '20', normalizedLimit: '10' }
+ * NORMALIZE_PAGINATION({ page: '99', perPage: '10', filteredCount: '20' }) // returns { normalizedPage: '2', normalizedPerPage: '10', normalizedPages: '2', normalizedOffset: '10', normalizedLimit: '10' }
+ * NORMALIZE_PAGINATION({ page: 'abc', perPage: 'x', filteredCount: '25' }) // returns { normalizedPage: '1', normalizedPerPage: '1', normalizedPages: '25', normalizedOffset: '0', normalizedLimit: '1' }
+ * ```
+ */
 export function NORMALIZE_PAGINATION (_: {
   page: numeric
   perPage: numeric

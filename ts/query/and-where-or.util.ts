@@ -1,5 +1,18 @@
 import { OR_WHERE } from './or-where.util.js'
 
+/**
+ * Adds a parenthesized group of OR conditions, joined to the other conditions of the query builder with AND
+ * @param _ - The query builder and the conditions
+ * @param _.qb - The knex query builder to add the group to
+ * @param _.or - The conditions to join with OR, each one with the fields of `OR_WHERE` (`column`, `value`, `operator`, `bKeepPercentAndDash`, ...)
+ * @returns nothing: adds the condition to the query builder
+ * @example
+ * ```typescript
+ * AND_WHERE_OR({ qb, or: [{ column: 'a', value: 1 }, { column: 'b', value: 'x', bBeginsWith: true }] }) // adds where (a = 1 or b like 'x%')
+ * AND_WHERE_OR({ qb, or: [{ column: 'a', value: null }] }) // adds where (a is null)
+ * AND_WHERE_OR({ qb, or: [] }) // adds an empty group, which knex ignores
+ * ```
+ */
 export function AND_WHERE_OR (_: {
   qb: any
   or: Array<{

@@ -2,7 +2,19 @@ import { IS_EMPTY } from '../check/is-empty.util.js'
 import type { WhereInParams } from '../where-in-params.js'
 import { WHERE_NOT_IN } from './where-not-in.util.js'
 
-/** WHERE_NOT_IN, but an empty list/set/map adds `1 = 1` like knex `whereNotIn([])`, instead of adding no condition */
+/**
+ * WHERE_NOT_IN, but an empty list/set/map adds `1 = 1` like knex `whereNotIn([])`, instead of adding no condition
+ * @param inParams - The query builder, the column and the values
+ * @param inParams.qb - The knex query builder to add the condition to
+ * @param inParams.column - The column to compare
+ * @param inParams.values - The values to match, as an array, a Set or a Map (its values are used); `'§§null§§'` matches a null column and `'§§not0§§'` a column different from 0
+ * @returns nothing: adds the condition to the query builder
+ * @example
+ * ```typescript
+ * WHERE_NOT_IN_OR_TRUE({ qb, column: 'id', values: [1, 2] }) // adds where id != 1 and id != 2
+ * WHERE_NOT_IN_OR_TRUE({ qb, column: 'id', values: [] }) // adds where 1 = 1
+ * ```
+ */
 export function WHERE_NOT_IN_OR_TRUE (inParams: WhereInParams): void {
   if (IS_EMPTY(inParams.values)) {
     inParams.qb.whereRaw('1 = 1')
