@@ -5,7 +5,7 @@ import { mockDateTime } from '../mocks/luxon-mock.js'
 describe(
   'LUXON_IS_SAME',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: { maTs: number, mbTs: number }, expected: boolean }> = [
       { name: 'same dates', input: { maTs: 1640995200000, mbTs: 1640995200000 }, expected: true },
       { name: 'different dates', input: { maTs: 1640995200000, mbTs: 1641081600000 }, expected: false },
     ]

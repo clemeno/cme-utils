@@ -12,7 +12,7 @@ import {
 describe(
   'oracle format constants',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, value: string, expected: string }> = [
       { name: 'ORACLE_FORMAT_YM', value: ORACLE_FORMAT_YM, expected: 'yyyy-mm' },
       { name: 'ORACLE_FORMAT_YMD', value: ORACLE_FORMAT_YMD, expected: 'yyyy-mm-dd' },
       { name: 'ORACLE_FORMAT_HI', value: ORACLE_FORMAT_HI, expected: 'hh24:mi' },

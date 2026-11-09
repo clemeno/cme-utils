@@ -4,7 +4,7 @@ import { NOW_MS } from '../../ts/time/now-ms.util.js'
 describe(
   'NOW_MS',
   () => {
-    const timestampTestCases = [
+    const timestampTestCases: Array<{ name: string, check: (_: { result: number, now: number }) => boolean }> = [
       { name: 'greater than now-100', check: ({ result, now }: { result: number, now: number }) => result > now - 100 },
       { name: 'less than now+100', check: ({ result, now }: { result: number, now: number }) => result < now + 100 },
     ]

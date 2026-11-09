@@ -4,36 +4,32 @@ import { SET_DOCUMENT_TZ } from '../../ts/time/set-document-tz.util.js'
 describe(
   'SET_DOCUMENT_TZ',
   () => {
-    const documentTzTestCases = [
-      { name: 'setAttribute called', check: ({ setAttributeCalled }: { setAttributeCalled: boolean }) => setAttributeCalled === true },
-      { name: 'setAttribute value', check: ({ setAttributeValue }: { setAttributeValue: string }) => setAttributeValue === 'UTC' },
+    const documentTzTestCases: Array<{ name: string, input: string, expected: string[][] }> = [
+      { name: 'UTC', input: 'UTC', expected: [['tz', 'UTC']] },
+      { name: 'Europe/Paris', input: 'Europe/Paris', expected: [['tz', 'Europe/Paris']] },
     ]
 
     it.each(documentTzTestCases)(
-      'should set document tz - $name',
-      ({ check }) => {
+      'should set the document tz attribute - $name',
+      ({ input, expected }) => {
         const originalWindow = global.window
-        let setAttributeCalled = false
-        let setAttributeValue = ''
+        const setAttributeCalls: string[][] = []
         global.window = {
           document: {
             documentElement: {
               // eslint-disable-next-line max-params
               setAttribute: (key: string, value: string) => {
-                if (key === 'tz') {
-                  setAttributeCalled = true
-                  setAttributeValue = value
-                }
+                setAttributeCalls.push([key, value])
               },
             },
           },
         } as any
 
-        SET_DOCUMENT_TZ('UTC')
+        SET_DOCUMENT_TZ(input)
 
         global.window = originalWindow
 
-        expect(check({ setAttributeCalled, setAttributeValue })).toBe(true)
+        expect(setAttributeCalls).toEqual(expected)
       }
     )
   }

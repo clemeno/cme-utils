@@ -32,7 +32,7 @@ import {
 describe(
   'luxon format constants',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, value: string, expected: string }> = [
       { name: 'LUXON_FORMAT_H', value: LUXON_FORMAT_H, expected: 'HH' },
       { name: 'LUXON_FORMAT_HM', value: LUXON_FORMAT_HM, expected: 'HH:mm' },
       { name: 'LUXON_FORMAT_HMS', value: LUXON_FORMAT_HMS, expected: 'HH:mm:ss' },

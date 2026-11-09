@@ -4,7 +4,7 @@ import { IS_A_DATE_AND_NOT_EMPTY } from '../../ts/time/is-a-date-and-not-empty.u
 describe(
   'IS_A_DATE_AND_NOT_EMPTY',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: Date | string | number | {} | null | undefined | boolean, expected: boolean }> = [
       { name: 'should return true for new Date()', input: new Date(), expected: true },
       { name: 'should return true for valid date string', input: new Date('2023-01-01'), expected: true },
       { name: 'should return true for Date(0)', input: new Date(0), expected: true },

@@ -12,7 +12,7 @@ import {
 describe(
   'pg format constants',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, value: string, expected: string }> = [
       { name: 'PG_FORMAT_YM', value: PG_FORMAT_YM, expected: 'YYYY-MM' },
       { name: 'PG_FORMAT_YMD', value: PG_FORMAT_YMD, expected: 'YYYY-MM-DD' },
       { name: 'PG_FORMAT_HI', value: PG_FORMAT_HI, expected: 'HH24:MI' },

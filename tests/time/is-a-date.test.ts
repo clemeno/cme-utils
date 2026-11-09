@@ -4,7 +4,7 @@ import { IS_A_DATE } from '../../ts/time/is-a-date.util.js'
 describe(
   'IS_A_DATE',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: 'should return true for new Date()', input: new Date(), expected: true },
       { name: 'should return true for valid date string', input: new Date('2023-01-01'), expected: true },
       { name: 'should return true for Date(0)', input: new Date(0), expected: true },
@@ -21,7 +21,7 @@ describe(
 
     it.each(testCases)(
       '$name',
-      ({ name, input, expected }) => {
+      ({ input, expected }) => {
         expect(IS_A_DATE(input)).toBe(expected)
       }
     )

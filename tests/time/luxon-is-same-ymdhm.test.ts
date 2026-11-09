@@ -5,7 +5,7 @@ import { mockDateTime } from '../mocks/luxon-mock.js'
 describe(
   'LUXON_IS_SAME_YMDHM',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, maTs: number, mbTs: number, expected: boolean }> = [
       {
         name: 'same year, month, day, hour, minute',
         maTs: 1640995200000, // 2022-01-01T00:00:00
@@ -22,7 +22,7 @@ describe(
 
     it.each(testCases)(
       '$name',
-      ({ name, maTs, mbTs, expected }) => {
+      ({ maTs, mbTs, expected }) => {
         const ma = mockDateTime(maTs)
         const mb = mockDateTime(mbTs)
         const result = LUXON_IS_SAME_YMDHM({ ma, mb })
