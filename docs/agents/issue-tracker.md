@@ -12,6 +12,7 @@ Issues and specs for this repo live as markdown files in `.scratch/`. They are c
 - Order of work lives in a `Blocked by: <id>, <id>` line near the top of each ticket. Create the blockers first: a UUID v7 sorts by creation time.
 - State is recorded as a `Status:` line near the top of each issue file: a triage role string of `triage-labels.md`, then `claimed` once work starts and `resolved` when done. A `resolved` or `wontfix` ticket is closed; any other is open.
 - Comments and conversation history append to the bottom of the file under a `## Comments` heading
+- On resolving a ticket, grep the repo for its id (`AGENTS.md`, docs, other tickets) and update or drop each pointer that still sends readers to it as open work
 
 ## When a skill says "publish to the issue tracker"
 
