@@ -55,6 +55,8 @@ describe(
           // 'a' (index 10) is not valid in base 8
           { name: 'digit out of range for base', n: 'a', from: 8, to: 10 },
           { name: 'base from <= 0', n: '10', from: 0, to: 16 },
+          { name: 'base from NaN', n: '10', from: NaN, to: 16 },
+          { name: 'base to NaN', n: '10', from: 10, to: NaN },
           { name: 'base from > 256 (SYMBOLS_LENGTH)', n: '10', from: 257, to: 16 },
           { name: 'base to <= 0', n: '10', from: 10, to: 0 },
           { name: 'base to > 256 (SYMBOLS_LENGTH)', n: '10', from: 10, to: 257 },
