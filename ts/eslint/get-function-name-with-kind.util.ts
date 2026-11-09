@@ -4,8 +4,17 @@ import { GET_PROPERTY_NAME } from './get-property-name.util.js'
 /**
  * Get the name and kind of the given function node (e.g. "async method 'foo'").
  * Ported from eslint-utils so this library stays dependency-free.
- * @param {GetFunctionNameWithKindParams} _ The function node to describe, plus an optional ESLint source code used to render computed property keys
- * @returns {string} The name and kind of the function node
+ * @param _ - The function node to describe, plus an optional ESLint source code used to render computed property keys
+ * @param _.node - The function AST node, linked to its `parent`
+ * @param _.sourceCode - The ESLint source code, used to render a computed non-literal key as `[text]`
+ * @returns The name and kind of the function node
+ * @example
+ * ```typescript
+ * GET_FUNCTION_NAME_WITH_KIND({ node: { type: 'FunctionDeclaration', id: { name: 'foo' }, parent: { type: 'Program' } } }) // returns "function 'foo'"
+ * GET_FUNCTION_NAME_WITH_KIND({ node: { type: 'FunctionDeclaration', async: true, generator: true, id: { name: 'baz' }, parent: { type: 'Program' } } }) // returns "async generator function 'baz'"
+ * // an anonymous function has no name
+ * GET_FUNCTION_NAME_WITH_KIND({ node: { type: 'FunctionExpression', parent: { type: 'CallExpression' } } }) // returns 'function'
+ * ```
  */
 export function GET_FUNCTION_NAME_WITH_KIND (_: GetFunctionNameWithKindParams): string {
   const parent = _.node.parent

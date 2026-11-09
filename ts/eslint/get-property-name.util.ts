@@ -4,8 +4,16 @@ import type { EsNode } from './es-node-type.js'
  * Get the property name from a MemberExpression, Property, MethodDefinition or
  * PropertyDefinition node.
  * Ported from eslint-utils so this library stays dependency-free.
- * @param {EsNode} node The AST node to read
- * @returns {string | null} The property name, or null when it cannot be resolved
+ * @param node - The AST node to read
+ * @returns The property name, or null when it cannot be resolved
+ * @example
+ * ```typescript
+ * GET_PROPERTY_NAME({ type: 'Property', computed: false, key: { type: 'Identifier', name: 'run' } }) // returns 'run'
+ * GET_PROPERTY_NAME({ type: 'MemberExpression', computed: true, property: { type: 'Literal', value: 'a-b' } }) // returns 'a-b'
+ * // a computed non-literal key cannot be resolved
+ * GET_PROPERTY_NAME({ type: 'Property', computed: true, key: { type: 'Identifier', name: 'KEY' } }) // returns null
+ * GET_PROPERTY_NAME({ type: 'Identifier', name: 'x' }) // returns null
+ * ```
  */
 export function GET_PROPERTY_NAME (node: EsNode): string | null {
   let result: string | null = null
