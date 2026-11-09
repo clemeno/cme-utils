@@ -31,9 +31,11 @@ const _DTYPE_CONVERTERS: Partial<Record<string, (x: string) => unknown>> = {
  * ```
  */
 export function TO_PHP_SERIALIZE (mixedValue: unknown): string {
-  const _utf8Size = (str: string): number => new TextEncoder().encode(str).length
+  function _utf8Size (str: string): number {
+    return new TextEncoder().encode(str).length
+  }
 
-  const _getType = (inp: unknown): string => {
+  function _getType (inp: unknown): string {
     let type: string = IS_NULL(inp) ? 'null' : typeof inp
     let match
 
@@ -69,7 +71,7 @@ export function TO_PHP_SERIALIZE (mixedValue: unknown): string {
   if ('function' === type) {
     val = ''
   } else if ('boolean' === type) {
-    val = 'b:' + (IS_ON(mixedValue) ? '1' : '0')
+    val = `b:${IS_ON(mixedValue) ? '1' : '0'}`
   } else if ('number' === type) {
     val = `${(Math.round(mixedValue as number) === TO_NUMBER(mixedValue)) ? 'i' : 'd'}:${TO_STRING(mixedValue)}`
   } else if ('string' === type) {
@@ -143,7 +145,7 @@ export function TO_UTF8_DECODED (strData: unknown): string {
  */
 export function FROM_PHP_UNSERIALIZE (_data: string): unknown {
   // extra UTF-8 bytes beyond 1 per UTF-16 code unit; each surrogate half is 2 of the pair's 4 bytes
-  const utf8Overhead = (chr: string): number => {
+  function utf8Overhead (chr: string): number {
     const code = chr.charCodeAt(0)
     const bSurrogate = (code >= 0xD800) && (code <= 0xDFFF)
     return (code < 0x0080) ? 0 : (((code < 0x0800) || bSurrogate) ? 1 : 2)

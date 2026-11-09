@@ -71,14 +71,12 @@ export function GET_FUNCTION_NAME_WITH_KIND (_: GetFunctionNameWithKindParams): 
       tokens.push(`'${_.node.id.name ?? ''}'`)
     } else if (
       parent.type === 'VariableDeclarator' &&
-      parent.id != null &&
-      parent.id.type === 'Identifier'
+      parent.id?.type === 'Identifier'
     ) {
       tokens.push(`'${parent.id.name ?? ''}'`)
     } else if (
       (parent.type === 'AssignmentExpression' || parent.type === 'AssignmentPattern') &&
-      parent.left != null &&
-      parent.left.type === 'Identifier'
+      parent.left?.type === 'Identifier'
     ) {
       tokens.push(`'${parent.left.name ?? ''}'`)
     }
