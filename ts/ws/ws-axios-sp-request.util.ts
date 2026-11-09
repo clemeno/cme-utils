@@ -12,6 +12,31 @@ import type { numeric } from '../numeric.js'
  * * axios: AxiosStatic
  * * type AE = AxiosError
  * * type AR = AxiosResponse
+ *
+ * `wsResolve` mimics `curl --resolve`: `'spoofHost:realHost'`, `'spoofHost:spoofPort:realHost'` or `'spoofHost:spoofPort:realHost:realPort'`.
+ * The request goes to the real host, with the spoofed `Host` header (and TLS server name). An empty string disables it.
+ * @param _ - The parameter object
+ * @param _.axios - The `axios` instance, whose `request` sends the request
+ * @param _.https - The `node:https` module, needed for an `https:` URL (its `Agent` skips the certificate check)
+ * @param _.wsResolve - The resolve rule, or an empty string for none
+ * @param _.method - The HTTP method, `'POST'` by default
+ * @param _.wsUrl - The URL of the WebService
+ * @param _.dataObject - The body to send as JSON (wins over `dataString`)
+ * @param _.dataString - The raw body to send
+ * @param _.contentType - The Content-Type header, JSON for a `dataObject` and form-urlencoded otherwise by default
+ * @returns A promise of `{ exception, result }`: the axios response in `result`, or the thrown error in `exception`
+ * @example
+ * ```typescript
+ * // a stand-in for axios that returns the request config it receives
+ * const axios = { request: async (config: unknown) => config }
+ * await WS_AXIOS_SP_REQUEST({ axios, wsResolve: '', wsUrl: 'http://example.com/api' }) // returns { exception: undefined, result: { method: 'POST', url: 'http://example.com/api' } }
+ * await WS_AXIOS_SP_REQUEST({ axios, wsResolve: '', wsUrl: 'http://example.com/api', method: 'PUT', dataObject: { a: 1 } }) // returns { exception: undefined, result: { method: 'PUT', url: 'http://example.com/api', data: '{"a":1}', headers: { 'Content-Length': 7, 'Content-Type': 'application/json' } } }
+ * // wsResolve sends the request to 10.0.0.5 with the Host header example.com
+ * await WS_AXIOS_SP_REQUEST({ axios, wsResolve: 'example.com:10.0.0.5', wsUrl: 'http://example.com/api', dataString: 'a=1' }) // returns { exception: undefined, result: { method: 'POST', url: 'http://10.0.0.5/api', data: 'a=1', headers: { 'Content-Length': 3, 'Content-Type': 'application/x-www-form-urlencoded', Host: 'example.com' } } }
+ * // a rejected request ends in `exception`
+ * const failingAxios = { request: async () => { throw 'boom' } }
+ * await WS_AXIOS_SP_REQUEST({ axios: failingAxios, wsResolve: '', wsUrl: 'http://example.com' }) // returns { exception: 'boom', result: undefined }
+ * ```
  */
 export async function WS_AXIOS_SP_REQUEST<AxiosStatic = any, NodeHttps = any, AxiosResult = any, AxiosError = any> (_: {
   axios: AxiosStatic
