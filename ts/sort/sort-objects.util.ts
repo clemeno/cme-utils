@@ -9,23 +9,24 @@ export type ANY_SORT_FUNCTION_TYPE = (a: any, b: any) => number
 /**
  * Creates a comparator function for sorting objects by a specified property.
  * Handles both ascending/descending order and numeric vs string comparison.
- * @param options - Configuration object
- * @param options.on - Function to extract the sort key from each object
- * @param options.order - Sort order: 'desc' for descending, undefined for ascending
- * @param options.bPureNumeric - If true, assumes all values are numbers for performance
+ * @param _ - Configuration object
+ * @param _.on - Function to extract the sort key from each object
+ * @param _.order - Sort order: 'desc' for descending, undefined for ascending
+ * @param _.bPureNumeric - If true, assumes all values are numbers for performance
  * @returns A comparator function suitable for Array.sort()
  * @example
  * ```typescript
- * const users = [{name: 'Alice', age: 25}, {name: 'Bob', age: 30}]
- *
+ * const users = [{ name: 'Alice', age: 25 }, { name: 'Bob', age: 30 }]
  * // Sort by age ascending
- * users.sort(SORT_OBJECTS({ on: u => u.age }))
- *
+ * [...users].sort(SORT_OBJECTS({ on: u => u.age })) // returns [{ name: 'Alice', age: 25 }, { name: 'Bob', age: 30 }]
  * // Sort by name descending
- * users.sort(SORT_OBJECTS({ on: u => u.name, order: 'desc' }))
- *
+ * [...users].sort(SORT_OBJECTS({ on: u => u.name, order: 'desc' })) // returns [{ name: 'Bob', age: 30 }, { name: 'Alice', age: 25 }]
  * // Pure numeric sorting (faster)
- * users.sort(SORT_OBJECTS({ on: u => u.age, bPureNumeric: true }))
+ * [...users].sort(SORT_OBJECTS({ on: u => u.age, order: 'desc', bPureNumeric: true })) // returns [{ name: 'Bob', age: 30 }, { name: 'Alice', age: 25 }]
+ * // Numeric strings compare as numbers: '10' sorts after '9'
+ * [{ v: '10' }, { v: '9' }].sort(SORT_OBJECTS({ on: x => x.v })) // returns [{ v: '9' }, { v: '10' }]
+ * // Equal keys compare as 0
+ * SORT_OBJECTS({ on: x => x.v })({ v: 1 }, { v: 1 }) // returns 0
  * ```
  */
 export function SORT_OBJECTS (_: { on: (x: any) => any, order?: any, bPureNumeric?: bool }): ANY_SORT_FUNCTION_TYPE {
