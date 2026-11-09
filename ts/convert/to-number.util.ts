@@ -7,10 +7,14 @@
  * ```typescript
  * TO_NUMBER(42) // returns 42
  * TO_NUMBER('123') // returns 123
- * TO_NUMBER('123abc') // returns NaN (invalid string)
  * TO_NUMBER(true) // returns 1
- * TO_NUMBER(new Date()) // returns timestamp
+ * TO_NUMBER(10n) // returns 10
+ * // an invalid string gives NaN
+ * TO_NUMBER('123abc') // returns NaN
+ * TO_NUMBER('') // returns NaN
  * TO_NUMBER(null) // returns NaN
+ * // a Date gives its timestamp
+ * TO_NUMBER(new Date()) // returns the current time in ms
  * ```
  */
 export function TO_NUMBER (v: any): number {

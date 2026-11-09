@@ -5,8 +5,17 @@ import { TO_NUMBER } from './to-number.util.js'
 
 /**
  * * check if v is SET before using this function
- * @param v must be a boolean, `true` or `false`, or a numeric number
- * @returns `true` or `false` or **throws** an error when the input is not strct enough
+ * @param v - must be a boolean, `'true'`, `'false'`, or a numeric value (0 is `false`, any other number is `true`)
+ * @returns `true` or `false` or **throws** an error when the input is not strict enough
+ * @example
+ * ```typescript
+ * PARSE_BOOLEAN_STRICT_OR_THROW(true) // returns true
+ * PARSE_BOOLEAN_STRICT_OR_THROW('false') // returns false
+ * PARSE_BOOLEAN_STRICT_OR_THROW('0') // returns false
+ * PARSE_BOOLEAN_STRICT_OR_THROW(5) // returns true
+ * PARSE_BOOLEAN_STRICT_OR_THROW('yes') // throws Invalid serialized boolean value: yes
+ * PARSE_BOOLEAN_STRICT_OR_THROW(null) // throws Invalid serialized boolean value: null
+ * ```
  */
 export function PARSE_BOOLEAN_STRICT_OR_THROW (v: any): boolean {
   let bRes = false

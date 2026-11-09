@@ -4,7 +4,21 @@ import type { numeric } from '../numeric.js'
 import { TO_NUMBER } from './to-number.util.js'
 
 /**
- * base convert big base small numbers
+ * Converts a small non-negative integer from one base to another, both in 2..256 (symbols of SYMBOLS).
+ * An invalid base or a symbol not allowed in the source base logs a message to the console and gives an empty string.
+ * @param _ - The number and the bases
+ * @param _.n - The number to convert, in the `from` base
+ * @param _.from - The base of `n`
+ * @param _.to - The target base
+ * @returns The number written in the target base, or an empty string when an input is invalid
+ * @example
+ * ```typescript
+ * BASE_CONVERT_BBSN({ n: 255, from: 10, to: 16 }) // returns 'ff'
+ * BASE_CONVERT_BBSN({ n: 'ff', from: 16, to: 2 }) // returns '11111111'
+ * BASE_CONVERT_BBSN({ n: 0, from: 10, to: 2 }) // returns '0'
+ * // base 1 is not valid: logs a message
+ * BASE_CONVERT_BBSN({ n: 12, from: 10, to: 1 }) // returns ''
+ * ```
  */
 export function BASE_CONVERT_BBSN (_: { n: numeric, from: numeric, to: numeric }): string | null {
   let res = ''

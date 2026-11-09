@@ -10,8 +10,9 @@ import { IS_SET } from '../check/is-set.util.js'
  * @example
  * ```typescript
  * TO_CSV_VALUE(42) // returns '42'
- * TO_CSV_VALUE('Hello, World') // returns '"Hello, World"' (quoted)
- * TO_CSV_VALUE({toString: () => 'custom'}) // returns '"custom"' (quoted)
+ * // strings and objects are quoted
+ * TO_CSV_VALUE('Hello, World') // returns '"Hello, World"'
+ * TO_CSV_VALUE({ toString: () => 'custom' }) // returns '"custom"'
  * TO_CSV_VALUE(null) // returns ''
  * ```
  */

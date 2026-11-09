@@ -28,6 +28,9 @@ const _DTYPE_CONVERTERS: Partial<Record<string, (x: string) => unknown>> = {
  * TO_PHP_SERIALIZE(3.14)              // returns 'd:3.14;'
  * TO_PHP_SERIALIZE('hello')           // returns 's:5:"hello";'
  * TO_PHP_SERIALIZE([1, 'two'])        // returns 'a:2:{i:0;i:1;i:1;s:3:"two";}'
+ * TO_PHP_SERIALIZE({ a: 1 })          // returns 'a:1:{s:1:"a";i:1;}'
+ * TO_PHP_SERIALIZE([])                // returns 'a:0:{}'
+ * TO_PHP_SERIALIZE(undefined)         // returns 'N;'
  * ```
  */
 export function TO_PHP_SERIALIZE (mixedValue: unknown): string {
@@ -117,6 +120,7 @@ export function TO_PHP_SERIALIZE (mixedValue: unknown): string {
  * @example
  * ```typescript
  * TO_UTF8_DECODED('hello')   // returns 'hello'
+ * TO_UTF8_DECODED('Ã©')      // returns 'é'
  * TO_UTF8_DECODED('')        // returns ''
  * ```
  */
@@ -141,6 +145,10 @@ export function TO_UTF8_DECODED (strData: unknown): string {
  * FROM_PHP_UNSERIALIZE('i:42;')                       // returns 42
  * FROM_PHP_UNSERIALIZE('s:5:"hello";')                // returns 'hello'
  * FROM_PHP_UNSERIALIZE('a:2:{i:0;i:1;i:1;s:3:"two";}') // returns { 0: 1, 1: 'two' }
+ * FROM_PHP_UNSERIALIZE('d:3.14;')                      // returns 3.14
+ * FROM_PHP_UNSERIALIZE('a:0:{}')                       // returns {}
+ * FROM_PHP_UNSERIALIZE('x:1;')                         // throws PHP unserialize: unknown data type 'x'
+ * FROM_PHP_UNSERIALIZE('i:4')                          // throws PHP unserialize: unexpected end of data
  * ```
  */
 export function FROM_PHP_UNSERIALIZE (_data: string): unknown {
