@@ -7,10 +7,10 @@ import { SET_DOCUMENT_LOCALE } from './set-document-locale.util.js'
  * set the global locale to `Luxon` `Settings`
  * * provide Settings -> import { Settings } from 'luxon'
  */
-export const SET_LOCALE = <TypeofSettings = any> (_: {
+export function SET_LOCALE<TypeofSettings = any> (_: {
   Settings: TypeofSettings
   locale: string
-}): void => {
+}): void {
   const locale = IS_A_STRING_AND_NOT_EMPTY(_.locale) ? _.locale : 'en-gb'
 
   const SettingsClass = _.Settings as any

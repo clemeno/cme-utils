@@ -5,7 +5,7 @@ import { SET_DOCUMENT_LANG } from './set-document-lang.util.js'
  * get the global lang from `Luxon` `Settings`
  * * provide Settings -> import { Settings } from 'luxon'
  */
-export const GET_LANG = <TypeofSettings = any> (_Settings: TypeofSettings): string => {
+export function GET_LANG<TypeofSettings = any> (_Settings: TypeofSettings): string {
   let documentLang = ''
 
   try {
