@@ -1,3 +1,5 @@
+import { TO_NUMBER } from '../convert/to-number.util.js'
+
 function IS_NOT_EMPTY (_: any): _ is any {
   const bNotNull = _ !== null
   const bNotUndefined = typeof _ !== 'undefined'
@@ -16,7 +18,7 @@ function IS_NOT_EMPTY (_: any): _ is any {
       (bArray && (_.length !== 0)) || // IS_AN_ARRAY_AND_NOT_EMPTY(_) ||
       (bSet && (_.size !== 0)) || // IS_A_SET_AND_NOT_EMPTY(_) ||
       (bMap && (_.size !== 0)) || // IS_A_MAP_AND_NOT_EMPTY(_) ||
-      (bDate && !isNaN(+_)) || // IS_A_DATE_AND_NOT_EMPTY() ||
+      (bDate && !isNaN(TO_NUMBER(_))) || // IS_A_DATE_AND_NOT_EMPTY() ||
       (bObject && !bNumber && !bString && !bArray && !bSet && !bMap && !bDate && (Object.keys(_ as Record<any, any>).length !== 0))
       // IS_AN_OBJECT_AND_NOT_EMPTY(_)
     )

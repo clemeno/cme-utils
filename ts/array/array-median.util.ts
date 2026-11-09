@@ -27,7 +27,7 @@ export function ARRAY_MEDIAN (arr: numeric[]): number {
     const indexM = Math.floor(count / 2)
 
     // Odd length: middle element; Even length: average of two middle elements
-    res = IS_ON(count % 2) ? sortedNList[indexM] : ((+sortedNList[indexM] + +sortedNList[indexM + 1]) / 2)
+    res = IS_ON(count % 2) ? sortedNList[indexM] : ((TO_NUMBER(sortedNList[indexM]) + TO_NUMBER(sortedNList[indexM + 1])) / 2)
   }
 
   return res

@@ -31,6 +31,7 @@ describe(
       { label: '"hello"', input: 'hello', expected: false },
       { label: '""', input: '', expected: false },
       { label: '"2"', input: '2', expected: false },
+      { label: '"0b1"', input: '0b1', expected: false },
       { label: '"maybe"', input: 'maybe', expected: false },
       { label: 'null', input: null, expected: false },
       { label: 'undefined', input: undefined, expected: false },

@@ -16,6 +16,7 @@ describe(
       { name: 'should return true for even numeric string "4"', input: '4', expected: true },
       { name: 'should return true for even numeric string "-2"', input: '-2', expected: true },
       { name: 'should return true for even numeric string "100"', input: '100', expected: true },
+      { name: 'should return false for radix-prefixed string "0x10"', input: '0x10', expected: false },
       { name: 'should return false for odd number 1', input: 1, expected: false },
       { name: 'should return false for odd number 3', input: 3, expected: false },
       { name: 'should return false for odd number -1', input: -1, expected: false },

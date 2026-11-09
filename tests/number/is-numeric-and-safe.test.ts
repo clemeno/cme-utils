@@ -28,6 +28,7 @@ describe(
       { label: 'NaN', input: NaN, expected: false },
       { label: '""', input: '', expected: false },
       { label: '"abc"', input: 'abc', expected: false },
+      { label: '"0x10"', input: '0x10', expected: false },
       { label: 'null', input: null, expected: false },
       { label: 'undefined', input: undefined, expected: false },
     ]

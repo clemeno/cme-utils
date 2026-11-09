@@ -16,6 +16,7 @@ describe(
       { name: 'odd numeric string "5"', input: '5', expected: true },
       { name: 'odd numeric string "-1"', input: '-1', expected: true },
       { name: 'odd numeric string "99"', input: '99', expected: true },
+      { name: 'radix-prefixed string "0x11" is not numeric', input: '0x11', expected: false },
       { name: 'even number 0', input: 0, expected: false },
       { name: 'even number 2', input: 2, expected: false },
       { name: 'even number 4', input: 4, expected: false },

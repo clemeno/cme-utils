@@ -27,7 +27,7 @@ export class FakeMomentTimezone<DateTime = any, TypeofDateTime = any> {
 
   // eslint-disable-next-line max-params
   tz (timestampMs?: number | Date, tz?: string): this {
-    const _ms = IS_A_DATE_AND_NOT_EMPTY(timestampMs) ? +timestampMs : TO_NUMBER(timestampMs)
+    const _ms = IS_A_DATE_AND_NOT_EMPTY(timestampMs) ? TO_NUMBER(timestampMs) : TO_NUMBER(timestampMs)
 
     const _options = IS_A_STRING_AND_NOT_EMPTY(tz) ? { zone: tz } : undefined
 

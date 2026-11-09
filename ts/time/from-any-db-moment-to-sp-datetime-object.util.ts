@@ -5,6 +5,7 @@ import { IS_SET } from '../check/is-set.util.js'
 import { TO_STRING } from '../convert/to-string.util.js'
 import type { AppSpDate } from './app-sp-date.js'
 import { NULL_DATE } from './null-date.util.js'
+import { TO_NUMBER } from '../convert/to-number.util.js'
 
 /**
  * * provide DateTime -> import { DateTime } from 'luxon'
@@ -29,7 +30,7 @@ export function FROM_ANY_DB_MOMENT_TO_SP_DATETIME_OBJECT<TypeofDateTime = any, D
   } else if (from instanceof DateTimeClass) {
     m = from.setZone(dbTz)
   } else if (from instanceof Date || IS_NUMERIC_AND_SAFE(from)) {
-    m = fromMillis(+from, { zone: dbTz })
+    m = fromMillis(TO_NUMBER(from), { zone: dbTz })
   } else if (IS_A_STRING_AND_NOT_EMPTY(from)) {
     m = fromISO(from).setZone(dbTz)
 

@@ -1,4 +1,5 @@
 import { BYTE_ARRAY_TO_UUID } from './byte-array-to-uuid.util.js'
+import { TO_NUMBER } from '../convert/to-number.util.js'
 
 /**
  * Generate a standard RFC 9652 UUID v7 string
@@ -17,7 +18,7 @@ export function UUID_V7 (): string {
   }
 
   // * current timestamp in ms
-  const timestampMs = BigInt(+(new Date()))
+  const timestampMs = BigInt(TO_NUMBER(new Date()))
 
   // ! timestamp
   randomByteArray[0] = Number((timestampMs >> 40n) & 0xffn)

@@ -1,6 +1,7 @@
 import { IS_NUMERIC } from '../number/is-numeric.util.js'
 import { IS_SET } from '../check/is-set.util.js'
 import { TO_STRING } from './to-string.util.js'
+import { TO_NUMBER } from './to-number.util.js'
 
 /**
  * * check if v is SET before using this function
@@ -17,7 +18,7 @@ export function PARSE_BOOLEAN_STRICT_OR_THROW (v: any): boolean {
   } else if (v === 'false') {
     bRes = false
   } else if (IS_NUMERIC(v)) {
-    bRes = 0 !== +v
+    bRes = 0 !== TO_NUMBER(v)
   } else {
     const vD = IS_SET(v) ? TO_STRING(v) : ((null === v) ? 'null' : 'undefined')
 

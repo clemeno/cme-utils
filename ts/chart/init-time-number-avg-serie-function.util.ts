@@ -1,3 +1,5 @@
+import { TO_NUMBER } from '../convert/to-number.util.js'
+
 /**
  * initialize a `Highcharts`/`Highstock` `PointOptionsObject[]` data for a time serie
  * * provide DateTime and DurationObjectUnits -> import { DateTime, type DurationObjectUnits } from 'luxon'
@@ -13,7 +15,7 @@ export async function INIT_TIME_NUMBER_AVG_SERIE_FUNCTION<DateTime = any, Durati
 
   const pointList: any[] = []
 
-  for (let mStep: any = mFrom; +mStep <= +mTo; mStep = mStep.plus(step)) {
+  for (let mStep: any = mFrom; TO_NUMBER(mStep) <= TO_NUMBER(mTo); mStep = mStep.plus(step)) {
     pointList.push({ name: mStep.setZone(_.toTz).toFormat(_.toFormat), y: null })
   }
 

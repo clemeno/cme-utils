@@ -61,6 +61,7 @@ describe(
     const nonNumericStringTestCases = [
       { name: '"abc"', value: 'abc' },
       { name: 'string "123abc"', value: '123abc' },
+      { name: 'radix-prefixed string "0x10"', value: '0x10' },
     ]
 
     it.each(nonNumericStringTestCases)(

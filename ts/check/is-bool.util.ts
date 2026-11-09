@@ -1,13 +1,12 @@
 import type { bool } from '../bool.js'
+import { TO_NUMBER } from '../convert/to-number.util.js'
+import { IS_NUMERIC } from '../number/is-numeric.util.js'
 
 export function IS_BOOL (v: any): v is bool {
   let res = (v === true) || (v === false)
 
-  if ((
-    ((typeof v === 'number') && !Number.isNaN(v)) ||
-    ((typeof v === 'string') && (v !== '') && !Number.isNaN(Number(v)) && !Number.isNaN(Number.parseFloat(v)))
-  )) {
-    res = (+v === 0) || (+v === 1)
+  if (IS_NUMERIC(v)) {
+    res = (TO_NUMBER(v) === 0) || (TO_NUMBER(v) === 1)
   } else if (typeof v === 'string') {
     const vl = v.toLowerCase()
     res = (
