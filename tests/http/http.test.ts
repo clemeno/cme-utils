@@ -87,7 +87,7 @@ import {
 describe(
   'HTTP Status Code Constants',
   () => {
-    const status1xxTestCases = [
+    const status1xxTestCases: Array<{ name: string, constant: number, expected: number }> = [
       { name: 'HTTP_CONTINUE', constant: HTTP_CONTINUE, expected: 100 },
       { name: 'HTTP_SWITCHING_PROTOCOLS', constant: HTTP_SWITCHING_PROTOCOLS, expected: 101 },
       { name: 'HTTP_PROCESSING', constant: HTTP_PROCESSING, expected: 102 },
@@ -101,7 +101,7 @@ describe(
       }
     )
 
-    const status2xxTestCases = [
+    const status2xxTestCases: Array<{ name: string, constant: number, expected: number }> = [
       { name: 'HTTP_OK', constant: HTTP_OK, expected: 200 },
       { name: 'HTTP_CREATED', constant: HTTP_CREATED, expected: 201 },
       { name: 'HTTP_ACCEPTED', constant: HTTP_ACCEPTED, expected: 202 },
@@ -122,7 +122,7 @@ describe(
       }
     )
 
-    const status3xxTestCases = [
+    const status3xxTestCases: Array<{ name: string, constant: number, expected: number }> = [
       { name: 'HTTP_MULTIPLE_CHOICES', constant: HTTP_MULTIPLE_CHOICES, expected: 300 },
       { name: 'HTTP_MOVED_PERMANENTLY', constant: HTTP_MOVED_PERMANENTLY, expected: 301 },
       { name: 'HTTP_FOUND', constant: HTTP_FOUND, expected: 302 },
@@ -142,7 +142,7 @@ describe(
       }
     )
 
-    const status4xxTestCases = [
+    const status4xxTestCases: Array<{ name: string, constant: number, expected: number }> = [
       { name: 'HTTP_BAD_REQUEST', constant: HTTP_BAD_REQUEST, expected: 400 },
       { name: 'HTTP_UNAUTHORIZED', constant: HTTP_UNAUTHORIZED, expected: 401 },
       { name: 'HTTP_PAYMENT_REQUIRED', constant: HTTP_PAYMENT_REQUIRED, expected: 402 },
@@ -186,7 +186,7 @@ describe(
       }
     )
 
-    const status5xxTestCases = [
+    const status5xxTestCases: Array<{ name: string, constant: number, expected: number }> = [
       { name: 'HTTP_INTERNAL_SERVER_ERROR', constant: HTTP_INTERNAL_SERVER_ERROR, expected: 500 },
       { name: 'HTTP_NOT_IMPLEMENTED', constant: HTTP_NOT_IMPLEMENTED, expected: 501 },
       { name: 'HTTP_BAD_GATEWAY', constant: HTTP_BAD_GATEWAY, expected: 502 },
@@ -207,7 +207,7 @@ describe(
       }
     )
 
-    const cloudflareTestCases = [
+    const cloudflareTestCases: Array<{ name: string, constant: number, expected: number }> = [
       { name: 'HTTP_UNKNOWN_ERROR', constant: HTTP_UNKNOWN_ERROR, expected: 520 },
       { name: 'HTTP_WEB_SERVER_IS_DOWN', constant: HTTP_WEB_SERVER_IS_DOWN, expected: 521 },
       { name: 'HTTP_CONNECTION_TIMED_OUT', constant: HTTP_CONNECTION_TIMED_OUT, expected: 522 },
@@ -229,7 +229,7 @@ describe(
       }
     )
 
-    const typeTestCases = [
+    const typeTestCases: Array<{ name: string, constant: number }> = [
       { name: 'HTTP_OK', constant: HTTP_OK },
       { name: 'HTTP_NOT_FOUND', constant: HTTP_NOT_FOUND },
       { name: 'HTTP_INTERNAL_SERVER_ERROR', constant: HTTP_INTERNAL_SERVER_ERROR },
