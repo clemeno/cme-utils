@@ -14,6 +14,10 @@ describe(
       { name: '4294967295 → ffffffff', input: '4294967295', expected: 'ffffffff' },
       { name: 'numeric 255', input: 255, expected: 'ff' },
       { name: 'large number', input: '18446744073709551615', expected: 'ffffffffffffffff' },
+      { name: 'whitespace " 1 " → empty (not digits only)', input: ' 1 ', expected: '' },
+      { name: 'radix-prefixed "0x10" → empty', input: '0x10', expected: '' },
+      { name: 'negative "-5" → empty', input: '-5', expected: '' },
+      { name: 'number printed in exponent form 1e21 → empty', input: 1e21, expected: '' },
     ]
 
     it.each(testCases)(
