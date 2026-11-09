@@ -4,7 +4,7 @@ import { IS_AN_ARRAY_AND_EMPTY } from '../../ts/array/is-an-array-and-empty.util
 describe(
   'IS_AN_ARRAY_AND_EMPTY',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: '[]', input: [], expected: true },
       { name: '[1]', input: [1], expected: false },
       { name: '[1,2,3]', input: [1, 2, 3], expected: false },

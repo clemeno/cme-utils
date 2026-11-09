@@ -4,7 +4,7 @@ import { IS_AN_ARRAY_AND_NOT_EMPTY } from '../../ts/array/is-an-array-and-not-em
 describe(
   'IS_AN_ARRAY_AND_NOT_EMPTY',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: '[1]', input: [1], expected: true },
       { name: '[1,2,3]', input: [1, 2, 3], expected: true },
       { name: '["a"]', input: ['a'], expected: true },

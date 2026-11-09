@@ -4,7 +4,7 @@ import { IS_AN_ARRAY } from '../../ts/array/is-an-array.util.js'
 describe(
   'IS_AN_ARRAY',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: unknown, expected: boolean }> = [
       { name: 'should return true for empty array', input: [], expected: true },
       { name: 'should return true for array [1, 2, 3]', input: [1, 2, 3], expected: true },
       { name: 'should return true for array ["a", "b"]', input: ['a', 'b'], expected: true },
@@ -20,7 +20,7 @@ describe(
 
     it.each(testCases)(
       '$name',
-      ({ name, input, expected }) => {
+      ({ input, expected }) => {
         expect(IS_AN_ARRAY(input)).toBe(expected)
       }
     )
