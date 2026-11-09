@@ -1,7 +1,22 @@
 import { TO_STRING } from '../convert/to-string.util.js'
 
 /**
- * * provide createDecipheriv -> import { createDecipheriv } from 'node:crypto'
+ * Decrypts a Buffer made by `CIPHER_AES_GCM_TO_BUFFER` (AES-128-GCM) back to a UTF-8 string.
+ * The platform APIs are provided by the caller: `import { Buffer } from 'node:buffer'` and `import { createDecipheriv } from 'node:crypto'`.
+ * @param _ - The parameter object
+ * @param _.Buffer - The `Buffer` class, used to slice the parts
+ * @param _.createDecipheriv - The `createDecipheriv` function of `node:crypto`
+ * @param _.cipheredBuffer - The ciphered data laid out as `[ IV (12 bytes), ciphertext, auth tag (16 bytes) ]`
+ * @param _.keyBuffer - The 16-byte AES-128 key used to cipher
+ * @returns The deciphered text
+ * @example
+ * ```typescript
+ * const cipheredBuffer = CIPHER_AES_GCM_TO_BUFFER({ Buffer, createCipheriv, randomBytes, plainString: 'Hello', keyBuffer })
+ * DECIPHER_AES_GCM_TO_UTF8({ Buffer, createDecipheriv, cipheredBuffer, keyBuffer }) // returns 'Hello'
+ * // an empty text round-trips too
+ * const emptyCipheredBuffer = CIPHER_AES_GCM_TO_BUFFER({ Buffer, createCipheriv, randomBytes, plainString: '', keyBuffer })
+ * DECIPHER_AES_GCM_TO_UTF8({ Buffer, createDecipheriv, cipheredBuffer: emptyCipheredBuffer, keyBuffer }) // returns ''
+ * ```
  */
 export function DECIPHER_AES_GCM_TO_UTF8<Buffer = any, TypeofBuffer = any, TypeofCreateDecipheriv = any> (_: {
   Buffer: TypeofBuffer

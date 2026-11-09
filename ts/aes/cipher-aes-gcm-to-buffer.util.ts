@@ -1,5 +1,19 @@
 /**
- * * provide createCipheriv and randomBytes -> import { createCipheriv, randomBytes } from 'node:crypto'
+ * Encrypts a UTF-8 string with AES-128-GCM and a random 12-byte IV.
+ * The platform APIs are provided by the caller: `import { Buffer } from 'node:buffer'` and `import { createCipheriv, randomBytes } from 'node:crypto'`.
+ * @param _ - The parameter object
+ * @param _.Buffer - The `Buffer` class, used to concatenate the parts
+ * @param _.createCipheriv - The `createCipheriv` function of `node:crypto`
+ * @param _.randomBytes - The `randomBytes` function of `node:crypto`
+ * @param _.plainString - The text to encrypt
+ * @param _.keyBuffer - The 16-byte AES-128 key
+ * @returns A Buffer laid out as `[ IV (12 bytes), ciphertext, auth tag (16 bytes) ]`
+ * @example
+ * ```typescript
+ * const keyBuffer = randomBytes(16)
+ * CIPHER_AES_GCM_TO_BUFFER({ Buffer, createCipheriv, randomBytes, plainString: 'Hello', keyBuffer }) // returns a 33-byte Buffer
+ * CIPHER_AES_GCM_TO_BUFFER({ Buffer, createCipheriv, randomBytes, plainString: '', keyBuffer }) // returns a 28-byte Buffer
+ * ```
  */
 export function CIPHER_AES_GCM_TO_BUFFER<Buffer = any, TypeofBuffer = any, TypeofCreateCipheriv = any, TypeofRandomBytes = any> (_: {
   Buffer: TypeofBuffer
