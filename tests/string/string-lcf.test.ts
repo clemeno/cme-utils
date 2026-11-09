@@ -4,7 +4,7 @@ import { STRING_LCF } from '../../ts/string/string-lcf.util.js'
 describe(
   'STRING_LCF',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: string, expected: string }> = [
       { name: 'Hello', input: 'Hello', expected: 'hello' },
       { name: 'A', input: 'A', expected: 'a' },
       { name: 'empty string', input: '', expected: '' },

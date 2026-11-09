@@ -4,7 +4,7 @@ import { GET_CLOUDFRONT_LINK_PATH } from '../../ts/string/get-cloudfront-link-pa
 describe(
   'GET_CLOUDFRONT_LINK_PATH',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: { filename: string, publicStaticImageFolder: string }, expected: string }> = [
       { name: 'should return the path with filename', input: { filename: 'image.png', publicStaticImageFolder: '/opt/cme' }, expected: '/opt/cme/image.png' },
       { name: 'should add slash if missing', input: { filename: 'image.png', publicStaticImageFolder: '/opt/cme' }, expected: '/opt/cme/image.png' },
       { name: 'should not add extra slash if present', input: { filename: 'image.png', publicStaticImageFolder: '/opt/cme/' }, expected: '/opt/cme/image.png' },
@@ -12,7 +12,7 @@ describe(
 
     it.each(testCases)(
       '$name',
-      ({ name, input, expected }) => {
+      ({ input, expected }) => {
         expect(GET_CLOUDFRONT_LINK_PATH(input)).toBe(expected)
       }
     )

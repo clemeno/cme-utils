@@ -4,7 +4,7 @@ import { OR_DASH } from '../../ts/string/or-dash.util.js'
 describe(
   'OR_DASH',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: number | string | null | undefined | boolean, expected: number | string | boolean }> = [
       { name: 'number 123', input: 123, expected: 123 },
       { name: 'string "123"', input: '123', expected: '123' },
       { name: 'zero', input: 0, expected: 0 },
@@ -20,7 +20,7 @@ describe(
 
     it.each(testCases)(
       'should return correct value for $name',
-      ({ name, input, expected }) => {
+      ({ input, expected }) => {
         expect(OR_DASH(input)).toBe(expected)
       }
     )

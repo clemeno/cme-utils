@@ -4,7 +4,7 @@ import { IS_A_STRING_AND_NOT_EMPTY } from '../../ts/string/is-a-string-and-not-e
 describe(
   'IS_A_STRING_AND_NOT_EMPTY',
   () => {
-    const testCases = [
+    const testCases: Array<{ label: string, input: string | number | null | undefined | {} | boolean, expected: boolean }> = [
       { label: '"hello"', input: 'hello', expected: true },
       { label: '" "', input: ' ', expected: true },
       { label: '"123"', input: '123', expected: true },

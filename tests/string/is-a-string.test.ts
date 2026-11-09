@@ -4,7 +4,7 @@ import { IS_A_STRING } from '../../ts/string/is-a-string.util.js'
 describe(
   'IS_A_STRING',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: string | number | null | undefined | {} | boolean, expected: boolean }> = [
       { name: 'should return true for empty string', input: '', expected: true },
       { name: 'should return true for string "hello"', input: 'hello', expected: true },
       { name: 'should return true for string "123"', input: '123', expected: true },
@@ -20,7 +20,7 @@ describe(
 
     it.each(testCases)(
       '$name',
-      ({ name, input, expected }) => {
+      ({ input, expected }) => {
         expect(IS_A_STRING(input)).toBe(expected)
       }
     )

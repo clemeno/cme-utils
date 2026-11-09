@@ -4,7 +4,7 @@ import { STRING_UCF } from '../../ts/string/string-ucf.util.js'
 describe(
   'STRING_UCF',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: string, expected: string }> = [
       { name: 'hello', input: 'hello', expected: 'Hello' },
       { name: 'a', input: 'a', expected: 'A' },
       { name: 'empty string', input: '', expected: '' },

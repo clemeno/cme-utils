@@ -4,7 +4,7 @@ import { IS_A_URL } from '../../ts/string/is-a-url.util.js'
 describe(
   'IS_A_URL',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: string, expected: boolean }> = [
       { name: 'should return true for http URL "http://example.com"', input: 'http://example.com', expected: true },
       { name: 'should return true for https URL "https://example.com"', input: 'https://example.com', expected: true },
       { name: 'should return true for protocol-relative URL "//example.com"', input: '//example.com', expected: true },
@@ -16,7 +16,7 @@ describe(
 
     it.each(testCases)(
       '$name',
-      ({ name, input, expected }) => {
+      ({ input, expected }) => {
         expect(IS_A_URL(input)).toBe(expected)
       }
     )

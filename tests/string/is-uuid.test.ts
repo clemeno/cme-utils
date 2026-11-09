@@ -4,7 +4,7 @@ import { IS_UUID } from '../../ts/string/is-uuid.util.js'
 describe(
   'IS_UUID',
   () => {
-    const testCases = [
+    const testCases: Array<{ name: string, input: string, expected: boolean }> = [
       { name: 'valid UUID', input: '123e4567-e89b-12d3-a456-426614174000', expected: true },
       { name: 'invalid UUID', input: 'not-a-uuid', expected: false },
       { name: 'empty string', input: '', expected: false },
