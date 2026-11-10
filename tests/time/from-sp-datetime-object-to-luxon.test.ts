@@ -22,7 +22,7 @@ describe(
     it.each(testCases)(
       '$name',
       ({ spDate, expected }) => {
-        expect(FROM_SP_DATETIME_OBJECT_TO_LUXON<typeof DateTime, Record<string, unknown>>({ DateTime, spDate: spDate as AppSpDate })).toEqual(expected)
+        expect(FROM_SP_DATETIME_OBJECT_TO_LUXON<typeof DateTime, Record<string, unknown>>({ DateTime, spDate })).toEqual(expected)
       }
     )
   }

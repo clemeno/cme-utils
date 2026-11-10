@@ -32,7 +32,7 @@ describe(
       'empty / null / NaN-like input returns empty string',
       () => {
         expect(BIG_10_TO_BIG_16('')).toBe('')
-        expect(BIG_10_TO_BIG_16(null as any)).toBe('')
+        expect(BIG_10_TO_BIG_16(null)).toBe('')
         expect(BIG_10_TO_BIG_16('NaN')).toBe('')
       }
     )

@@ -18,7 +18,7 @@ import { TO_STRING } from './to-string.util.js'
  * FROM_BASE_10_TO_CSN_DISPLAY({ from: null, bCsnHexNumber: false, bCsnHexCard: false }) // returns ''
  * ```
  */
-export function FROM_BASE_10_TO_CSN_DISPLAY (_: { from: numeric, bCsnHexNumber: boolean, bCsnHexCard: boolean }): string {
+export function FROM_BASE_10_TO_CSN_DISPLAY (_: { from: numeric | null | undefined, bCsnHexNumber: boolean, bCsnHexCard: boolean }): string {
   let res = TO_STRING(_.from)
 
   if (_.bCsnHexNumber || _.bCsnHexCard) {

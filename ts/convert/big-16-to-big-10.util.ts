@@ -14,7 +14,7 @@ import { BIG_ADD_10 } from './big-add-10.util.js'
  * BIG_16_TO_BIG_10(null) // returns ''
  * ```
  */
-export function BIG_16_TO_BIG_10 (_s: numeric): string {
+export function BIG_16_TO_BIG_10 (_s: numeric | null | undefined): string {
   let dec = '0'
 
   const input = (IS_SET(_s) && ((typeof _s === 'number') ? !isNaN(_s) : (_s !== 'NaN'))) ? `${_s}` : ''

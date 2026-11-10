@@ -23,7 +23,7 @@ describe(
     it.each(testCases)(
       '$name',
       ({ input, expected }) => {
-        expect(BIG_16_TO_BIG_10(input as numeric)).toBe(expected)
+        expect(BIG_16_TO_BIG_10(input)).toBe(expected)
       }
     )
   }

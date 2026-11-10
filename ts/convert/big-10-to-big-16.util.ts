@@ -15,7 +15,7 @@ import { TO_NUMBER } from './to-number.util.js'
  * BIG_10_TO_BIG_16(null) // returns ''
  * ```
  */
-export function BIG_10_TO_BIG_16 (_s: numeric): string {
+export function BIG_10_TO_BIG_16 (_s: numeric | null | undefined): string {
   const hex: Array<string | undefined> = []
 
   const sStr = (IS_SET(_s) && (((typeof _s === 'number') && !isNaN(_s)) || (_s !== 'NaN'))) ? `${_s}` : ''
