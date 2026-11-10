@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it, spyOn } from 'bun:test'
 import { Glob } from 'bun'
-import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto'
+import { createCipheriv, createDecipheriv, randomBytes, webcrypto } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { DateTime, Duration, Interval, Settings } from 'luxon'
@@ -26,7 +26,7 @@ const outsideApis = new Set(['qb', 'createReadStream', 'writeFile', 'axios', 'Fi
 // the outside modules every example runs and typechecks with, besides the library
 const providedModules: Record<string, Record<string, unknown>> = {
   luxon: { DateTime, Duration, Interval, Settings },
-  'node:crypto': { createCipheriv, createDecipheriv, randomBytes },
+  'node:crypto': { createCipheriv, createDecipheriv, randomBytes, webcrypto },
 }
 
 // the names every example runs and typechecks with, besides its own module's exports; luxon is set as the examples assume:

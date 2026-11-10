@@ -1,3 +1,4 @@
+export { GET_RANDOM_BYTE_LIST } from './get-random-byte-list.util.js'
 export { GET_RANDOM_INT_BETWEEN } from './get-random-int-between.util.js'
 export { IS_NUMERIC } from './is-numeric.util.js'
 export { IS_NUMERIC_AND_SAFE } from './is-numeric-and-safe.util.js'
