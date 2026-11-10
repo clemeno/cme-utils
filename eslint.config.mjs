@@ -65,6 +65,21 @@ const testRestrictedSyntax = [
   },
 ]
 
+// every util runs in a browser, on Node and on bun (AGENTS.md): what only one runtime has comes through the object parameter
+const nodeOnlyGlobals = ['Buffer', 'process', 'require', 'module', 'exports', '__dirname', '__filename', 'global', 'setImmediate', 'clearImmediate', 'Bun']
+const browserOnlyGlobals = ['document', 'self', 'FileReader', 'localStorage', 'sessionStorage', 'navigator', 'location', 'XMLHttpRequest', 'indexedDB', 'alert']
+const runtimeRules = {
+  'no-restricted-globals': [
+    'error',
+    ...nodeOnlyGlobals.map(name => ({ name, message: `${name} exists on Node or bun only: take it through the object parameter, or read globalThis.${name} behind a check, so the util also runs in a browser.` })),
+    ...browserOnlyGlobals.map(name => ({ name, message: `${name} exists in a browser only: use an API all three runtimes have (Blob.text() for FileReader), reach it through window inside try / catch, or take it through the object parameter.` })),
+  ],
+  'no-restricted-imports': [
+    'error',
+    { patterns: [{ regex: '^[^.]', message: 'ts/ imports nothing from outside ts/: take the platform or library API through the object parameter, so the util runs in a browser, on Node and on bun.' }] },
+  ],
+}
+
 const optionList = [
   ...neostandard({
     ignores: resolveIgnoresFromGitignore(),
@@ -113,7 +128,7 @@ const optionList = [
         project: './tsconfig.json',
       },
     },
-    rules: tsRules,
+    rules: { ...tsRules, ...runtimeRules },
   },
   {
     files: ['tests/**/*.ts', 'tests/**/*.tsx'],

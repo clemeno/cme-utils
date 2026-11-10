@@ -3,7 +3,7 @@
 ## Commands
 
 ```bash
-bun run check          # build, lint, tests with the 100% coverage gate, typecheck of tests/ and examples/
+bun run check          # build, lint, tests with the 100% coverage gate, typecheck of tests/ and examples/, load of the build in Node
 bun run lint:fix       # auto-fix lint issues
 bun test tests/array/array-sum.test.ts   # one test file
 ```
@@ -17,6 +17,7 @@ bun test tests/array/array-sum.test.ts   # one test file
 - `cjs/` — Hand-kept CommonJS copy of the ESLint plugin (`max-return-statements-per-function`) for CJS users; change it together with `ts/max-return-statements-per-function.*.ts`
 - `tests/` — Bun test files, mirroring the `ts/` folder structure
 - `examples/` — Usage examples of the public API, typechecked by `bun run test:types`
+- `tools/` — Repo scripts (`load-in-node.mjs`: `bun run check` loads the build in Node)
 - `ts/index.ts` — Single barrel re-export for the entire public API
 
 Each category is a subfolder (e.g. `ts/array/`, `ts/convert/`) with its own `index.ts` barrel. New utilities must be exported through the subfolder's `index.ts` and then through `ts/index.ts`.
@@ -25,7 +26,7 @@ To add a utility, follow [.github/instructions/new-utility.instructions.md](.git
 
 The library has **zero runtime dependencies**. All `devDependencies` are build/test only. Use no deprecated package and no version with a known vulnerability.
 
-`ts/` imports nothing from outside `ts/`, not even `node:` built-ins: a utility that needs a platform or library API (`createReadStream`, `createCipheriv`, luxon's `DateTime`) takes it through its object parameter. `package.json` sets `"sideEffects": false`, so no module may have an observable effect at import time (no global writes, I/O or timers); building a module-local table, as `byte-array-to-uuid.util.ts` does, is fine.
+Every utility runs in a browser, on Node and on bun (user decision, 2026-11-10). `ts/` imports nothing from outside `ts/`, not even `node:` built-ins: a utility that needs a platform or library API (`createReadStream`, `createCipheriv`, luxon's `DateTime`) takes it through its object parameter. Lint flags the outside imports and the globals of one runtime (`Buffer`, `process`, `FileReader`, `document`...); `window` is read only inside `try` / `catch`. A utility that still can't run everywhere (it reads or writes a file by path, it needs `node:crypto`) says so in its JSDoc: `Runs on Node and bun only: <why>.` `package.json` sets `"sideEffects": false`, so no module may have an observable effect at import time (no global writes, I/O or timers); building a module-local table, as `byte-array-to-uuid.util.ts` does, is fine.
 
 ## Key Conventions
 

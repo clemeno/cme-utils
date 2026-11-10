@@ -44,13 +44,14 @@
   "scripts": {
     "prepare": "bun run build",
     "build": "rm -rf m && tsc -p tsconfig.json",
-    "check": "bun run build && eslint && bun test --coverage && bun run test:types",
+    "check": "bun run build && eslint && bun test --coverage && bun run test:types && bun run test:node",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "test": "bun test",
     "test:coverage": "bun test --coverage",
     "test:watch": "bun test --watch",
-    "test:types": "tsc -p tsconfig.tests.json --noEmit && tsc -p tsconfig.examples.json --noEmit"
+    "test:types": "tsc -p tsconfig.tests.json --noEmit && tsc -p tsconfig.examples.json --noEmit",
+    "test:node": "node tools/load-in-node.mjs"
   },
   "engines": {
     "node": ">=16"
