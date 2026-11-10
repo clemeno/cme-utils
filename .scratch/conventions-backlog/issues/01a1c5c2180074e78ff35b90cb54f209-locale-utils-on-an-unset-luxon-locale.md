@@ -1,6 +1,6 @@
 # 01a1c5c2180074e78ff35b90cb54f209: Handle an unset luxon `defaultLocale` in the locale utils
 
-Status: needs-triage
+Status: ready-for-agent
 Blocked by: none
 
 ## What
@@ -12,14 +12,13 @@ luxon starts with `Settings.defaultLocale === null` (`node_modules/luxon/src/set
 
 Found by the Spec review of 01a1c0c798b775c68fe6b020e2426672.
 
-## Decision needed
+## Decision
 
-The fallback for an unset locale:
-- the system locale, as luxon itself uses (`new Intl.DateTimeFormat().resolvedOptions().locale`);
-- or `'en-gb'`, the fallback of `SET_LOCALE`;
-- or none: document that `SET_LOCALE` must run first.
+User decision, 2026-11-10: an unset locale falls back to the system locale, the one luxon itself formats with (`new Intl.DateTimeFormat().resolvedOptions().locale`). The other options were `'en-gb'` (the fallback of `SET_LOCALE`) and no fallback.
 
-With a fallback, `AppLuxonSettings.defaultLocale` can become `string | null`, so tsc makes every reader handle it.
+`AppLuxonSettings.defaultLocale` becomes `string | null`, so tsc makes every reader handle it; `GET_LOCALE` returns the fallback, and writes it to the document `locale` attribute like any other locale.
+
+The fix must run in a browser, Node and bun (user, 2026-11-10): `Intl.DateTimeFormat` is ECMA-402, in all three (checked: bun and Node v26 both give `fr-FR` on this machine), so it needs no platform parameter.
 
 ## Acceptance
 

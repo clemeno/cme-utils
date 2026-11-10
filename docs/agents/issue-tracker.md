@@ -10,6 +10,7 @@ Issues and specs for this repo live as markdown files in `.scratch/`. They are c
 - `<id>` is a fresh UUID v7 in hex, without `-`. Generate it, never hand-write or shorten it: `bun -e "console.log(Bun.randomUUIDv7().replaceAll('-',''))"`
 - The ticket's title is `# <id>: <title>`. File names, references, commits and replies name the ticket by that id.
 - Order of work lives in a `Blocked by: <id>, <id>` line near the top of each ticket. Create the blockers first: a UUID v7 sorts by creation time.
+- Each acceptance line names a check that runs the changed code (a test, a probe, `bun run check`); open the code that check runs to confirm it reaches the change before writing the line
 - State is recorded as a `Status:` line near the top of each issue file: a triage role string of `triage-labels.md`, then `claimed` once work starts and `resolved` when done. A `resolved` or `wontfix` ticket is closed; any other is open.
 - Comments and conversation history append to the bottom of the file under a `## Comments` heading
 - On resolving a ticket, grep the repo for its id (`AGENTS.md`, docs, other tickets) and update or drop each pointer that still sends readers to it as open work
