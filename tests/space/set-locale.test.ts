@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from 'bun:test'
 import { SET_LOCALE } from '../../ts/space/set-locale.util.js'
-import { createMockDocument, createMockSettings } from '../mocks/space-mocks.js'
+import { createMockSettings } from '../mocks/luxon-mock.js'
+import { createMockDocument } from '../mocks/space-mocks.js'
 
 /** Exposes the given mock document through a global window. */
 function installWindow (inDocument: ReturnType<typeof createMockDocument>): void {

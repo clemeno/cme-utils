@@ -1,3 +1,4 @@
+import type { AppLuxonSettings } from '../app-luxon-settings.js'
 import { GET_DAY_STOP } from './get-day-stop.util.js'
 import { NOW_APP } from './now-app.util.js'
 
@@ -15,9 +16,9 @@ import { NOW_APP } from './now-app.util.js'
  * GET_TODAY_STOP({ DateTime, Settings }).hour // returns 23
  * ```
  */
-export function GET_TODAY_STOP<DateTime = any, TypeofDateTime = any, TypeofSettings = any> (_: {
+export function GET_TODAY_STOP<DateTime = any, TypeofDateTime = any> (_: {
   DateTime: TypeofDateTime
-  Settings: TypeofSettings
+  Settings: AppLuxonSettings
 }): DateTime {
   return GET_DAY_STOP({ m: NOW_APP(_), ..._ })
 }

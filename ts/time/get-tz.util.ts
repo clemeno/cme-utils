@@ -1,3 +1,4 @@
+import type { AppLuxonSettings } from '../app-luxon-settings.js'
 import { SET_DOCUMENT_TZ } from './set-document-tz.util.js'
 
 /**
@@ -7,13 +8,13 @@ import { SET_DOCUMENT_TZ } from './set-document-tz.util.js'
  * @returns The name of the default zone (also written on the document `tz` attribute when there is a document)
  * @example
  * ```typescript
- * const settings = { defaultZone: { name: 'Europe/Paris' } }
- * GET_TZ(settings) // returns 'Europe/Paris'
- * const utcSettings = { defaultZone: { name: 'UTC' } }
- * GET_TZ(utcSettings) // returns 'UTC'
+ * Settings.defaultZone = 'Europe/Paris'
+ * GET_TZ(Settings) // returns 'Europe/Paris'
+ * Settings.defaultZone = 'UTC'
+ * GET_TZ(Settings) // returns 'UTC'
  * ```
  */
-export function GET_TZ<TypeofSettings = any> (_Settings: TypeofSettings): string {
+export function GET_TZ (_Settings: AppLuxonSettings): string {
   // _Settings.defaultZone.name
   let documentTz = ''
 
@@ -22,7 +23,7 @@ export function GET_TZ<TypeofSettings = any> (_Settings: TypeofSettings): string
     documentTz = window.document.documentElement.getAttribute('tz') ?? ''
   } catch {}
 
-  const settingsTz = (_Settings as any).defaultZone.name
+  const settingsTz = _Settings.defaultZone.name
 
   if (documentTz !== settingsTz) {
     SET_DOCUMENT_TZ(settingsTz)

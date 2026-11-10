@@ -1,3 +1,4 @@
+import type { AppLuxonSettings } from '../app-luxon-settings.js'
 import { IS_A_STRING_AND_NOT_EMPTY } from '../string/is-a-string-and-not-empty.util.js'
 import { SET_DOCUMENT_TZ } from './set-document-tz.util.js'
 
@@ -10,22 +11,19 @@ import { SET_DOCUMENT_TZ } from './set-document-tz.util.js'
  * @returns Nothing
  * @example
  * ```typescript
- * const settings = { defaultZone: 'Europe/Paris' }
- * SET_TZ({ Settings: settings, tz: 'Asia/Tokyo' }) // returns undefined
- * settings.defaultZone // returns 'Asia/Tokyo'
- * SET_TZ({ Settings: settings, tz: '' }) // returns undefined
- * settings.defaultZone // returns 'UTC'
+ * SET_TZ({ Settings, tz: 'Asia/Tokyo' }) // returns undefined
+ * Settings.defaultZone.name // returns 'Asia/Tokyo'
+ * SET_TZ({ Settings, tz: '' }) // returns undefined
+ * Settings.defaultZone.name // returns 'UTC'
  * ```
  */
-export function SET_TZ<TypeofSettings = any> (_: {
-  Settings: TypeofSettings
+export function SET_TZ (_: {
+  Settings: AppLuxonSettings
   tz: string
 }): void {
   const tz = IS_A_STRING_AND_NOT_EMPTY(_.tz) ? _.tz : 'UTC'
 
-  const SettingsClass: any = _.Settings
-
-  SettingsClass.defaultZone = tz
+  _.Settings.defaultZone = tz
 
   SET_DOCUMENT_TZ(tz)
 }

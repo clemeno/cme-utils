@@ -1,3 +1,4 @@
+import type { AppLuxonSettings } from '../app-luxon-settings.js'
 import { GET_LOCALE } from './get-locale.util.js'
 import { SET_DOCUMENT_LANG } from './set-document-lang.util.js'
 
@@ -7,11 +8,13 @@ import { SET_DOCUMENT_LANG } from './set-document-lang.util.js'
  * @returns The lang of the default locale
  * @example
  * ```typescript
- * GET_LANG({ defaultLocale: 'fr-CA' }) // returns 'fr'
- * GET_LANG({ defaultLocale: 'en' }) // returns 'en'
+ * Settings.defaultLocale = 'fr-CA'
+ * GET_LANG(Settings) // returns 'fr'
+ * Settings.defaultLocale = 'en'
+ * GET_LANG(Settings) // returns 'en'
  * ```
  */
-export function GET_LANG<TypeofSettings = any> (_Settings: TypeofSettings): string {
+export function GET_LANG (_Settings: AppLuxonSettings): string {
   let documentLang = ''
 
   try {

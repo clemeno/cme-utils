@@ -1,3 +1,4 @@
+import type { AppLuxonSettings } from '../app-luxon-settings.js'
 import { GET_LOCALE } from './get-locale.util.js'
 import { SET_DOCUMENT_GEO } from './set-document-geo.util.js'
 
@@ -7,12 +8,15 @@ import { SET_DOCUMENT_GEO } from './set-document-geo.util.js'
  * @returns The geo of the default locale, or '' (empty string) when the locale has no geo
  * @example
  * ```typescript
- * GET_GEO({ defaultLocale: 'fr-CA' }) // returns 'CA'
- * GET_GEO({ defaultLocale: 'zh-Hans-CN' }) // returns 'Hans-CN'
- * GET_GEO({ defaultLocale: 'en' }) // returns ''
+ * Settings.defaultLocale = 'fr-CA'
+ * GET_GEO(Settings) // returns 'CA'
+ * Settings.defaultLocale = 'zh-Hans-CN'
+ * GET_GEO(Settings) // returns 'Hans-CN'
+ * Settings.defaultLocale = 'en'
+ * GET_GEO(Settings) // returns ''
  * ```
  */
-export function GET_GEO<TypeofSettings = any> (_Settings: TypeofSettings): string {
+export function GET_GEO (_Settings: AppLuxonSettings): string {
   let documentGeo = ''
 
   try {

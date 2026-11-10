@@ -1,3 +1,4 @@
+import type { AppLuxonSettings } from '../app-luxon-settings.js'
 import { NOW_APP } from './now-app.util.js'
 
 /**
@@ -14,9 +15,9 @@ import { NOW_APP } from './now-app.util.js'
  * NOW_APP_ISO({ DateTime, Settings }).endsWith('+01:00') // returns true
  * ```
  */
-export function NOW_APP_ISO<TypeofDateTime = any, TypeofSettings = any> (_: {
+export function NOW_APP_ISO<TypeofDateTime = any> (_: {
   DateTime: TypeofDateTime
-  Settings: TypeofSettings
+  Settings: AppLuxonSettings
 }): string {
   return NOW_APP(_).toISO() ?? ''
 }

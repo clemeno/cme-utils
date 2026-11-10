@@ -29,7 +29,3 @@ export function createMockDocument (options: { getAttributeValue?: string } = {}
   }
   return mock
 }
-
-export function createMockSettings (initialLocale = 'old'): { defaultLocale: string } {
-  return { defaultLocale: initialLocale }
-}

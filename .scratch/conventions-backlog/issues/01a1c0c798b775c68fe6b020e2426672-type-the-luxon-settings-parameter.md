@@ -1,6 +1,6 @@
 # 01a1c0c798b775c68fe6b020e2426672: Type the luxon `Settings` parameter structurally
 
-Status: ready-for-agent
+Status: resolved
 Blocked by: none
 
 ## What
@@ -20,3 +20,12 @@ What they use of it: `defaultLocale` (read by `GET_LOCALE`, written by `SET_LOCA
 - A test row passing `{ locale: 'en-US' }` as `Settings` fails `bun run test:types` (check it once, then remove the probe).
 - `examples/` still typecheck with luxon's real `Settings`.
 - `bun run check` passes; one `refactor!:` commit with a `BREAKING CHANGE:` footer naming the new type.
+
+## Comments
+
+2026-11-10, resolved:
+- `AppLuxonSettings` (`ts/app-luxon-settings.ts`): `defaultLocale: string`, and `defaultZone` as a getter of `{ readonly name: string }` with a `string` setter, as luxon's own `Settings` declares it. A getter and setter of different types need TypeScript 5.1+ in consumers.
+- Probe: `{ locale: 'en-US' }` (TS2353) and `{ defaultLocale: 'en' }` passed to `SET_TZ` (TS2741) fail `test:types`; luxon's real `Settings` passes. The probe is removed.
+- `examples/` never call these utils, so `tests/time/set-tz.test.ts`, which now passes luxon's real `Settings`, is the typed proof that luxon fits the interface.
+- The JSDoc examples use luxon's `Settings` instead of partial objects. The tests use `createMockSettings` of `tests/mocks/luxon-mock.ts`; the copy in `space-mocks.ts` had no `defaultZone` and is gone. The mock has no `defaultZone` setter (a `shortcut:` comment says so).
+- The Spec review found that luxon starts with `defaultLocale === null`: ticket 01a1c5c2180074e78ff35b90cb54f209.

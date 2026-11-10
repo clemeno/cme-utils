@@ -1,3 +1,4 @@
+import type { AppLuxonSettings } from '../app-luxon-settings.js'
 import { IS_NUMERIC } from './is-numeric.util.js'
 import { TO_NUMBER } from '../convert/to-number.util.js'
 import { GET_LOCALE } from '../space/index.js'
@@ -11,13 +12,14 @@ import { GET_LOCALE } from '../space/index.js'
  * @returns The formatted number, or an empty string when `x` is not numeric
  * @example
  * ```typescript
- * TO_LOCAL_NUMBER_WITH_1_F_DIGIT({ Settings: { defaultLocale: 'en-US' }, x: 1234.56 }) // returns '1,234.6'
- * TO_LOCAL_NUMBER_WITH_1_F_DIGIT({ Settings: { defaultLocale: 'en-US' }, x: 3 }) // returns '3.0'
- * TO_LOCAL_NUMBER_WITH_1_F_DIGIT({ Settings: { defaultLocale: 'en-US' }, x: 'abc' }) // returns ''
+ * // with Settings.defaultLocale = 'en-US'
+ * TO_LOCAL_NUMBER_WITH_1_F_DIGIT({ Settings, x: 1234.56 }) // returns '1,234.6'
+ * TO_LOCAL_NUMBER_WITH_1_F_DIGIT({ Settings, x: 3 }) // returns '3.0'
+ * TO_LOCAL_NUMBER_WITH_1_F_DIGIT({ Settings, x: 'abc' }) // returns ''
  * ```
  */
-export function TO_LOCAL_NUMBER_WITH_1_F_DIGIT<TypeofSettings = any> (_: {
-  Settings: TypeofSettings
+export function TO_LOCAL_NUMBER_WITH_1_F_DIGIT (_: {
+  Settings: AppLuxonSettings
   x: any
 }): string {
   return (

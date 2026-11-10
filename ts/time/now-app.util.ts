@@ -1,3 +1,4 @@
+import type { AppLuxonSettings } from '../app-luxon-settings.js'
 import { GET_TZ } from './get-tz.util.js'
 import { NOW } from './now.util.js'
 
@@ -16,11 +17,10 @@ import { NOW } from './now.util.js'
  * NOW_APP({ DateTime, Settings }).zoneName // returns 'UTC'
  * ```
  */
-export function NOW_APP<DateTime = any, TypeofDateTime = any, TypeofSettings = any> (_: {
+export function NOW_APP<DateTime = any, TypeofDateTime = any> (_: {
   DateTime: TypeofDateTime
-  Settings: TypeofSettings
+  Settings: AppLuxonSettings
 }): DateTime {
   const DateTimeClass = _.DateTime as any
-  const SettingsClass = _.Settings as any
-  return NOW(DateTimeClass).setZone(GET_TZ(SettingsClass) ?? 'UTC') as any
+  return NOW(DateTimeClass).setZone(GET_TZ(_.Settings) ?? 'UTC') as any
 }

@@ -1,3 +1,4 @@
+import type { AppLuxonSettings } from '../app-luxon-settings.js'
 import { NOW_APP } from './now-app.util.js'
 
 /**
@@ -16,10 +17,10 @@ import { NOW_APP } from './now-app.util.js'
  * GET_DAY_STOP({ DateTime, Settings }).millisecond // returns 999
  * ```
  */
-export function GET_DAY_STOP<DateTime = any, TypeofDateTime = any, TypeofSettings = any> (_: {
+export function GET_DAY_STOP<DateTime = any, TypeofDateTime = any> (_: {
   m?: DateTime
   DateTime: TypeofDateTime
-  Settings: TypeofSettings
+  Settings: AppLuxonSettings
 }): DateTime {
   return ((_.m ?? NOW_APP(_)) as any).endOf('day')
 }

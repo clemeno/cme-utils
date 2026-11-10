@@ -1,14 +1,16 @@
 import { describe, expect, it } from 'bun:test'
+import type { AppLuxonSettings } from '../../ts/app-luxon-settings.js'
 import { TO_LOCAL_NUMBER_WITH_1_F_DIGIT } from '../../ts/number/to-local-number-with-1-f-digit.util.js'
+import { createMockSettings } from '../mocks/luxon-mock.js'
 
 describe(
   'TO_LOCAL_NUMBER_WITH_1_F_DIGIT',
   () => {
-    const enUS = { defaultLocale: 'en-US' }
-    const frFR = { defaultLocale: 'fr-FR' }
-    const deDE = { defaultLocale: 'de-DE' }
+    const enUS = createMockSettings({ initialLocale: 'en-US' })
+    const frFR = createMockSettings({ initialLocale: 'fr-FR' })
+    const deDE = createMockSettings({ initialLocale: 'de-DE' })
 
-    const testCases: Array<{ label: string, Settings: { defaultLocale: string }, x: unknown, expected: string }> = [
+    const testCases: Array<{ label: string, Settings: AppLuxonSettings, x: unknown, expected: string }> = [
       { label: '123.456 (en-US)', Settings: enUS, x: 123.456, expected: '123.5' },
       { label: '123 (en-US)', Settings: enUS, x: 123, expected: '123.0' },
       { label: '0 (en-US)', Settings: enUS, x: 0, expected: '0.0' },
@@ -37,7 +39,7 @@ describe(
     it(
       'returns a string',
       () => {
-        const result = TO_LOCAL_NUMBER_WITH_1_F_DIGIT({ Settings: { defaultLocale: 'en-US' }, x: 123.456 })
+        const result = TO_LOCAL_NUMBER_WITH_1_F_DIGIT({ Settings: enUS, x: 123.456 })
         expect(typeof result).toBe('string')
       }
     )

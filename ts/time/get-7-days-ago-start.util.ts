@@ -1,3 +1,4 @@
+import type { AppLuxonSettings } from '../app-luxon-settings.js'
 import { GET_7_DAYS_BEFORE_START } from './get-7-days-before-start.util.js'
 import { NOW_APP } from './now-app.util.js'
 
@@ -15,9 +16,9 @@ import { NOW_APP } from './now-app.util.js'
  * GET_7_DAYS_AGO_START({ DateTime, Settings }).hour // returns 0
  * ```
  */
-export function GET_7_DAYS_AGO_START<DateTime = any, TypeofDateTime = any, TypeofSettings = any> (_: {
+export function GET_7_DAYS_AGO_START<DateTime = any, TypeofDateTime = any> (_: {
   DateTime: TypeofDateTime
-  Settings: TypeofSettings
+  Settings: AppLuxonSettings
 }): DateTime {
   return GET_7_DAYS_BEFORE_START({ m: NOW_APP(_), ..._ })
 }

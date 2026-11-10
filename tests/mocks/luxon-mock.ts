@@ -177,6 +177,7 @@ export class MockDateTimeClass {
 
 export const MockDateTime = MockDateTimeClass
 
+// shortcut: no defaultZone setter, so SET_TZ on this mock stores a bare string; test SET_TZ with luxon's Settings
 export function createMockSettings ({ initialZone = 'UTC', initialLocale = 'en' } = {}): { defaultZone: { name: string }, defaultLocale: string } {
   return {
     defaultZone: { name: initialZone },

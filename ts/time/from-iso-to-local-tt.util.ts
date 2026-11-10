@@ -1,3 +1,4 @@
+import type { AppLuxonSettings } from '../app-luxon-settings.js'
 import { FROM_ISO_TO_LOCAL_FORMAT } from './from-iso-to-local-format.util.js'
 import { LUXON_FORMAT_LOCAL_HMS } from './luxon.util.js'
 
@@ -16,9 +17,9 @@ import { LUXON_FORMAT_LOCAL_HMS } from './luxon.util.js'
  * FROM_ISO_TO_LOCAL_TT({ DateTime, Settings, iso: 'not a date' }) // returns ''
  * ```
  */
-export function FROM_ISO_TO_LOCAL_TT<TypeofDateTime = any, TypeofSettings = any> (_: {
+export function FROM_ISO_TO_LOCAL_TT<TypeofDateTime = any> (_: {
   DateTime: TypeofDateTime
-  Settings: TypeofSettings
+  Settings: AppLuxonSettings
   iso: string
 }): string {
   return FROM_ISO_TO_LOCAL_FORMAT({ ..._, format: LUXON_FORMAT_LOCAL_HMS })

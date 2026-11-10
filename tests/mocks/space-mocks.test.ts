@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { createMockDocument, createMockSettings } from './space-mocks.js'
+import { createMockDocument } from './space-mocks.js'
 
 describe(
   'Space Mocks',
@@ -46,23 +46,6 @@ describe(
             const result = mock.documentElement.getAttribute('lang')
             expect(result).toBe(expected)
             expect(mock.getGetAttributeCalls()).toEqual(['lang'])
-          }
-        )
-      }
-    )
-
-    describe(
-      'createMockSettings',
-      () => {
-        it.each<{ name: string, args: Parameters<typeof createMockSettings>, expected: ReturnType<typeof createMockSettings> }>([
-          { name: 'default locale', args: [], expected: { defaultLocale: 'old' } },
-          { name: 'custom locale', args: ['en-US'], expected: { defaultLocale: 'en-US' } },
-          { name: 'empty string locale', args: [''], expected: { defaultLocale: '' } },
-        ])(
-          'should create a mock settings with $name',
-          ({ args, expected }) => {
-            const mock = createMockSettings(...args)
-            expect(mock).toEqual(expected)
           }
         )
       }
