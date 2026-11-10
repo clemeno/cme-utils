@@ -1,132 +1,7 @@
 import { describe, expect, it } from 'bun:test'
 import { READ_FILE_CONTENT } from '../../ts/async/read-file-content.util.js'
 
-// Mock FileReader for testing in Bun environment
-class MockFileReader {
-  onload: ((event: { target: { result: string | null } }) => void) | null = null
-  onerror: ((error: any) => void) | null = null
-
-  readAsText (file: Blob | File): void {
-    // Simulate async reading by directly calling onload with file content
-    setTimeout(() => {
-      try {
-        // Use the getTextFromFile method to get content
-        const content = this.getTextFromFile(file)
-        if (this.onload != null) {
-          this.onload({ target: { result: content } })
-        }
-      } catch (error) {
-        if (this.onerror != null) {
-          this.onerror(error)
-        }
-      }
-    }, 0)
-  }
-
-  // Made public for coverage
-  public getTextFromFile (file: Blob | File): string {
-    // Extract content from our mock file/blob
-    return (file as any)._content ?? ''
-  }
-}
-
-// Mock FileReader that triggers errors for testing
-class MockFileReaderWithError {
-  onload: ((event: { target: { result: string | null } }) => void) | null = null
-  onerror: ((error: any) => void) | null = null
-
-  // eslint-disable-next-line max-params
-  readAsText (file: Blob | File, encoding?: string): void {
-    // This method should be counted in coverage - make it synchronous for testing
-    // Add unique logic to distinguish from MockFileReader.readAsText
-    const uniqueErrorLogic = 'error_simulation_with_encoding'
-    if (this.onerror != null && uniqueErrorLogic === 'error_simulation_with_encoding') {
-      this.onerror(new Error('Mock read error with encoding'))
-    }
-  }
-
-  // Add a unique method to ensure this class is treated separately
-  triggerError (): void {
-    if (this.onerror != null) {
-      this.onerror(new Error('Direct error trigger'))
-    }
-  }
-
-  simulateError (): string {
-    return 'error_simulated'
-  }
-
-  // Add another unique method to ensure this class is treated separately
-  getErrorMessage (): string {
-    return 'MockFileReaderWithError error'
-  }
-
-  // Another unique method
-  isErrorReader (): boolean {
-    return true
-  }
-
-  // Final unique method
-  getErrorType (): string {
-    return 'FileReaderError'
-  }
-
-  // One more unique method
-  hasErrorHandler (): boolean {
-    return this.onerror != null
-  }
-}
-
-// Mock File and Blob classes for testing
-class MockFile {
-  _content: string
-  name: string
-  type: string
-  lastModified: number
-
-  // eslint-disable-next-line max-params
-  constructor (bits: any[], name: string, options?: any) {
-    // Handle different types of content - concatenate all parts
-    this._content = bits.map(bit => bit instanceof Uint8Array ? new TextDecoder().decode(bit) : bit ?? '').join('')
-
-    this.name = name
-    this.type = options?.type ?? ''
-    this.lastModified = options?.lastModified ?? Date.now()
-  }
-}
-
-class MockBlob {
-  _content: string
-  type: string
-  size: number
-
-  // eslint-disable-next-line max-params
-  constructor (bits: any[], options?: any) {
-    // Handle different types of content - concatenate all parts
-    this._content = bits.map(bit => {
-      let result = bit ?? ''
-      if (bit instanceof Uint8Array) {
-        result = new TextDecoder().decode(bit)
-      } else if (bit instanceof ArrayBuffer) {
-        result = new TextDecoder().decode(bit)
-      } else if (bit instanceof DataView) {
-        result = new TextDecoder().decode(bit.buffer.slice(bit.byteOffset, bit.byteOffset + bit.byteLength))
-      }
-      return result
-    }).join('')
-
-    this.type = options?.type ?? ''
-    this.size = this._content.length
-  }
-}
-
-// Setup global mocks for testing (type assertions needed for test environment)
-Object.assign(global as any, {
-  FileReader: MockFileReader,
-  File: MockFile,
-  Blob: MockBlob,
-})
-
+// the real Blob and File of the runtime: READ_FILE_CONTENT must run in a browser, on Node and on bun
 describe(
   'READ_FILE_CONTENT',
   () => {
@@ -290,11 +165,6 @@ describe(
         expected: { exception: undefined, result: 'Blob with options' },
       },
       {
-        name: 'should handle Blob with native endings',
-        input: () => new Blob(['Line 1\r\nLine 2'], { type: 'text/plain', endings: 'native' }),
-        expected: { exception: undefined, result: 'Line 1\r\nLine 2' },
-      },
-      {
         name: 'should handle File with empty filename',
         input: () => new File(['content'], '', { type: 'text/plain' }),
         expected: { exception: undefined, result: 'content' },
@@ -411,11 +281,6 @@ describe(
         expected: { exception: undefined, result: 'Blob with options' },
       },
       {
-        name: 'should handle Blob with native endings',
-        input: () => new Blob(['Line 1\r\nLine 2'], { type: 'text/plain', endings: 'native' }),
-        expected: { exception: undefined, result: 'Line 1\r\nLine 2' },
-      },
-      {
         name: 'should handle File with empty filename',
         input: () => new File(['content'], '', { type: 'text/plain' }),
         expected: { exception: undefined, result: 'content' },
@@ -426,130 +291,6 @@ describe(
         expected: { exception: undefined, result: 'content' },
       },
     ]
-    const errorHandlingTests: Array<{ name: string, input: () => { file: File, originalFileReader: typeof FileReader }, expected: { exception: unknown, result: string | undefined } }> = [
-      {
-        name: 'should handle FileReader error event',
-        input: () => {
-          // Create a mock FileReader that triggers onerror event
-          const originalFileReader = global.FileReader
-          global.FileReader = class MockFileReaderErrorEvent {
-            onload: ((event: { target: { result: string | null } }) => void) | null = null
-            onerror: ((error: any) => void) | null = null
-
-            readAsText (file: Blob | File): void {
-              // Simulate an error by triggering onerror event
-              setTimeout(() => {
-                if (this.onerror != null) {
-                  this.onerror(new Error('FileReader error event'))
-                }
-              }, 0)
-            }
-          } as any
-
-          return {
-            file: new File(['test'], 'error-event.txt'),
-            originalFileReader,
-          }
-        },
-        expected: { exception: expect.any(Error), result: undefined },
-      },
-      {
-        name: 'should handle FileReader abort scenario',
-        input: () => {
-          // Create a mock FileReader that can be aborted
-          const originalFileReader = global.FileReader
-          global.FileReader = class MockFileReaderAbort {
-            onload: ((event: { target: { result: string | null } }) => void) | null = null
-            onerror: ((error: any) => void) | null = null
-            onabort: ((event: any) => void) | null = null
-            abortCalled = false
-
-            readAsText (file: Blob | File): void {
-              // Simulate abort before completion
-              setTimeout(() => {
-                if (this.abortCalled) {
-                  if (this.onabort != null) {
-                    this.onabort({ type: 'abort' })
-                  }
-                } else if (this.onload !== null) {
-                  this.onload({ target: { result: (file as any)._content ?? '' } })
-                }
-              }, 0)
-            }
-
-            abort (): void {
-              this.abortCalled = true
-            }
-          } as any
-
-          return {
-            file: new File(['test'], 'abort-test.txt'),
-            originalFileReader,
-          }
-        },
-        expected: { exception: undefined, result: 'test' }, // Abort doesn't trigger error in our implementation
-      },
-    ]
-
-    const mockCoverageTests: Array<{ name: string, input: () => File, expected: { exception: undefined, result: string } }> = [
-      {
-        name: 'should handle File with webkitRelativePath',
-        input: () => {
-          const file = new File(['content'], 'test.txt', { type: 'text/plain' })
-          // Simulate webkitRelativePath property
-          Object.defineProperty(file, 'webkitRelativePath', {
-            value: 'folder/subfolder/test.txt',
-            writable: false,
-          })
-          expect((file as any).webkitRelativePath).toBe('folder/subfolder/test.txt')
-          return file
-        },
-        expected: { exception: undefined, result: 'content' },
-      },
-      {
-        name: 'should exercise mock constructors for coverage',
-        input: () => {
-          // Exercise MockFile constructor
-          const mockFile = new (global.File as any)(['test content'], 'test.txt')
-          expect(mockFile._content).toBe('test content')
-
-          // Exercise MockBlob constructor
-          const mockBlob = new (global.Blob as any)(['blob content'])
-          expect(mockBlob._content).toBe('blob content')
-
-          // Exercise MockFileReader methods
-          const reader = new (global.FileReader as any)()
-          expect(typeof reader.readAsText).toBe('function')
-          expect(typeof reader.getTextFromFile).toBe('function')
-          // Call getTextFromFile directly to ensure it's covered
-          const testFile = new File(['direct call'], 'direct.txt')
-          expect(reader.getTextFromFile(testFile)).toBe('direct call')
-
-          // Exercise MockFileReaderWithError methods directly
-          const errorReader = new MockFileReaderWithError()
-          // Call the method to ensure it's covered - this should be a separate function
-          errorReader.readAsText(new Blob(['test']))
-          // Call the unique methods to ensure the class is fully covered
-          errorReader.triggerError()
-          expect(errorReader.simulateError()).toBe('error_simulated')
-          expect(errorReader.getErrorMessage()).toBe('MockFileReaderWithError error')
-          expect(errorReader.isErrorReader()).toBe(true)
-          expect(errorReader.getErrorType()).toBe('FileReaderError')
-          expect(errorReader.hasErrorHandler()).toBe(false)
-
-          // Ensure all constructors are exercised
-          const anotherFile = new (global.File as any)(['another'], 'another.txt')
-          expect(anotherFile._content).toBe('another')
-          const anotherBlob = new (global.Blob as any)(['another blob'])
-          expect(anotherBlob._content).toBe('another blob')
-          const anotherReader = new (global.FileReader as any)()
-          expect(typeof anotherReader.readAsText).toBe('function')
-
-          return new File(['dummy'], 'dummy.txt')
-        },
-        expected: { exception: undefined, result: 'dummy' },
-      },
-    ]
 
     it.each(edgeCaseTests)(
       '$name',
@@ -558,24 +299,37 @@ describe(
       }
     )
 
-    it.each(errorHandlingTests)(
+    // decoded as FileReader.readAsText does: byte order mark, else the charset of the type, else UTF-8
+    const encodingTestCases: Array<{ name: string, input: Blob, expected: { exception: undefined, result: string } }> = [
+      { name: 'decodes UTF-16LE by its byte order mark', input: new Blob([new Uint8Array([0xff, 0xfe, 0x68, 0, 0x69, 0])]), expected: { exception: undefined, result: 'hi' } },
+      { name: 'decodes UTF-16BE by its byte order mark', input: new Blob([new Uint8Array([0xfe, 0xff, 0, 0x68, 0, 0x69])]), expected: { exception: undefined, result: 'hi' } },
+      { name: 'drops the UTF-8 byte order mark', input: new Blob([new Uint8Array([0xef, 0xbb, 0xbf, 0x68, 0x69])]), expected: { exception: undefined, result: 'hi' } },
+      { name: 'decodes by the charset of the type', input: new Blob([new Uint8Array([0xe9])], { type: 'text/plain;charset=windows-1252' }), expected: { exception: undefined, result: 'é' } },
+      { name: 'decodes by a quoted charset', input: new Blob([new Uint8Array([0x68, 0, 0x69, 0])], { type: 'text/plain; charset="utf-16le"' }), expected: { exception: undefined, result: 'hi' } },
+      { name: 'lets the byte order mark win over the charset', input: new Blob([new Uint8Array([0xff, 0xfe, 0x68, 0, 0x69, 0])], { type: 'text/plain;charset=windows-1252' }), expected: { exception: undefined, result: 'hi' } },
+      { name: 'falls back to UTF-8 on an unknown charset', input: new Blob(['hi'], { type: 'text/plain;charset=nope' }), expected: { exception: undefined, result: 'hi' } },
+    ]
+
+    it.each(encodingTestCases)(
       '$name',
       async ({ input, expected }) => {
-        const { file, originalFileReader } = input()
-
-        try {
-          expect(await READ_FILE_CONTENT(file)).toEqual(expected)
-        } finally {
-          // each input replaces the global FileReader
-          global.FileReader = originalFileReader
-        }
+        expect(await READ_FILE_CONTENT(input)).toEqual(expected)
       }
     )
 
-    it.each(mockCoverageTests)(
+    const readError = new Error('read failed')
+
+    const errorTestCases: Array<{ name: string, input: Blob, expected: { exception: unknown, result: undefined } }> = [
+      // a Blob whose read rejects, as on a file removed or unreadable since it was picked
+      { name: 'returns the read error as the exception', input: { arrayBuffer: async () => { throw readError } } as unknown as Blob, expected: { exception: readError, result: undefined } },
+      // input.files?.[0] when no file is picked
+      { name: 'returns a TypeError as the exception when there is no file', input: undefined as unknown as Blob, expected: { exception: expect.any(TypeError), result: undefined } },
+    ]
+
+    it.each(errorTestCases)(
       '$name',
       async ({ input, expected }) => {
-        expect(await READ_FILE_CONTENT(input())).toEqual(expected)
+        expect(await READ_FILE_CONTENT(input)).toEqual(expected)
       }
     )
   }
