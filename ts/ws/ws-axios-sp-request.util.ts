@@ -8,16 +8,17 @@ import type { numeric } from '../numeric.js'
 /**
  * Emulates a curl request to an HTTP WebSevice using Axios
  * * provide axios -> import axios from 'axios'
- * * provide https -> import https from 'node:https' (optional, required only for an "https:" URL protocol)
+ * * provide https -> import https from 'node:https' (optional, Node and bun only: its Agent skips the certificate check of an "https:" URL)
  * * axios: AxiosStatic
  * * type AE = AxiosError
  * * type AR = AxiosResponse
  *
  * `wsResolve` mimics `curl --resolve`: `'spoofHost:realHost'`, `'spoofHost:spoofPort:realHost'` or `'spoofHost:spoofPort:realHost:realPort'`.
- * The request goes to the real host, with the spoofed `Host` header (and TLS server name). An empty string disables it.
+ * The request goes to the real host, with the spoofed `Host` header (and, when `https` is given, the spoofed TLS server name). An empty string disables it.
+ * In a browser, which refuses to set the `Host` and `Content-Length` headers, `wsResolve` only changes the target host, and the browser checks the certificate.
  * @param _ - The parameter object
  * @param _.axios - The `axios` instance, whose `request` sends the request
- * @param _.https - The `node:https` module, needed for an `https:` URL (its `Agent` skips the certificate check)
+ * @param _.https - The `node:https` module (Node and bun), optional: for an `https:` URL, its `Agent` skips the certificate check; without it, the runtime checks the certificate
  * @param _.wsResolve - The resolve rule, or an empty string for none
  * @param _.method - The HTTP method, `'POST'` by default
  * @param _.wsUrl - The URL of the WebService
@@ -157,7 +158,8 @@ export async function WS_AXIOS_SP_REQUEST<AxiosStatic = any, NodeHttps = any, Ax
     }
   }
 
-  if (bUrlHttps) {
+  // a browser has no node:https: it sends the request with its own certificate check
+  if (bUrlHttps && _.https != null) {
     // ? https.AgentOptions
     const agentConfig: Record<string, unknown> = { rejectUnauthorized: false }
 

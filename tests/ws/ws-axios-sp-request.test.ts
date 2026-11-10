@@ -94,6 +94,20 @@ describe(
         },
       },
       {
+        // a browser has no node:https: the request goes out with the browser's own certificate check
+        name: 'https URL without the https module',
+        input: {
+          axios: createMockAxiosForWS({ data: 'response' }),
+          wsResolve: 'secure.example.com',
+          wsUrl: 'https://secure.example.com/api',
+          method: 'GET',
+        },
+        expected: {
+          result: okResult,
+          request: { method: 'GET', url: 'https://secure.example.com/api' },
+        },
+      },
+      {
         name: 'https URL with wsResolve',
         input: {
           axios: createMockAxiosForWS({ data: 'response' }),
