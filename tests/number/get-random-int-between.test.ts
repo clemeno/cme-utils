@@ -1,4 +1,5 @@
-import { afterEach, describe, expect, it } from 'bun:test'
+import { describe, expect, it } from 'bun:test'
+import type { getRandomValuesFnType } from '../../ts/get-random-values-fn-type.js'
 import { GET_RANDOM_INT_BETWEEN } from '../../ts/number/get-random-int-between.util.js'
 
 describe(
@@ -32,26 +33,39 @@ describe(
       }
     )
 
+    it.each<{ name: string, input: Parameters<typeof GET_RANDOM_INT_BETWEEN>[0] }>([
+      { name: 'a NaN bound', input: { a: Number.NaN, b: 5 } },
+      { name: 'an infinite bound', input: { a: 0, b: Number.POSITIVE_INFINITY } },
+    ])(
+      'should return NaN for $name',
+      ({ input }) => {
+        expect(GET_RANDOM_INT_BETWEEN(input)).toBeNaN()
+      }
+    )
+
     describe(
-      'bounds with Math.random pinned',
+      'draws from the injected getRandomValues',
       () => {
-        const kOriginalRandom = Math.random
+        /** Returns a getRandomValues whose calls get the byte lists of `drawList`, in order. */
+        function drawing (drawList: number[][]): getRandomValuesFnType {
+          const queue = [...drawList]
+          return array => { array.set(queue.shift() ?? []); return array }
+        }
 
-        afterEach(() => {
-          Math.random = kOriginalRandom
-        })
-
-        it.each<{ name: string, random: number, input: Parameters<typeof GET_RANDOM_INT_BETWEEN>[0], expected: number }>([
-          { name: 'lowest draw → min', random: 0, input: { a: 5, b: 10 }, expected: 5 },
-          { name: 'highest draw → max (upper bound included)', random: 0.9999999, input: { a: 5, b: 10 }, expected: 10 },
-          { name: 'highest draw with a > b → max', random: 0.9999999, input: { a: 10, b: 5 }, expected: 10 },
-          { name: 'highest draw on a range of 2 → max', random: 0.9999999, input: { a: 5, b: 6 }, expected: 6 },
-          { name: 'highest draw on negatives → max', random: 0.9999999, input: { a: -10, b: -5 }, expected: -5 },
+        it.each<{ name: string, a: number, b: number, drawList: number[][], expected: number }>([
+          { name: 'lowest draw → min', a: 5, b: 10, drawList: [[0]], expected: 5 },
+          { name: 'highest kept draw → max (upper bound included)', a: 5, b: 10, drawList: [[5]], expected: 10 },
+          { name: 'highest kept draw with a > b → max', a: 10, b: 5, drawList: [[5]], expected: 10 },
+          { name: 'highest kept draw on negatives → max', a: -10, b: -5, drawList: [[5]], expected: -5 },
+          { name: 'the bits above the range are masked out', a: 5, b: 10, drawList: [[0b11111_001]], expected: 6 },
+          { name: 'a draw past the range is discarded, the next one kept', a: 5, b: 10, drawList: [[6], [2]], expected: 7 },
+          { name: 'no draw when both bounds are equal', a: 5, b: 5, drawList: [], expected: 5 },
+          { name: 'lowest draw on the whole safe range → MIN_SAFE_INTEGER', a: Number.MIN_SAFE_INTEGER, b: Number.MAX_SAFE_INTEGER, drawList: [[0, 0, 0, 0, 0, 0, 0]], expected: Number.MIN_SAFE_INTEGER },
+          { name: 'highest kept draw on the whole safe range → MAX_SAFE_INTEGER', a: Number.MIN_SAFE_INTEGER, b: Number.MAX_SAFE_INTEGER, drawList: [[0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff], [0x3f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe]], expected: Number.MAX_SAFE_INTEGER },
         ])(
           '$name',
-          ({ random, input, expected }) => {
-            Math.random = () => random
-            expect(GET_RANDOM_INT_BETWEEN(input)).toBe(expected)
+          ({ a, b, drawList, expected }) => {
+            expect(GET_RANDOM_INT_BETWEEN({ a, b, getRandomValues: drawing(drawList) })).toBe(expected)
           }
         )
       }
