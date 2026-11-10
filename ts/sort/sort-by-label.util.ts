@@ -10,7 +10,7 @@ import { SORT_OBJECTS } from './sort-objects.util.js'
  * [{ label: 'b' }, { label: 'a' }].sort(SORT_BY_LABEL) // returns [{ label: 'a' }, { label: 'b' }]
  * SORT_BY_LABEL({ label: 'b' }, { label: 'a' }) // returns 1
  * SORT_BY_LABEL({ label: 'a' }, { label: 'a' }) // returns 0
- * [].sort(SORT_BY_LABEL) // returns []
+ * ;[].sort(SORT_BY_LABEL) // returns []
  * ```
  */
 export const SORT_BY_LABEL = SORT_OBJECTS({ on: x => x.label, order: 'asc' })

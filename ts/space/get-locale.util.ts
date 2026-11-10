@@ -10,8 +10,7 @@ import { SET_DOCUMENT_LOCALE } from './set-document-locale.util.js'
  * Settings.defaultLocale = 'fr-CA'
  * GET_LOCALE(Settings) // returns 'fr-CA'
  * Settings.defaultLocale = 'en'
- * GET_LOCALE(Settings) // returns 'en'
- * ```
+ * GET_LOCALE(Settings) // returns 'en' * ```
  */
 export function GET_LOCALE (_Settings: AppLuxonSettings): string {
   let documentLocale = ''

@@ -15,7 +15,7 @@ import { IS_A_URL } from './is-a-url.util.js'
  * @returns The CloudFront url of the file, or '' (empty string) when `s` is a url without a file name
  * @example
  * ```typescript
- * const basename = s => s.split('/').pop()
+ * const basename = (s: string): string => s.slice(s.lastIndexOf('/') + 1)
  * const opts = { basename, cloudfrontUri: 'https://cdn.example.com', fileUploadFolder: './uploads', publicStaticImageFolder: '/static' }
  * GET_CLOUDFRONT_URL_FROM_ANY_STRING({ ...opts, s: '123e4567-e89b-12d3-a456-426614174000' }) // returns 'https://cdn.example.com/123e4567-e89b-12d3-a456-426614174000.png'
  * GET_CLOUDFRONT_URL_FROM_ANY_STRING({ ...opts, s: './uploads/a.png' }) // returns 'https://cdn.example.com/a.png'

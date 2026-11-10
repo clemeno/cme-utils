@@ -19,10 +19,11 @@ const notInBarrels = new Set([
   'ts/check/check.util.ts CHECK',
 ])
 
-// outside APIs an example names without this test providing them (a knex query builder, files, HTTP, the browser): those lines are skipped
+// outside APIs an example names without this test providing them (a knex query builder, files, HTTP, the browser): those
+// lines are skipped, and the typecheck declares them as any
 const outsideApis = new Set(['qb', 'createReadStream', 'writeFile', 'axios', 'FileReader'])
 
-// the names every example runs with, besides its own module's exports; luxon is set as the examples assume:
+// the names every example runs and typechecks with, besides its own module's exports; luxon is set as the examples assume:
 // en-US, Europe/Paris, now 2024-03-15T15:30:45+01:00
 const scope: Record<string, unknown> = { ...lib, DateTime, Duration, Interval, Settings, createCipheriv, createDecipheriv, randomBytes }
 const exampleNow = DateTime.fromISO('2024-03-15T15:30:45.000+01:00').toMillis()
@@ -35,6 +36,14 @@ interface ExportedFunction {
   name: string
   bTakesParameter: boolean
   tags: readonly ts.JSDocTag[]
+}
+
+interface ExampleBlock {
+  name: string
+  util: string
+  file: string
+  line: number
+  code: string
 }
 
 interface CheckedLine {
@@ -126,9 +135,66 @@ function missingTagsOf (fn: ExportedFunction): string[] {
 
 const exportedFunctions = moduleFiles.flatMap(file => sourceOf(file).statements.flatMap(statement => functionsOf({ file, statement })))
 
-const exampleBlocks: Array<{ name: string, file: string, code: string }> = exportedFunctions.flatMap(fn => fn.tags
+/* Gives the line, counted from 1 in its file, of the first code line of an @example fence (0 without a fence) */
+function firstCodeLineOf (tag: ts.JSDocTag): number {
+  const sourceFile = tag.getSourceFile()
+  const fence = sourceFile.text.indexOf('```typescript', tag.pos)
+
+  return (fence < 0) ? 0 : sourceFile.getLineAndCharacterOfPosition(fence).line + 2
+}
+
+const exampleBlocks: ExampleBlock[] = exportedFunctions.flatMap(fn => fn.tags
   .filter(t => t.tagName.text === 'example')
-  .map(t => ({ name: `${fn.name} @example (${fn.file})`, file: fn.file, code: exampleCodeOf(t) })))
+  .map(t => ({ name: `${fn.name} @example (${fn.file})`, util: fn.name, file: fn.file, line: firstCodeLineOf(t), code: exampleCodeOf(t) })))
+
+// the in-memory file the examples typecheck in, at the repo root so that its imports resolve as the tests' do
+const examplesPath = join(repoDir, 'jsdoc-examples.ts').replace(/\\/g, '/')
+
+/* Builds one file holding each example block in its own async function, after the names the doc-test provides */
+function examplesFileOf (blocks: ExampleBlock[]): { text: string, startLines: number[] } {
+  const lines = [
+    `import { ${[...rootNames].join(', ')} } from './ts/index.js'`,
+    ...[...notInBarrels].map(key => key.split(' ')).map(([file, name]) => `import { ${name} } from './${file.replace(/\.ts$/, '.js')}'`),
+    "import { DateTime, Duration, Interval, Settings } from 'luxon'",
+    "import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto'",
+    `declare const ${[...outsideApis].map(name => `${name}: any`).join(', ')}`,
+  ]
+  const startLines: number[] = []
+
+  for (const [i, block] of blocks.entries()) {
+    lines.push(`export async function example${i} (): Promise<void> {`)
+    startLines.push(lines.length)
+    lines.push(...block.code.split('\n'), '}')
+  }
+
+  return { text: lines.join('\n'), startLines }
+}
+
+/* Typechecks the example blocks with the tests' compiler options, and lists each error at its line in the util's JSDoc */
+function typeErrorsOf (blocks: ExampleBlock[]): string[] {
+  const { text, startLines } = examplesFileOf(blocks)
+  const { options } = ts.parseJsonConfigFileContent(ts.readConfigFile(join(repoDir, 'tsconfig.tests.json'), ts.sys.readFile).config, ts.sys, repoDir)
+  const baseHost = ts.createCompilerHost(options)
+  const getSourceFile = baseHost.getSourceFile.bind(baseHost)
+  const host: ts.CompilerHost = {
+    ...baseHost,
+    getSourceFile: (...args) => (args[0].replace(/\\/g, '/') === examplesPath) ? ts.createSourceFile(args[0], text, args[1]) : getSourceFile(...args),
+  }
+  const program = ts.createProgram({ rootNames: [examplesPath], options, host })
+  const sourceFile = program.getSourceFile(examplesPath)
+
+  if (sourceFile == null) {
+    throw new Error(`${examplesPath} is missing from the program`)
+  }
+
+  return [...program.getSyntacticDiagnostics(sourceFile), ...program.getSemanticDiagnostics(sourceFile)].map(d => {
+    const line = sourceFile.getLineAndCharacterOfPosition(d.start ?? 0).line
+    const i = startLines.filter(start => start <= line).length - 1
+    const where = (i < 0) ? `the imports of the examples, line ${line + 1}` : `${blocks[i].file}:${blocks[i].line + line - startLines[i]} ${blocks[i].util}`
+
+    return `${where}: ${ts.flattenDiagnosticMessageText(d.messageText, '\n  ')}`
+  })
+}
 
 /* Tells whether a text parses as a JavaScript expression, rather than prose */
 function isExpression (code: string): boolean {
@@ -150,7 +216,8 @@ function checkedLineOf (_: { line: string, label: string }): string {
 
   if (match != null) {
     const [, left, verb, right] = match
-    const call = left.replace(/;\s*$/, '')
+    // a leading `;` guards a line starting with `[` or `(` from the line above, as in code
+    const call = left.replace(/^\s*;/, '').replace(/;\s*$/, '')
     const label = JSON.stringify(_.label)
 
     if (verb === 'throws') {
@@ -262,6 +329,14 @@ describe(
       () => {
         expect(exportedFunctions.filter(fn => missingTagsOf(fn).length > 0).map(fn => `${fn.file} ${fn.name}: ${missingTagsOf(fn).join(', ')}`)).toEqual([])
       }
+    )
+
+    it(
+      'typechecks every @example block',
+      () => {
+        expect(typeErrorsOf(exampleBlocks.filter(block => block.code !== ''))).toEqual([])
+      },
+      60_000
     )
 
     it.each(exampleBlocks)(

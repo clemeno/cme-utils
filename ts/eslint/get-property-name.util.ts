@@ -8,11 +8,12 @@ import type { EsNode } from './es-node-type.js'
  * @returns The property name, or null when it cannot be resolved
  * @example
  * ```typescript
- * GET_PROPERTY_NAME({ type: 'Property', computed: false, key: { type: 'Identifier', name: 'run' } }) // returns 'run'
- * GET_PROPERTY_NAME({ type: 'MemberExpression', computed: true, property: { type: 'Literal', value: 'a-b' } }) // returns 'a-b'
+ * // ESLint passes whole nodes; these literals hold only the fields read
+ * GET_PROPERTY_NAME({ type: 'Property', computed: false, key: { type: 'Identifier', name: 'run' } } as EsNode) // returns 'run'
+ * GET_PROPERTY_NAME({ type: 'MemberExpression', computed: true, property: { type: 'Literal', value: 'a-b' } } as EsNode) // returns 'a-b'
  * // a computed non-literal key cannot be resolved
- * GET_PROPERTY_NAME({ type: 'Property', computed: true, key: { type: 'Identifier', name: 'KEY' } }) // returns null
- * GET_PROPERTY_NAME({ type: 'Identifier', name: 'x' }) // returns null
+ * GET_PROPERTY_NAME({ type: 'Property', computed: true, key: { type: 'Identifier', name: 'KEY' } } as EsNode) // returns null
+ * GET_PROPERTY_NAME({ type: 'Identifier', name: 'x' } as EsNode) // returns null
  * ```
  */
 export function GET_PROPERTY_NAME (node: EsNode): string | null {

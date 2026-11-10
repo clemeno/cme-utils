@@ -10,10 +10,11 @@ import { GET_PROPERTY_NAME } from './get-property-name.util.js'
  * @returns The name and kind of the function node
  * @example
  * ```typescript
- * GET_FUNCTION_NAME_WITH_KIND({ node: { type: 'FunctionDeclaration', id: { name: 'foo' }, parent: { type: 'Program' } } }) // returns "function 'foo'"
- * GET_FUNCTION_NAME_WITH_KIND({ node: { type: 'FunctionDeclaration', async: true, generator: true, id: { name: 'baz' }, parent: { type: 'Program' } } }) // returns "async generator function 'baz'"
+ * // ESLint passes whole nodes; these literals hold only the fields read
+ * GET_FUNCTION_NAME_WITH_KIND({ node: { type: 'FunctionDeclaration', id: { name: 'foo' }, parent: { type: 'Program' } } as EsNode }) // returns "function 'foo'"
+ * GET_FUNCTION_NAME_WITH_KIND({ node: { type: 'FunctionDeclaration', async: true, generator: true, id: { name: 'baz' }, parent: { type: 'Program' } } as EsNode }) // returns "async generator function 'baz'"
  * // an anonymous function has no name
- * GET_FUNCTION_NAME_WITH_KIND({ node: { type: 'FunctionExpression', parent: { type: 'CallExpression' } } }) // returns 'function'
+ * GET_FUNCTION_NAME_WITH_KIND({ node: { type: 'FunctionExpression', parent: { type: 'CallExpression' } } as EsNode }) // returns 'function'
  * ```
  */
 export function GET_FUNCTION_NAME_WITH_KIND (_: GetFunctionNameWithKindParams): string {

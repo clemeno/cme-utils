@@ -18,13 +18,13 @@ export type ANY_SORT_FUNCTION_TYPE = (a: any, b: any) => number
  * ```typescript
  * const users = [{ name: 'Alice', age: 25 }, { name: 'Bob', age: 30 }]
  * // Sort by age ascending
- * [...users].sort(SORT_OBJECTS({ on: u => u.age })) // returns [{ name: 'Alice', age: 25 }, { name: 'Bob', age: 30 }]
+ * ;[...users].sort(SORT_OBJECTS({ on: u => u.age })) // returns [{ name: 'Alice', age: 25 }, { name: 'Bob', age: 30 }]
  * // Sort by name descending
- * [...users].sort(SORT_OBJECTS({ on: u => u.name, order: 'desc' })) // returns [{ name: 'Bob', age: 30 }, { name: 'Alice', age: 25 }]
+ * ;[...users].sort(SORT_OBJECTS({ on: u => u.name, order: 'desc' })) // returns [{ name: 'Bob', age: 30 }, { name: 'Alice', age: 25 }]
  * // Pure numeric sorting (faster)
- * [...users].sort(SORT_OBJECTS({ on: u => u.age, order: 'desc', bPureNumeric: true })) // returns [{ name: 'Bob', age: 30 }, { name: 'Alice', age: 25 }]
+ * ;[...users].sort(SORT_OBJECTS({ on: u => u.age, order: 'desc', bPureNumeric: true })) // returns [{ name: 'Bob', age: 30 }, { name: 'Alice', age: 25 }]
  * // Numeric strings compare as numbers: '10' sorts after '9'
- * [{ v: '10' }, { v: '9' }].sort(SORT_OBJECTS({ on: x => x.v })) // returns [{ v: '9' }, { v: '10' }]
+ * ;[{ v: '10' }, { v: '9' }].sort(SORT_OBJECTS({ on: x => x.v })) // returns [{ v: '9' }, { v: '10' }]
  * // Equal keys compare as 0
  * SORT_OBJECTS({ on: x => x.v })({ v: 1 }, { v: 1 }) // returns 0
  * ```

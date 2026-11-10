@@ -67,7 +67,7 @@ Template: section 6 of [.github/instructions/new-utility.instructions.md](.githu
 - In `tests/` only: a rule whose violation is the test input or the mocked API's shape (e.g. `no-new-wrappers` to build a `new String()` input, `@typescript-eslint/no-useless-constructor` in a mock)
 
 ### JSDoc
-All exported functions must have JSDoc with `@param`, `@returns`, and `@example`. `tests/exports.test.ts` checks it and runs each example's `// returns` lines; how to write them: section 3 of [.github/instructions/new-utility.instructions.md](.github/instructions/new-utility.instructions.md).
+All exported functions must have JSDoc with `@param`, `@returns`, and `@example`. `tests/exports.test.ts` checks it, typechecks each example and runs its `// returns` lines; how to write them: section 3 of [.github/instructions/new-utility.instructions.md](.github/instructions/new-utility.instructions.md).
 
 ## Git
 

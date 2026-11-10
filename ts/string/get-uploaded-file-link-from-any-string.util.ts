@@ -14,7 +14,7 @@ import { IS_A_URL } from './is-a-url.util.js'
  * @returns The static link of the file, or '' (empty string) when `s` is a url without a file name
  * @example
  * ```typescript
- * const basename = s => s.split('/').pop()
+ * const basename = (s: string): string => s.slice(s.lastIndexOf('/') + 1)
  * const opts = { basename, fileUploadFolder: './uploads', publicStaticImageFolder: '/static' }
  * GET_UPLOADED_FILE_LINK_FROM_ANY_STRING({ ...opts, s: '123e4567-e89b-12d3-a456-426614174000' }) // returns '/static/123e4567-e89b-12d3-a456-426614174000.png'
  * GET_UPLOADED_FILE_LINK_FROM_ANY_STRING({ ...opts, s: './uploads/a.png' }) // returns '/static/a.png'
