@@ -1,6 +1,6 @@
 # 01a1c600eca476fc96c02e7cae4632d6: Secure random bytes on every runtime
 
-Status: ready-for-agent
+Status: resolved
 Blocked by: none
 
 ## What
@@ -34,3 +34,14 @@ What old runtimes offer, without an import (`ts/` imports nothing, AGENTS.md):
 - A test with no global `crypto` (stubbed, then restored) reaches the `Math.random` path.
 - A test without injection reaches the global `crypto` path.
 - `bun run check` passes; `feat:` commit (the new optional parameters), with `fix:` for the bias if it is split out.
+
+## Comments
+
+2026-11-10, resolved: `GET_RANDOM_BYTE_LIST` (`ts/number/get-random-byte-list.util.ts`) draws from the injected `getRandomValues`, then the global `crypto.getRandomValues`, then `Math.random`. The source type is the new `getRandomValuesFnType` (`ts/get-random-values-fn-type.ts`). `UUID_V4`, `UUID_V7` and `GET_RANDOM_INT_BETWEEN` take `getRandomValues?` and draw through it, and their JSDoc and the README give the Node 16 to 18 fix. The doc-test now has `webcrypto` of `node:crypto` in scope, so the examples that pass `webcrypto.getRandomValues.bind(webcrypto)` run and typecheck.
+
+Differences from the design:
+- `UUID_V4` uses an injected `getRandomValues` before `crypto.randomUUID()`: a caller who injects a source gets it. Without one, `randomUUID` still comes first.
+- The utils check whether a source exists (`typeof globalThis.crypto?.getRandomValues === 'function'`) instead of catching its error. A source that is present and throws now throws, instead of silently falling back to `Math.random`.
+- `getRandomValuesFnType` takes a `Uint8Array<ArrayBuffer>`: Node's types refuse a `Uint8Array` that a `SharedArrayBuffer` may back, so the example typecheck rejected `webcrypto.getRandomValues.bind(webcrypto)` against a plain `Uint8Array`. It is the first generic typed array in `ts/`, and a TypeScript older than 5.7 can't read its `.d.ts` (without `skipLibCheck`).
+- `GET_RANDOM_BYTE_LIST` asks for at most 65536 bytes per call (the Web Crypto quota), so any length works.
+- `GET_RANDOM_INT_BETWEEN` keeps returning NaN for a NaN or infinite bound, instead of throwing a BigInt `RangeError`. It draws the bits of `max - min` in BigInt, masks them, and discards a draw past the range. Its tests cover the whole safe range (`MIN_SAFE_INTEGER` to `MAX_SAFE_INTEGER`, 54 bits). Its tests used to pin `Math.random`, which would now loop forever on a discarded draw, so they inject bytes instead.
