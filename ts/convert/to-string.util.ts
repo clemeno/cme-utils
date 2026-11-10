@@ -21,7 +21,8 @@ export function TO_STRING (_: any): string {
   if (IS_SET(_) && !Number.isNaN(_)) {
     let bBuffer = false
 
-    try { bBuffer = (typeof Buffer !== 'undefined') && (Buffer as any).isBuffer(_) } catch { }
+    // a Buffer knows itself through its class, so a polyfill (absent from globalThis) counts too
+    try { bBuffer = _.constructor?.isBuffer?.(_) === true } catch { }
 
     if (typeof _ === 'string') {
       res = _

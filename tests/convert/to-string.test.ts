@@ -1,6 +1,17 @@
 import { describe, expect, it } from 'bun:test'
 import { TO_STRING } from '../../ts/convert/to-string.util.js'
 
+// a Buffer polyfill (the buffer package in a browser bundle) is not on globalThis: TO_STRING knows it by its class
+class PolyfilledBuffer {
+  static isBuffer (v: unknown): boolean {
+    return v instanceof PolyfilledBuffer
+  }
+
+  toString (): string {
+    return 'hello'
+  }
+}
+
 describe(
   'TO_STRING',
   () => {
@@ -20,6 +31,7 @@ describe(
       { name: 'should convert undefined to empty string', input: undefined, expected: '' },
       { name: 'should convert NaN to empty string', input: NaN, expected: '' },
       { name: 'should convert Buffer to string', input: Buffer.from('hello'), expected: 'hello' },
+      { name: 'should convert a polyfilled Buffer to string', input: new PolyfilledBuffer(), expected: 'hello' },
       { name: 'should convert Symbol to string', input: Symbol('test'), expected: 'Symbol(test)' },
       { name: 'should convert BigInt to string', input: BigInt(123), expected: '123' },
     ]
