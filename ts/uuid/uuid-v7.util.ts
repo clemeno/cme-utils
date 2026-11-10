@@ -3,6 +3,7 @@ import { TO_NUMBER } from '../convert/to-number.util.js'
 
 /**
  * Generate a standard RFC 9562 UUID v7 string
+ * On Node 16 to 18, which have no global `crypto`, the random bytes come from `Math.random`, which is not cryptographically secure.
  * @returns A lowercase UUID v7 string, whose first 48 bits are the current timestamp in milliseconds
  * @example
  * ```typescript

@@ -1,5 +1,6 @@
 /**
  * Downloads a URL with an axios GET (as an arraybuffer) and writes the response body to a file.
+ * Runs on Node and bun only: it writes a file by its path.
  * * provide axios -> import axios from 'axios'
  * * provide writeFile -> import { writeFile } from 'node:fs/promises'
  * @param _ - The parameter object

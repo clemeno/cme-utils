@@ -2,6 +2,7 @@ import { BYTE_ARRAY_TO_UUID } from './byte-array-to-uuid.util.js'
 
 /**
  * Generate a standard RFC 4122 UUID v4 string
+ * On Node 16 to 18, which have no global `crypto`, the random bytes come from `Math.random`, which is not cryptographically secure.
  * @returns A random lowercase UUID v4 string
  * @example
  * ```typescript

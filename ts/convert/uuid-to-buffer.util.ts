@@ -2,6 +2,7 @@ import { TO_STRING } from './to-string.util.js'
 
 /**
  * Converts a UUID string into a Buffer of its bytes (dashes removed, read as hexadecimal).
+ * Runs on Node and bun only: a browser has no `Buffer`, unless the caller passes a polyfill (the `buffer` package).
  * @param _ - The UUID and the Buffer class
  * @param _.uuid - The UUID string
  * @param _.Buffer - The Node `Buffer` class

@@ -3,6 +3,7 @@ import { GET_FILE_FULL_TEXT_CONTENT } from '../file/get-file-full-text-content.u
 /**
  * Reads a base64 AES-128-GCM SFTP key file and decodes it to a Buffer.
  * The platform APIs are provided by the caller: `import { Buffer } from 'node:buffer'` and `import { createReadStream } from 'node:fs'`.
+ * Runs on Node and bun only: it reads a file by its path.
  * @param _ - The parameter object
  * @param _.Buffer - The `Buffer` class, used to decode the base64 content
  * @param _.createReadStream - The `createReadStream` function of `node:fs`

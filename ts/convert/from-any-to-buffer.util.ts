@@ -1,5 +1,6 @@
 /**
  * Builds a Buffer from an array, a string or a typed array / view (sharing the view's memory).
+ * Runs on Node and bun only: a browser has no `Buffer`, unless the caller passes a polyfill (the `buffer` package).
  * @param _ - The source and the Buffer class
  * @param _.from - The value to convert: an array, a string, an ArrayBuffer or a view such as `Uint8Array`
  * @param _.Buffer - The Node `Buffer` class

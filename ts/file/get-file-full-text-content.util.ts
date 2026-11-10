@@ -4,6 +4,7 @@ import { TO_STRING } from '../convert/to-string.util.js'
  * Reads a whole UTF-8 text file and returns its content, trimmed once at both ends.
  * Byte chunks go through one streaming TextDecoder, so a multi-byte character split between chunks stays intact.
  * Open and read errors (e.g. ENOENT) are not caught: the returned promise rejects with them.
+ * Runs on Node and bun only: it reads a file by its path (in a browser, `READ_FILE_CONTENT` reads a picked `File`).
  * * provide createReadStream -> import { createReadStream } from 'node:fs'
  * @param _ - The parameter object
  * @param _.createReadStream - The `createReadStream` function of `node:fs`
