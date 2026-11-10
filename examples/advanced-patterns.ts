@@ -7,14 +7,17 @@ import {
   ARRAY_AVERAGE,
   ARRAY_MAX,
   ARRAY_MIN,
+  FROM_ISO_TO_LOCAL_DT,
   IS_NUMERIC,
   NORMALIZE_N_1,
+  SET_LOCALE,
   SORT_OBJECTS,
   TO_CSV_VALUE,
   TO_NUMBER,
   TO_STRING,
   UUID_V7,
 } from 'cme-utils'
+import { DateTime, Settings } from 'luxon'
 
 console.log('=== Advanced Sorting Patterns ===')
 
@@ -129,15 +132,16 @@ console.log(exportToCSV(users))
 
 console.log('\n=== Internationalization Example ===')
 
-// Note: SET_LOCALE and FROM_ISO_TO_LOCAL_DT require Luxon DateTime/Settings objects
-// For simple internationalization, use built-in Intl.DateTimeFormat
+// SET_LOCALE and FROM_ISO_TO_LOCAL_DT take luxon's DateTime and Settings
 const dates = ['2024-01-15T10:30:00Z', '2024-07-04T15:45:00Z']
 
-console.log('Sample dates for formatting:')
-for (const date of dates) {
-  console.log(`  ${date}`)
+for (const locale of ['en-US', 'de-DE']) {
+  SET_LOCALE({ Settings, locale })
+  console.log(`Dates in ${locale}:`)
+  for (const date of dates) {
+    console.log(`  ${date} -> ${FROM_ISO_TO_LOCAL_DT({ DateTime, Settings, iso: date })}`)
+  }
 }
-console.log('Use Intl.DateTimeFormat for locale-specific formatting')
 
 console.log('\n=== Error Handling Patterns ===')
 
