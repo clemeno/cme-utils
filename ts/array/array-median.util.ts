@@ -9,8 +9,10 @@ import type { numeric } from '../numeric.js'
  * @returns The median value, or NaN if array is empty
  * @example
  * ```typescript
- * ARRAY_MEDIAN([1, 3, 5, 7, 9]) // returns 5 (odd length)
- * ARRAY_MEDIAN([1, 3, 5, 7]) // returns 4 (even length: (3+5)/2)
+ * // odd length: the middle value
+ * ARRAY_MEDIAN([1, 3, 5, 7, 9]) // returns 5
+ * // even length: the average of the 2 middle values, (3 + 5) / 2
+ * ARRAY_MEDIAN([1, 3, 5, 7]) // returns 4
  * ARRAY_MEDIAN([]) // returns NaN
  * ```
  */

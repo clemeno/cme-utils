@@ -23,9 +23,15 @@ const notInBarrels = new Set([
 // lines are skipped, and the typecheck declares them as any
 const outsideApis = new Set(['qb', 'createReadStream', 'writeFile', 'axios', 'FileReader'])
 
+// the outside modules every example runs and typechecks with, besides the library
+const providedModules: Record<string, Record<string, unknown>> = {
+  luxon: { DateTime, Duration, Interval, Settings },
+  'node:crypto': { createCipheriv, createDecipheriv, randomBytes },
+}
+
 // the names every example runs and typechecks with, besides its own module's exports; luxon is set as the examples assume:
 // en-US, Europe/Paris, now 2024-03-15T15:30:45+01:00
-const scope: Record<string, unknown> = { ...lib, DateTime, Duration, Interval, Settings, createCipheriv, createDecipheriv, randomBytes }
+const scope: Record<string, unknown> = Object.assign({}, lib, ...Object.values(providedModules))
 const exampleNow = DateTime.fromISO('2024-03-15T15:30:45.000+01:00').toMillis()
 const luxonDefaults = { defaultLocale: Settings.defaultLocale, defaultZone: Settings.defaultZone, now: Settings.now }
 
@@ -155,8 +161,7 @@ function examplesFileOf (blocks: ExampleBlock[]): { text: string, startLines: nu
   const lines = [
     `import { ${[...rootNames].join(', ')} } from './ts/index.js'`,
     ...[...notInBarrels].map(key => key.split(' ')).map(([file, name]) => `import { ${name} } from './${file.replace(/\.ts$/, '.js')}'`),
-    "import { DateTime, Duration, Interval, Settings } from 'luxon'",
-    "import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto'",
+    ...Object.entries(providedModules).map(([module, names]) => `import { ${Object.keys(names).join(', ')} } from '${module}'`),
     `declare const ${[...outsideApis].map(name => `${name}: any`).join(', ')}`,
   ]
   const startLines: number[] = []
@@ -187,12 +192,13 @@ function typeErrorsOf (blocks: ExampleBlock[]): string[] {
     throw new Error(`${examplesPath} is missing from the program`)
   }
 
-  return [...program.getSyntacticDiagnostics(sourceFile), ...program.getSemanticDiagnostics(sourceFile)].map(d => {
-    const line = sourceFile.getLineAndCharacterOfPosition(d.start ?? 0).line
-    const i = startLines.filter(start => start <= line).length - 1
-    const where = (i < 0) ? `the imports of the examples, line ${line + 1}` : `${blocks[i].file}:${blocks[i].line + line - startLines[i]} ${blocks[i].util}`
+  return [...program.getSyntacticDiagnostics(sourceFile), ...program.getSemanticDiagnostics(sourceFile)].map(diagnostic => {
+    const line = sourceFile.getLineAndCharacterOfPosition(diagnostic.start ?? 0).line
+    const blockIndex = startLines.filter(start => start <= line).length - 1
+    const block = blocks[blockIndex]
+    const where = (blockIndex < 0) ? `the imports of the examples, line ${line + 1}` : `${block.file}:${block.line + line - startLines[blockIndex]} ${block.util}`
 
-    return `${where}: ${ts.flattenDiagnosticMessageText(d.messageText, '\n  ')}`
+    return `${where}: ${ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n  ')}`
   })
 }
 
@@ -224,6 +230,9 @@ function checkedLineOf (_: { line: string, label: string }): string {
       out = `await __throws({ label: ${label}, call: async () => (${call}) });`
     } else if (isExpression(right)) {
       out = `await __returns({ label: ${label}, call: async () => (${call}), expected: () => (${right}) });`
+    } else if (/^['"`[{(\d-]/.test(right)) {
+      // a value that starts like a JavaScript value but does not parse is a typo: as prose, the line would only run
+      out = `await __runs({ label: ${label}, call: async () => { throw new SyntaxError(${JSON.stringify(`the value after // returns does not parse: ${right}`)}) } });`
     } else {
       out = `await __runs({ label: ${label}, call: async () => (${call}) });`
     }

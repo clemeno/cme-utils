@@ -23,9 +23,9 @@ Either generate one `.ts` file into a git-ignored folder and add it to `test:typ
 - Every example that fails today is fixed in the same change, or listed here with the reason it can't typecheck.
 - `bun run check` passes.
 
-## Resolution (2026-11-10)
+## Comments
 
-`tests/exports.test.ts` typechecks in memory with the `typescript` API ("typechecks every @example block"). It builds one file that holds each example in its own async function, after imports of the library, luxon and `node:crypto`, and declares the outside APIs as `any`. It checks that file under `tsconfig.tests.json` and reports each error as `<util file>:<JSDoc line> <UTIL>: <message>`. The whole check takes about 2 s. The `GET_LOCALE({ defaultLocale: 'fr-CA' })` line failed it as `ts/space/get-locale.util.ts:14 GET_LOCALE: Argument of type '{ defaultLocale: string; }' is not assignable to parameter of type 'AppLuxonSettings'.`, then was reverted.
+2026-11-10, resolved: `tests/exports.test.ts` typechecks in memory with the `typescript` API ("typechecks every @example block"). It builds one file that holds each example in its own async function, after imports of the library, luxon and `node:crypto`, and declares the outside APIs as `any`. It checks that file under `tsconfig.tests.json` and reports each error as `<util file>:<JSDoc line> <UTIL>: <message>`. The whole check takes about 2 s. The `GET_LOCALE({ defaultLocale: 'fr-CA' })` line failed it as `ts/space/get-locale.util.ts:14 GET_LOCALE: Argument of type '{ defaultLocale: string; }' is not assignable to parameter of type 'AppLuxonSettings'.`, then was reverted. That revert first merged the closing fence into the last example line (`// returns 'en' * ```), which the doc-test read as prose and only ran: a `// returns` value that starts like a JavaScript value (a quote, bracket, brace, parenthesis, digit or `-`) but does not parse now fails it.
 
 The examples of 12 utils failed; all are fixed:
 - ASI: as plain code, a line starting with `[` joined the line above. The doc-test hid this, because it rewrites each checked line into a statement of its own. `IGNORE_DUPLICATES`, `SORT_BY_LABEL` and `SORT_OBJECTS` now take a leading `;`, which the doc-test strips from a checked call.

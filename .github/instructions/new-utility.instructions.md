@@ -42,7 +42,7 @@ Rules:
 
 - `@param` for each parameter, `@returns`, and at least one `@example` block in a ```` ```typescript ```` fence
 - The example must show at least the happy path and one edge case (e.g. `null`, empty array)
-- `tests/exports.test.ts` runs every example: a `CALL // returns VALUE` line must return VALUE, a `CALL // throws ...` line must throw. Write VALUE as a JavaScript expression (`'abc'`, `[1, 2]`, `NaN`, `42n`), with any note on its own `//` line above; multi-word prose (`// returns a 32-byte Buffer`) only runs the call. One call per checked line, setup (`const list = [1, 2]`) on the lines above.
+- `tests/exports.test.ts` runs every example: a `CALL // returns VALUE` line must return VALUE, a `CALL // throws ...` line must throw. Write VALUE as a JavaScript expression (`'abc'`, `[1, 2]`, `NaN`, `42n`), with any note on its own `//` line above; multi-word prose (`// returns a 32-byte Buffer`) only runs the call, and a VALUE that starts like a JavaScript value (a quote, bracket, brace, parenthesis, digit or `-`) fails unless it parses. One call per checked line, setup (`const list = [1, 2]`) on the lines above.
 - The examples run with the library, luxon (`DateTime`, `Settings`, `Duration`, `Interval`) and `node:crypto` in scope, luxon set to `en-US`, `Europe/Paris` and the time `2024-03-15T15:30:45+01:00`. A line naming `qb`, `axios`, `createReadStream`, `writeFile` or `FileReader` is skipped
 - It also typechecks every example with those names in scope (the skipped ones typed `any`), under the tests' compiler options: each example compiles as a caller's code would. A partial object stands for a richer one through a cast (`{ type: 'Identifier', name: 'x' } as EsNode`), and a line starting with `[` or `(` takes a leading `;`, as in code
 
