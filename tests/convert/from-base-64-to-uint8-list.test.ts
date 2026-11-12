@@ -46,5 +46,10 @@ describe(
         expect(FROM_BASE_64_TO_UINT8_LIST({ Buffer: undefined, base64 })).toEqual(expected)
       }
     )
+
+    it('throws the error of a given Buffer that throws, instead of falling back to atob', () => {
+      const brokenBuffer = { from: () => { throw new Error('Buffer broke') } }
+      expect(() => FROM_BASE_64_TO_UINT8_LIST({ Buffer: brokenBuffer, base64: 'SA==' })).toThrow(new Error('Buffer broke'))
+    })
   }
 )

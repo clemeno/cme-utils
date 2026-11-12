@@ -1,4 +1,3 @@
-import { IS_SET } from '../check/is-set.util.js'
 import { TO_STRING } from './to-string.util.js'
 
 /**
@@ -22,16 +21,15 @@ export function BASE64_TO_HEX<TypeofBuffer = any> (_: {
 }): string {
   let res = ''
 
-  let error: any
-
   const base64String = TO_STRING(_.base64)
 
   // * provide Buffer
-  try { res = (_.Buffer as any).from(base64String, 'base64').toString('hex') } catch (err) { error = err }
-
-  if (IS_SET(error)) {
+  if (_.Buffer != null) {
+    res = (_.Buffer as any).from(base64String, 'base64').toString('hex')
+  } else {
     let raw = ''
 
+    // an invalid base 64 string makes atob throw: the result stays empty
     try { raw = atob(base64String) } catch { }
 
     const resList: string[] = []

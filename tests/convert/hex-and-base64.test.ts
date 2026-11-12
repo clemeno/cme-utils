@@ -85,3 +85,21 @@ describe(
     })
   }
 )
+
+describe(
+  'HEX_TO_BASE64 and BASE64_TO_HEX with a Buffer that throws',
+  () => {
+    // a given Buffer that throws lets its error through: btoa and atob replace a missing Buffer only
+    const brokenBuffer = { from: () => { throw new Error('Buffer broke') } }
+
+    it.each<{ name: string, convert: () => string }>([
+      { name: 'HEX_TO_BASE64', convert: () => HEX_TO_BASE64({ Buffer: brokenBuffer, hex: '48' }) },
+      { name: 'BASE64_TO_HEX', convert: () => BASE64_TO_HEX({ Buffer: brokenBuffer, base64: 'SA==' }) },
+    ])(
+      '$name throws the error of the Buffer',
+      ({ convert }) => {
+        expect(convert).toThrow(new Error('Buffer broke'))
+      }
+    )
+  }
+)

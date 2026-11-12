@@ -12,6 +12,13 @@ class PolyfilledBuffer {
   }
 }
 
+// a class whose isBuffer exists and throws
+class ThrowingBuffer {
+  static isBuffer (): boolean {
+    throw new Error('isBuffer broke')
+  }
+}
+
 describe(
   'TO_STRING',
   () => {
@@ -32,6 +39,7 @@ describe(
       { name: 'should convert NaN to empty string', input: NaN, expected: '' },
       { name: 'should convert Buffer to string', input: Buffer.from('hello'), expected: 'hello' },
       { name: 'should convert a polyfilled Buffer to string', input: new PolyfilledBuffer(), expected: 'hello' },
+      { name: 'should convert an object whose constructor.isBuffer is no function to JSON', input: { constructor: { isBuffer: true } }, expected: '{"constructor":{"isBuffer":true}}' },
       { name: 'should convert Symbol to string', input: Symbol('test'), expected: 'Symbol(test)' },
       { name: 'should convert BigInt to string', input: BigInt(123), expected: '123' },
     ]
@@ -42,5 +50,9 @@ describe(
         expect(TO_STRING(input)).toBe(expected)
       }
     )
+
+    it('should let the error of an isBuffer that throws through', () => {
+      expect(() => TO_STRING(new ThrowingBuffer())).toThrow(new Error('isBuffer broke'))
+    })
   }
 )

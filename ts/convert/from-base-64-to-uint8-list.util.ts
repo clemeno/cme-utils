@@ -19,12 +19,11 @@ export function FROM_BASE_64_TO_UINT8_LIST<TypeofBuffer = any> (_: {
 }): number[] {
   let res = new Uint8Array(0)
 
-  let bErr = false
-
   // * provide Buffer
-  try { res = new Uint8Array((_.Buffer as any).from(_.base64, 'base64')) } catch { bErr = true }
-
-  if (bErr) {
+  if (_.Buffer != null) {
+    res = new Uint8Array((_.Buffer as any).from(_.base64, 'base64'))
+  } else {
+    // an invalid base 64 string makes atob throw: the result stays empty
     try {
       const raw = atob(_.base64)
 
@@ -35,9 +34,7 @@ export function FROM_BASE_64_TO_UINT8_LIST<TypeofBuffer = any> (_: {
       }
 
       res = new Uint8Array(resList)
-    } catch {
-      bErr = true
-    }
+    } catch { }
   }
 
   return Array.from(res)
