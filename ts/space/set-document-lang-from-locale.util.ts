@@ -1,3 +1,5 @@
+import { SET_DOCUMENT_LANG } from './set-document-lang.util.js'
+
 /**
  * Sets the lang attribute of the document element from a locale: the part before the first dash. Does nothing outside a browser (no window).
  * @param locale - The locale, for example 'fr-CA'
@@ -11,7 +13,5 @@
  * ```
  */
 export function SET_DOCUMENT_LANG_FROM_LOCALE (locale: string): void {
-  // missing outside a browser (Node, bun, a worker)
-  const globalWindow: Partial<Window> | undefined = globalThis.window
-  globalWindow?.document?.documentElement?.setAttribute('lang', locale.split('-').slice(0, 1).join('-'))
+  SET_DOCUMENT_LANG(locale.split('-').slice(0, 1).join('-'))
 }

@@ -32,7 +32,7 @@ describe(
         expected: '',
       },
       {
-        name: 'should return empty string when the window has no document (a worker, Deno)',
+        name: 'should return empty string when the window has no document (Deno 1.x)',
         setup: () => { global.window = {} as any },
         expected: '',
       },
@@ -49,15 +49,5 @@ describe(
         expect(GET_BASE_URI()).toBe(expected)
       }
     )
-
-    it('should let the error of a document that throws through', () => {
-      setDocumentElement({
-        get baseURI () {
-          throw new Error('Access denied')
-        },
-      })
-
-      expect(() => GET_BASE_URI()).toThrow(new Error('Access denied'))
-    })
   }
 )

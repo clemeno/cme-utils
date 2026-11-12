@@ -11,6 +11,5 @@
  */
 export function SET_DOCUMENT_LOCALE (locale: string): void {
   // missing outside a browser (Node, bun, a worker)
-  const globalWindow: Partial<Window> | undefined = globalThis.window
-  globalWindow?.document?.documentElement?.setAttribute('locale', locale)
+  globalThis.window?.document?.documentElement?.setAttribute('locale', locale)
 }

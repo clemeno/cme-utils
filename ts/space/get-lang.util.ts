@@ -16,8 +16,7 @@ import { SET_DOCUMENT_LANG } from './set-document-lang.util.js'
  */
 export function GET_LANG (_Settings: AppLuxonSettings): string {
   // missing outside a browser (Node, bun, a worker)
-  const globalWindow: Partial<Window> | undefined = globalThis.window
-  const documentLang = globalWindow?.document?.documentElement?.getAttribute('lang') ?? ''
+  const documentLang = globalThis.window?.document?.documentElement?.getAttribute('lang') ?? ''
 
   const settingsLocale = GET_LOCALE(_Settings)
   const settingsLang = settingsLocale.split('-').slice(0, 1).join('-')

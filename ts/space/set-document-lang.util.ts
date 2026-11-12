@@ -11,6 +11,5 @@
  */
 export function SET_DOCUMENT_LANG (lang: string): void {
   // missing outside a browser (Node, bun, a worker)
-  const globalWindow: Partial<Window> | undefined = globalThis.window
-  globalWindow?.document?.documentElement?.setAttribute('lang', lang)
+  globalThis.window?.document?.documentElement?.setAttribute('lang', lang)
 }

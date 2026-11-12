@@ -51,8 +51,11 @@ describe(
       }
     )
 
-    it('should let the error of an isBuffer that throws through', () => {
-      expect(() => TO_STRING(new ThrowingBuffer())).toThrow(new Error('isBuffer broke'))
-    })
+    it(
+      'should let the error of an isBuffer that throws through',
+      () => {
+        expect(() => TO_STRING(new ThrowingBuffer())).toThrow(new Error('isBuffer broke'))
+      }
+    )
   }
 )

@@ -17,8 +17,7 @@ import { SET_DOCUMENT_TZ } from './set-document-tz.util.js'
 export function GET_TZ (_Settings: AppLuxonSettings): string {
   // _Settings.defaultZone.name
   // missing outside a browser (Node, bun, a worker)
-  const globalWindow: Partial<Window> | undefined = globalThis.window
-  const documentTz = globalWindow?.document?.documentElement?.getAttribute('tz') ?? ''
+  const documentTz = globalThis.window?.document?.documentElement?.getAttribute('tz') ?? ''
 
   const settingsTz = _Settings.defaultZone.name
 
