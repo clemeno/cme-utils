@@ -1,3 +1,5 @@
+import { IS_SET } from '../check/is-set.util.js'
+
 /**
  * Decodes a base 64 string into a list of byte values, with Buffer when given and atob otherwise.
  * An invalid base 64 string gives an empty list.
@@ -20,7 +22,7 @@ export function FROM_BASE_64_TO_UINT8_LIST<TypeofBuffer = any> (_: {
   let res = new Uint8Array(0)
 
   // * provide Buffer
-  if (_.Buffer != null) {
+  if (IS_SET(_.Buffer)) {
     res = new Uint8Array((_.Buffer as any).from(_.base64, 'base64'))
   } else {
     // an invalid base 64 string makes atob throw: the result stays empty

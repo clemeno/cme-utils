@@ -72,12 +72,12 @@ function isExported (statement: ts.Statement): boolean {
 function namesOf (statement: ts.Statement): string[] {
   let names: string[] = []
 
-  if (ts.isExportDeclaration(statement) && (statement.exportClause != null) && ts.isNamedExports(statement.exportClause)) {
+  if (ts.isExportDeclaration(statement) && (statement.exportClause !== undefined) && ts.isNamedExports(statement.exportClause)) {
     names = statement.exportClause.elements.map(e => e.name.text)
   } else if (isExported(statement) && ts.isVariableStatement(statement)) {
     names = statement.declarationList.declarations.map(d => d.name.getText())
   } else if (isExported(statement) && (ts.isFunctionDeclaration(statement) || ts.isClassDeclaration(statement) || ts.isInterfaceDeclaration(statement) || ts.isTypeAliasDeclaration(statement))) {
-    names = (statement.name != null) ? [statement.name.text] : []
+    names = (statement.name !== undefined) ? [statement.name.text] : []
   }
 
   return names
@@ -110,7 +110,7 @@ function functionsOf (_: { file: string, statement: ts.Statement }): ExportedFun
   const tags = ts.getJSDocTags(_.statement)
   let functions: ExportedFunction[] = []
 
-  if (isExported(_.statement) && ts.isFunctionDeclaration(_.statement) && (_.statement.name != null)) {
+  if (isExported(_.statement) && ts.isFunctionDeclaration(_.statement) && (_.statement.name !== undefined)) {
     functions = [{ file: _.file, name: _.statement.name.text, bTakesParameter: _.statement.parameters.length > 0, tags }]
   } else if (isExported(_.statement) && ts.isVariableStatement(_.statement)) {
     functions = _.statement.declarationList.declarations
@@ -188,7 +188,7 @@ function typeErrorsOf (blocks: ExampleBlock[]): string[] {
   const program = ts.createProgram({ rootNames: [examplesPath], options, host })
   const sourceFile = program.getSourceFile(examplesPath)
 
-  if (sourceFile == null) {
+  if (sourceFile === undefined) {
     throw new Error(`${examplesPath} is missing from the program`)
   }
 
@@ -220,7 +220,7 @@ function checkedLineOf (_: { line: string, label: string }): string {
   const match = _.line.match(/^(.*?\S)\s*\/\/\s*(returns|throws)\b\s*(.*)$/)
   let out = _.line
 
-  if (match != null) {
+  if (match !== null) {
     const [, left, verb, right] = match
     // a leading `;` guards a line starting with `[` or `(` from the line above, as in code
     const call = left.replace(/^\s*;/, '').replace(/;\s*$/, '')

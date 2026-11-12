@@ -1,9 +1,10 @@
+import { IS_SET } from '../check/is-set.util.js'
 import { TO_STRING } from './to-string.util.js'
 
 type DateLike = { toISO: () => string | null } | { toISOString: () => string }
 
 function toIsoString (value: DateLike | null | undefined): string | null | undefined {
-  return value == null ? undefined : (('toISO' in value) ? value.toISO() : value.toISOString())
+  return IS_SET(value) ? (('toISO' in value) ? value.toISO() : value.toISOString()) : undefined
 }
 
 /**

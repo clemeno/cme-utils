@@ -1,3 +1,4 @@
+import { IS_SET } from '../check/is-set.util.js'
 import type { GetFunctionNameWithKindParams } from './get-function-name-with-kind-params.js'
 import { GET_PROPERTY_NAME } from './get-property-name.util.js'
 
@@ -70,14 +71,14 @@ export function GET_FUNCTION_NAME_WITH_KIND (_: GetFunctionNameWithKindParams): 
         const name = GET_PROPERTY_NAME(parent)
         if (name !== null && name !== '') {
           tokens.push(`'${name}'`)
-        } else if (_.sourceCode != null && parent.key != null) {
+        } else if (IS_SET(_.sourceCode) && IS_SET(parent.key)) {
           const keyText = _.sourceCode.getText(parent.key)
           if (!keyText.includes('\n')) {
             tokens.push(`[${keyText}]`)
           }
         }
       }
-    } else if (_.node.id != null) {
+    } else if (IS_SET(_.node.id)) {
       tokens.push(`'${_.node.id.name ?? ''}'`)
     } else if (
       parent.type === 'VariableDeclarator' &&

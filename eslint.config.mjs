@@ -88,6 +88,8 @@ const optionList = [
   {
     rules: {
       curly: ['error', 'all'],
+      // strict even against null (neostandard ignores it): IS_SET tells null or undefined apart from a value
+      eqeqeq: ['error', 'always'],
       'no-plusplus': 'error',
       'no-dupe-else-if': 'error',
       'no-lonely-if': 'error',

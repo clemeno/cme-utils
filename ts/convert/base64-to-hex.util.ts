@@ -1,3 +1,4 @@
+import { IS_SET } from '../check/is-set.util.js'
 import { TO_STRING } from './to-string.util.js'
 
 /**
@@ -24,7 +25,7 @@ export function BASE64_TO_HEX<TypeofBuffer = any> (_: {
   const base64String = TO_STRING(_.base64)
 
   // * provide Buffer
-  if (_.Buffer != null) {
+  if (IS_SET(_.Buffer)) {
     res = (_.Buffer as any).from(base64String, 'base64').toString('hex')
   } else {
     let raw = ''

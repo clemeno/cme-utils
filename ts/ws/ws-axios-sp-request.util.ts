@@ -159,7 +159,7 @@ export async function WS_AXIOS_SP_REQUEST<AxiosStatic = any, NodeHttps = any, Ax
   }
 
   // a browser has no node:https: it sends the request with its own certificate check
-  if (bUrlHttps && _.https != null) {
+  if (bUrlHttps && IS_SET(_.https)) {
     // ? https.AgentOptions
     const agentConfig: Record<string, unknown> = { rejectUnauthorized: false }
 

@@ -1,3 +1,4 @@
+import { IS_SET } from '../check/is-set.util.js'
 import { TO_STRING } from './to-string.util.js'
 
 /**
@@ -22,7 +23,7 @@ export function HEX_TO_BASE64<TypeofBuffer = any> (_: {
 
   const hexStr = TO_STRING(_.hex)
 
-  if (_.Buffer != null) {
+  if (IS_SET(_.Buffer)) {
     res = (_.Buffer as any).from(hexStr, 'hex').toString('base64')
   } else {
     // like Buffer, it stops at the first pair that is not two hex digits, so btoa only gets char codes 0 to 255

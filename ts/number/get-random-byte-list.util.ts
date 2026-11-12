@@ -1,3 +1,4 @@
+import { IS_SET } from '../check/is-set.util.js'
 import type { getRandomValuesFnType } from '../get-random-values-fn-type.js'
 
 // getRandomValues throws a QuotaExceededError when asked for more bytes in one call
@@ -28,7 +29,7 @@ export function GET_RANDOM_BYTE_LIST (_: { length: number, getRandomValues?: get
 
   let res = new Uint8Array(length)
 
-  if (getRandomValues == null) {
+  if (!IS_SET(getRandomValues)) {
     res = res.map(() => Math.floor(Math.random() * 256))
   } else {
     for (let offset = 0; offset < length; offset += maxByteCountPerCall) {

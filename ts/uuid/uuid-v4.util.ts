@@ -1,3 +1,4 @@
+import { IS_SET } from '../check/is-set.util.js'
 import type { getRandomValuesFnType } from '../get-random-values-fn-type.js'
 import { GET_RANDOM_BYTE_LIST } from '../number/get-random-byte-list.util.js'
 import { BYTE_ARRAY_TO_UUID } from './byte-array-to-uuid.util.js'
@@ -26,7 +27,7 @@ export function UUID_V4 (_?: { getRandomValues?: getRandomValuesFnType }): strin
 
   let res = ''
 
-  if (getRandomValues == null && typeof globalCrypto?.randomUUID === 'function') {
+  if (!IS_SET(getRandomValues) && typeof globalCrypto?.randomUUID === 'function') {
     res = globalCrypto.randomUUID()
   } else {
     const randomByteArray = GET_RANDOM_BYTE_LIST({ length: 16, getRandomValues })
