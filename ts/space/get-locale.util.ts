@@ -14,12 +14,9 @@ import { SET_DOCUMENT_LOCALE } from './set-document-locale.util.js'
  * ```
  */
 export function GET_LOCALE (_Settings: AppLuxonSettings): string {
-  let documentLocale = ''
-
-  try {
-    // @ts-ignore
-    documentLocale = window.document.documentElement.getAttribute('locale') ?? ''
-  } catch {}
+  // missing outside a browser (Node, bun, a worker)
+  const globalWindow: Partial<Window> | undefined = globalThis.window
+  const documentLocale = globalWindow?.document?.documentElement?.getAttribute('locale') ?? ''
 
   const { defaultLocale } = _Settings
 

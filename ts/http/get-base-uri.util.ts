@@ -9,12 +9,9 @@
  * ```
  */
 export function GET_BASE_URI (): string {
-  let baseURI = ''
-
-  try {
-    // @ts-ignore
-    baseURI = window.document.documentElement.baseURI.replace(/\/$/, '')
-  } catch { }
+  // missing outside a browser (Node, bun, a worker)
+  const globalWindow: Partial<Window> | undefined = globalThis.window
+  const baseURI = globalWindow?.document?.documentElement?.baseURI.replace(/\/$/, '') ?? ''
 
   return baseURI
 }

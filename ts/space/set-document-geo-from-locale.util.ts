@@ -12,8 +12,7 @@
  * ```
  */
 export function SET_DOCUMENT_GEO_FROM_LOCALE (locale: string): void {
-  try {
-    // @ts-ignore
-    window.document.documentElement.setAttribute('geo', locale.split('-').slice(1).join('-'))
-  } catch {}
+  // missing outside a browser (Node, bun, a worker)
+  const globalWindow: Partial<Window> | undefined = globalThis.window
+  globalWindow?.document?.documentElement?.setAttribute('geo', locale.split('-').slice(1).join('-'))
 }

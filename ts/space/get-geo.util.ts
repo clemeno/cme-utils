@@ -17,12 +17,9 @@ import { SET_DOCUMENT_GEO } from './set-document-geo.util.js'
  * ```
  */
 export function GET_GEO (_Settings: AppLuxonSettings): string {
-  let documentGeo = ''
-
-  try {
-    // @ts-ignore
-    documentGeo = window.document.documentElement.getAttribute('geo') ?? ''
-  } catch {}
+  // missing outside a browser (Node, bun, a worker)
+  const globalWindow: Partial<Window> | undefined = globalThis.window
+  const documentGeo = globalWindow?.document?.documentElement?.getAttribute('geo') ?? ''
 
   const settingsLocale = GET_LOCALE(_Settings)
   const settingsGeo = settingsLocale.split('-').slice(1).join('-')

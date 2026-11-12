@@ -31,5 +31,14 @@ describe(
         expect(() => SET_DOCUMENT_LANG('en')).not.toThrow()
       }
     )
+
+    it(
+      'should let the error of a document that throws through',
+      () => {
+        global.window = { document: { documentElement: { setAttribute: () => { throw new Error('setAttribute broke') } } } } as any
+
+        expect(() => SET_DOCUMENT_LANG('en')).toThrow(new Error('setAttribute broke'))
+      }
+    )
   }
 )

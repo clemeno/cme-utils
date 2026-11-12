@@ -10,8 +10,7 @@
  * ```
  */
 export function SET_DOCUMENT_GEO (geo: string): void {
-  try {
-    // @ts-ignore
-    window.document.documentElement.setAttribute('geo', geo)
-  } catch {}
+  // missing outside a browser (Node, bun, a worker)
+  const globalWindow: Partial<Window> | undefined = globalThis.window
+  globalWindow?.document?.documentElement?.setAttribute('geo', geo)
 }
