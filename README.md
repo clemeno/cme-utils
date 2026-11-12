@@ -36,7 +36,7 @@ Or deep-import a single module directly (same value, shortest path):
 import { UUID_V7 } from 'cme-utils/m/uuid/uuid-v7.util.js'
 ```
 
-Requires **Node >= 16**. The package is ESM-first — use `import` or a bundler. CommonJS `require()` is supported only for the ESLint plugin entries (see below).
+Requires **Node >= 16**, and TypeScript >= 5.7 for its typings (or `skipLibCheck`): they use the generic `Uint8Array<ArrayBuffer>`. The package is ESM-first — use `import` or a bundler. CommonJS `require()` is supported only for the ESLint plugin entries (see below).
 
 > `UUID_V4`, `UUID_V7`, `GET_RANDOM_INT_BETWEEN` and `GET_RANDOM_BYTE_LIST` draw from the global Web Crypto, which bun, browsers and Node 19+ have. Node 16 to 18 lack it by default: pass `getRandomValues: webcrypto.getRandomValues.bind(webcrypto)` (`webcrypto` of `node:crypto`), or run Node 16.15+ or 17.6+ with `--experimental-global-webcrypto`. With neither, they fall back to `Math.random()`, which is not cryptographically secure.
 
