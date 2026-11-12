@@ -72,7 +72,7 @@ const runtimeRules = {
   'no-restricted-globals': [
     'error',
     ...nodeOnlyGlobals.map(name => ({ name, message: `${name} exists on Node or bun only: take it through the object parameter, or read globalThis.${name} behind a check, so the util also runs in a browser.` })),
-    ...browserOnlyGlobals.map(name => ({ name, message: `${name} exists in a browser only: use an API all three runtimes have (Blob.text() for FileReader), reach it through window inside try / catch, or take it through the object parameter.` })),
+    ...browserOnlyGlobals.map(name => ({ name, message: `${name} exists in a browser only: use an API all three runtimes have (Blob.text() for FileReader), read it from globalThis.window behind a check (globalThis.window?.document), or take it through the object parameter.` })),
   ],
   'no-restricted-imports': [
     'error',
