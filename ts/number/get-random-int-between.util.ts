@@ -9,7 +9,7 @@ import { GET_RANDOM_BYTE_LIST } from './get-random-byte-list.util.js'
  * @param _ - The bounds and the source
  * @param _.a - One bound
  * @param _.b - The other bound, which may be lower than `a`
- * @param _.getRandomValues - Optional source, a Web Crypto `getRandomValues` bound to its `crypto`; it comes before the global one
+ * @param _.getRandomValues - Optional source, a Web Crypto `getRandomValues` bound to its `crypto`; it comes before the global one. A fake for tests must vary: one that keeps drawing past the range never ends
  * @returns A random integer `n` with `min(a, b) <= n <= max(a, b)`, or NaN when a bound is NaN or infinite
  * @example
  * ```typescript
@@ -37,13 +37,13 @@ export function GET_RANDOM_INT_BETWEEN (_: { a: number, b: number, getRandomValu
     const bitCount = (maxOffset === 0n) ? 0 : maxOffset.toString(2).length
     const mask = (1n << BigInt(bitCount)) - 1n
 
-    let offset = maxOffset + 1n
+    let offset = 0n
 
-    while (maxOffset < offset) {
+    do {
       const byteList = GET_RANDOM_BYTE_LIST({ length: Math.ceil(bitCount / 8), getRandomValues: _.getRandomValues })
       // eslint-disable-next-line max-params
       offset = byteList.reduce((acc, byte) => (acc << 8n) | BigInt(byte), 0n) & mask
-    }
+    } while (maxOffset < offset)
 
     res = Number(BigInt(min) + offset)
   }

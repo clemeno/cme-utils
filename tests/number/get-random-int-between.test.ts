@@ -47,7 +47,7 @@ describe(
       'draws from the injected getRandomValues',
       () => {
         /** Returns a getRandomValues whose calls get the byte lists of `drawList`, in order. */
-        function drawing (drawList: number[][]): getRandomValuesFnType {
+        function getRandomValuesFrom (drawList: number[][]): getRandomValuesFnType {
           const queue = [...drawList]
           return array => { array.set(queue.shift() ?? []); return array }
         }
@@ -65,7 +65,7 @@ describe(
         ])(
           '$name',
           ({ a, b, drawList, expected }) => {
-            expect(GET_RANDOM_INT_BETWEEN({ a, b, getRandomValues: drawing(drawList) })).toBe(expected)
+            expect(GET_RANDOM_INT_BETWEEN({ a, b, getRandomValues: getRandomValuesFrom(drawList) })).toBe(expected)
           }
         )
       }

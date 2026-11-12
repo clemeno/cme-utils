@@ -24,11 +24,7 @@ export function GET_RANDOM_BYTE_LIST (_: { length: number, getRandomValues?: get
   // missing on Node 16 to 18, unless run with --experimental-global-webcrypto
   const globalCrypto: Partial<Crypto> | undefined = globalThis.crypto
 
-  let getRandomValues = _.getRandomValues
-
-  if (getRandomValues == null && typeof globalCrypto?.getRandomValues === 'function') {
-    getRandomValues = globalCrypto.getRandomValues.bind(globalCrypto)
-  }
+  const getRandomValues = _.getRandomValues ?? ((typeof globalCrypto?.getRandomValues === 'function') ? globalCrypto.getRandomValues.bind(globalCrypto) : undefined)
 
   let res = new Uint8Array(length)
 

@@ -19,7 +19,7 @@ import { BYTE_ARRAY_TO_UUID } from './byte-array-to-uuid.util.js'
  * ```
  */
 export function UUID_V4 (_?: { getRandomValues?: getRandomValuesFnType }): string {
-  const getRandomValues = _?.getRandomValues
+  const { getRandomValues } = _ ?? {}
 
   // missing on Node 16 to 18, unless run with --experimental-global-webcrypto, and randomUUID in a page served over http
   const globalCrypto: Partial<Crypto> | undefined = globalThis.crypto
