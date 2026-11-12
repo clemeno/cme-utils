@@ -1,6 +1,6 @@
 # 01a1c5ebc99072b3a2800cef8e4203e8: AES-GCM on Web Crypto, for the browser too
 
-Status: ready-for-agent
+Status: resolved
 Blocked by: none
 
 ## What
@@ -24,3 +24,10 @@ User, 2026-11-10: keep both. The new Web Crypto utils sit beside the sync `node:
 
 - A test ciphers with `CIPHER_AES_GCM_TO_BUFFER` (Node API) and deciphers with the Web Crypto util, and the reverse.
 - The JSDoc of the new utils has no `Runs on Node and bun only` line; `bun run check` passes.
+
+## Comments
+
+2026-11-12, resolved: `CIPHER_AES_GCM_TO_BYTES` (`ts/aes/cipher-aes-gcm-to-bytes.util.ts`) and `DECIPHER_AES_GCM_BYTES_TO_UTF8` (`ts/aes/decipher-aes-gcm-bytes-to-utf8.util.ts`) run on `crypto.subtle`, with the byte layout of `CIPHER_AES_GCM_TO_BUFFER`. Tests (`tests/aes/aes-gcm-web-crypto.test.ts`) cover round trips, both cross-runtime directions, the NIST GCM vectors 1 and 2, the missing sources and the failing ones. Differences from the design:
+- The Web Crypto object comes in whole, as `crypto` (user decision above), typed by the new exported interface `AesGcmWebCrypto` (`ts/aes/aes-gcm-web-crypto-type.ts`): only the members the utils call, since the DOM and Node types of a `CryptoKey` differ. The decipher takes `subtle` alone.
+- The key and the ciphered bytes may be any `Uint8Array` or `Buffer`, typed plain `Uint8Array`: the utils copy them, since Web Crypto refuses a view on a `SharedArrayBuffer`. The output is a `Uint8Array<ArrayBuffer>`.
+- A 24- or 32-byte key works too (AES-192, AES-256); only a 16-byte key matches the `aes-128-gcm` of the `node:crypto` utils.
