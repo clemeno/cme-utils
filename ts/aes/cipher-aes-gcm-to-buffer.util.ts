@@ -1,7 +1,7 @@
 /**
  * Encrypts a UTF-8 string with AES-128-GCM and a random 12-byte IV.
  * The platform APIs are provided by the caller: `import { Buffer } from 'node:buffer'` and `import { createCipheriv, randomBytes } from 'node:crypto'`.
- * Runs on Node and bun only: a browser has no `node:crypto`.
+ * Runs on Node and bun only: a browser has no `node:crypto`. `CIPHER_AES_GCM_TO_BYTES` does the same, with the same byte layout, on Web Crypto.
  * @param _ - The parameter object
  * @param _.Buffer - The `Buffer` class, used to concatenate the parts
  * @param _.createCipheriv - The `createCipheriv` function of `node:crypto`

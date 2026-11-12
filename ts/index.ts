@@ -1,4 +1,4 @@
-export { CIPHER_AES_GCM_TO_BUFFER, DECIPHER_AES_GCM_TO_UTF8, GET_AES_GCM_KEY_BUFFER, GET_AES_GCM_KEY_SFTP_BUFFER } from './aes/index.js'
+export { type AesGcmWebCrypto, CIPHER_AES_GCM_TO_BUFFER, CIPHER_AES_GCM_TO_BYTES, DECIPHER_AES_GCM_BYTES_TO_UTF8, DECIPHER_AES_GCM_TO_UTF8, GET_AES_GCM_KEY_BUFFER, GET_AES_GCM_KEY_SFTP_BUFFER } from './aes/index.js'
 export type { AppAbstractControl } from './app-abstract-control.js'
 export { AppExceptionOnly } from './app-exception-only.js'
 export { AppExceptionResult } from './app-exception-result.js'

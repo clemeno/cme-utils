@@ -16,7 +16,7 @@ User, 2026-11-10: keep both. The new Web Crypto utils sit beside the sync `node:
 ## Design
 
 - Two new async utils on `crypto.subtle`, with `Uint8Array` in and out and the same byte layout: `CIPHER_AES_GCM_TO_BYTES` and `DECIPHER_AES_GCM_BYTES_TO_UTF8`.
-- `subtle` is taken through the object parameter, optional, `globalThis.crypto.subtle` by default. Node 16 to 18 (`engines` keeps `>=16`, user decision) have no global `crypto`: there the caller passes `webcrypto.subtle` of `node:crypto`, or runs Node with `--experimental-global-webcrypto`.
+- The Web Crypto object is taken through the object parameter as `crypto`, optional, `globalThis.crypto` by default (user decision, 2026-11-12: one object rather than `subtle` alone, which leaves the IV no secure source on Node 16 to 18). Node 16 to 18 (`engines` keeps `>=16`, user decision) have no global `crypto`: there the caller passes `crypto: webcrypto` of `node:crypto`, or runs Node with `--experimental-global-webcrypto`.
 - The 12-byte IV comes from `crypto.getRandomValues` of the same Web Crypto object.
 - No fallback where Web Crypto is missing: a non-secure browser context (neither https nor localhost) or Node 16 to 18 without the injection. AES can't be done safely by hand, so the promise rejects with an error that names the cause, and the JSDoc says so. The other random sources fall back to `Math.random` (ticket 01a1c600eca476fc96c02e7cae4632d6, resolved).
 

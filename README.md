@@ -39,6 +39,8 @@ import { UUID_V7 } from 'cme-utils/m/uuid/uuid-v7.util.js'
 Requires **Node >= 16**, and TypeScript >= 5.7 for its typings (or `skipLibCheck`): they use the generic `Uint8Array<ArrayBuffer>`. The package is ESM-first — use `import` or a bundler. CommonJS `require()` is supported only for the ESLint plugin entries (see below).
 
 > `UUID_V4`, `UUID_V7`, `GET_RANDOM_INT_BETWEEN` and `GET_RANDOM_BYTE_LIST` draw from the global Web Crypto, which bun, browsers and Node 19+ have. Node 16 to 18 lack it by default: pass `getRandomValues: webcrypto.getRandomValues.bind(webcrypto)` (`webcrypto` of `node:crypto`), or run Node 16.15+ or 17.6+ with `--experimental-global-webcrypto`. With neither, they fall back to `Math.random()`, which is not cryptographically secure.
+>
+> `CIPHER_AES_GCM_TO_BYTES` and `DECIPHER_AES_GCM_BYTES_TO_UTF8` run AES-GCM on the same global Web Crypto; on Node 16 to 18 pass `crypto: webcrypto`. They have no fallback: without Web Crypto (Node 16 to 18 without it, a browser page served over http) their promise rejects.
 
 ## Quick Examples
 
@@ -127,7 +129,7 @@ The rule is also exported on its own — `cme-utils/m/max-return-statements-per-
 
 The library is organized into the following categories:
 
-- **aes**: AES encryption utilities (e.g., `CIPHER_AES_GCM_TO_BUFFER`, `DECIPHER_AES_GCM_TO_UTF8`)
+- **aes**: AES encryption utilities (e.g., `CIPHER_AES_GCM_TO_BYTES` and `DECIPHER_AES_GCM_BYTES_TO_UTF8` on Web Crypto, `CIPHER_AES_GCM_TO_BUFFER` and `DECIPHER_AES_GCM_TO_UTF8` on `node:crypto`)
 - **array**: Array operations (e.g., `ARRAY_SUM`, `ARRAY_AVERAGE`, `ARRAY_MIN_MAX`)
 - **async**: Asynchronous utilities (e.g., `ALL_SETTLED`, `THROW_IF_ERROR`)
 - **bigint**: BigInt division operations (e.g., `BIGINT_DIV`, `BIGINT_DIV_CEIL`, `BIGINT_DIV_FLOOR`, `BIGINT_DIV_ROUND`, `BIGINT_DIV_TRUNC`)

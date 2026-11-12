@@ -3,7 +3,7 @@ import { TO_STRING } from '../convert/to-string.util.js'
 /**
  * Decrypts a Buffer made by `CIPHER_AES_GCM_TO_BUFFER` (AES-128-GCM) back to a UTF-8 string.
  * The platform APIs are provided by the caller: `import { Buffer } from 'node:buffer'` and `import { createDecipheriv } from 'node:crypto'`.
- * Runs on Node and bun only: a browser has no `node:crypto`.
+ * Runs on Node and bun only: a browser has no `node:crypto`. `DECIPHER_AES_GCM_BYTES_TO_UTF8` does the same, with the same byte layout, on Web Crypto.
  * @param _ - The parameter object
  * @param _.Buffer - The `Buffer` class, used to slice the parts
  * @param _.createDecipheriv - The `createDecipheriv` function of `node:crypto`
