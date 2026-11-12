@@ -1,6 +1,7 @@
 import type { AesGcmWebCrypto } from './aes-gcm-web-crypto-type.js'
 
 const ivByteCount = 12
+const tagBitCount = 128
 
 /**
  * Decrypts bytes made by `CIPHER_AES_GCM_TO_BYTES` or `CIPHER_AES_GCM_TO_BUFFER` (AES-GCM) back to a UTF-8 string, on Web Crypto (`crypto.subtle`).
@@ -22,9 +23,9 @@ const ivByteCount = 12
  * await DECIPHER_AES_GCM_BYTES_TO_UTF8({ cipheredBytes, keyBytes: new Uint8Array(16) }) // throws an OperationError: wrong key
  * ```
  */
-export async function DECIPHER_AES_GCM_BYTES_TO_UTF8 (_: { cipheredBytes: Uint8Array, keyBytes: Uint8Array, crypto?: AesGcmWebCrypto }): Promise<string> {
+export async function DECIPHER_AES_GCM_BYTES_TO_UTF8 (_: { cipheredBytes: Uint8Array, keyBytes: Uint8Array, crypto?: Pick<AesGcmWebCrypto, 'subtle'> }): Promise<string> {
   // missing on Node 16 to 18 unless injected, and crypto.subtle in a page served over http
-  const webCrypto: AesGcmWebCrypto | undefined = _.crypto ?? globalThis.crypto
+  const webCrypto: Partial<Pick<AesGcmWebCrypto, 'subtle'>> | undefined = _.crypto ?? globalThis.crypto
 
   if (typeof webCrypto?.subtle?.decrypt !== 'function') {
     throw new Error('DECIPHER_AES_GCM_BYTES_TO_UTF8 needs Web Crypto (crypto.subtle): on Node 16 to 18 pass crypto: webcrypto of node:crypto, in a browser serve the page over https')
@@ -35,7 +36,7 @@ export async function DECIPHER_AES_GCM_BYTES_TO_UTF8 (_: { cipheredBytes: Uint8A
   const cipheredBytes = new Uint8Array(_.cipheredBytes)
 
   // ? [ ...iv (head: 12 bytes), ...ciphertext PAYLOAD and tag (tail: 16 bytes), which Web Crypto takes as one ]
-  const plainBytes = await webCrypto.subtle.decrypt({ name: 'AES-GCM', iv: cipheredBytes.subarray(0, ivByteCount), tagLength: 128 }, key, cipheredBytes.subarray(ivByteCount))
+  const plainBytes = await webCrypto.subtle.decrypt({ name: 'AES-GCM', iv: cipheredBytes.subarray(0, ivByteCount), tagLength: tagBitCount }, key, cipheredBytes.subarray(ivByteCount))
 
   return new TextDecoder().decode(plainBytes)
 }

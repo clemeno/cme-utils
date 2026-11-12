@@ -101,11 +101,13 @@ describe(
     const keyBytes = new Uint8Array(16)
     const cipheredBytes = new Uint8Array(28)
     const getRandomValues = webcrypto.getRandomValues.bind(webcrypto)
+    // the types refuse it, a JavaScript caller can still pass it
+    const subtleOnlyCrypto = { subtle: webcrypto.subtle } as unknown as AesGcmWebCrypto
 
     const missingCases: Array<{ name: string, globalCrypto: unknown, run: () => Promise<unknown>, expected: Error }> = [
       { name: 'CIPHER rejects without a global crypto (Node 16 to 18)', globalCrypto: undefined, run: async () => await CIPHER_AES_GCM_TO_BYTES({ plainString: 'x', keyBytes }), expected: new Error(cipherMissingMessage) },
       { name: 'CIPHER rejects without crypto.subtle (a page served over http)', globalCrypto: { getRandomValues }, run: async () => await CIPHER_AES_GCM_TO_BYTES({ plainString: 'x', keyBytes }), expected: new Error(cipherMissingMessage) },
-      { name: 'CIPHER rejects an injected crypto without getRandomValues', globalCrypto: webcrypto, run: async () => await CIPHER_AES_GCM_TO_BYTES({ plainString: 'x', keyBytes, crypto: { subtle: webcrypto.subtle } }), expected: new Error(cipherMissingMessage) },
+      { name: 'CIPHER rejects an injected crypto without getRandomValues', globalCrypto: webcrypto, run: async () => await CIPHER_AES_GCM_TO_BYTES({ plainString: 'x', keyBytes, crypto: subtleOnlyCrypto }), expected: new Error(cipherMissingMessage) },
       { name: 'DECIPHER rejects without a global crypto (Node 16 to 18)', globalCrypto: undefined, run: async () => await DECIPHER_AES_GCM_BYTES_TO_UTF8({ cipheredBytes, keyBytes }), expected: new Error(decipherMissingMessage) },
       { name: 'DECIPHER rejects without crypto.subtle (a page served over http)', globalCrypto: { getRandomValues }, run: async () => await DECIPHER_AES_GCM_BYTES_TO_UTF8({ cipheredBytes, keyBytes }), expected: new Error(decipherMissingMessage) },
     ]
@@ -125,11 +127,17 @@ describe(
       return bytes
     }
 
-    const rngBroke = new Error('rng broke')
-    const brokenRngCrypto: AesGcmWebCrypto = { subtle: webcrypto.subtle, getRandomValues: () => { throw rngBroke } }
+    it(
+      'CIPHER lets the error of a throwing getRandomValues through, as is',
+      async () => {
+        const rngBroke = new Error('rng broke')
+        const brokenRngCrypto: AesGcmWebCrypto = { subtle: webcrypto.subtle, getRandomValues: () => { throw rngBroke } }
+        await expect(CIPHER_AES_GCM_TO_BYTES({ plainString: 'x', keyBytes, crypto: brokenRngCrypto })).rejects.toBe(rngBroke)
+      }
+    )
 
-    const failingCases: Array<{ name: string, run: () => Promise<unknown>, expected: { name: string, message?: string } }> = [
-      { name: 'CIPHER lets the error of a throwing getRandomValues through', run: async () => await CIPHER_AES_GCM_TO_BYTES({ plainString: 'x', keyBytes, crypto: brokenRngCrypto }), expected: { name: 'Error', message: 'rng broke' } },
+    // a DOMException can only be matched by its name
+    const failingCases: Array<{ name: string, run: () => Promise<unknown>, expected: { name: string } }> = [
       { name: 'CIPHER lets subtle reject a 10-byte key', run: async () => await CIPHER_AES_GCM_TO_BYTES({ plainString: 'x', keyBytes: new Uint8Array(10) }), expected: { name: 'DataError' } },
       { name: 'DECIPHER lets subtle reject a wrong key', run: async () => await DECIPHER_AES_GCM_BYTES_TO_UTF8({ cipheredBytes: await CIPHER_AES_GCM_TO_BYTES({ plainString: 'x', keyBytes }), keyBytes: new Uint8Array(16).fill(1) }), expected: { name: 'OperationError' } },
       { name: 'DECIPHER lets subtle reject altered bytes', run: async () => await DECIPHER_AES_GCM_BYTES_TO_UTF8({ cipheredBytes: await alteredCipheredBytes(), keyBytes }), expected: { name: 'OperationError' } },

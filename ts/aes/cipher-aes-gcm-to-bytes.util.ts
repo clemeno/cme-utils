@@ -1,6 +1,7 @@
 import type { AesGcmWebCrypto } from './aes-gcm-web-crypto-type.js'
 
 const ivByteCount = 12
+const tagBitCount = 128
 
 /**
  * Encrypts a UTF-8 string with AES-GCM on Web Crypto (`crypto.subtle`), with a random 12-byte IV and a 16-byte auth tag.
@@ -22,7 +23,7 @@ const ivByteCount = 12
  */
 export async function CIPHER_AES_GCM_TO_BYTES (_: { plainString: string, keyBytes: Uint8Array, crypto?: AesGcmWebCrypto }): Promise<Uint8Array<ArrayBuffer>> {
   // missing on Node 16 to 18 unless injected, and crypto.subtle in a page served over http
-  const webCrypto: AesGcmWebCrypto | undefined = _.crypto ?? globalThis.crypto
+  const webCrypto: Partial<AesGcmWebCrypto> | undefined = _.crypto ?? globalThis.crypto
 
   if ((typeof webCrypto?.subtle?.encrypt !== 'function') || (typeof webCrypto.getRandomValues !== 'function')) {
     throw new Error('CIPHER_AES_GCM_TO_BYTES needs Web Crypto (crypto.subtle and crypto.getRandomValues): on Node 16 to 18 pass crypto: webcrypto of node:crypto, in a browser serve the page over https')
@@ -35,7 +36,7 @@ export async function CIPHER_AES_GCM_TO_BYTES (_: { plainString: string, keyByte
   const key = await webCrypto.subtle.importKey('raw', new Uint8Array(_.keyBytes), 'AES-GCM', false, ['encrypt'])
 
   // ? Web Crypto appends the 16-byte auth tag to the ciphertext
-  const ciphertextAndTag = new Uint8Array(await webCrypto.subtle.encrypt({ name: 'AES-GCM', iv: ivBytes, tagLength: 128 }, key, new TextEncoder().encode(_.plainString)))
+  const ciphertextAndTag = new Uint8Array(await webCrypto.subtle.encrypt({ name: 'AES-GCM', iv: ivBytes, tagLength: tagBitCount }, key, new TextEncoder().encode(_.plainString)))
 
   // ? [ ...iv (head: 12 bytes), ...ciphertext PAYLOAD (body: dynamic), ...tag (tail: 16 bytes) ]
   const res = new Uint8Array(ivByteCount + ciphertextAndTag.length)
