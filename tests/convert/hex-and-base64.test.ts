@@ -87,6 +87,31 @@ describe(
 )
 
 describe(
+  'HEX_TO_BASE64 on invalid hex, with Buffer and with btoa',
+  () => {
+    // both stop at the first pair that is not two hex digits
+    const invalidHexCases: Array<{ name: string, hex: string, expected: string }> = [
+      { name: 'no hex digit', hex: 'zz', expected: '' },
+      { name: 'a bad pair after a good one', hex: '48zz', expected: 'SA==' },
+      { name: 'an odd last digit', hex: '486', expected: 'SA==' },
+      { name: 'a pair with one hex digit', hex: '4g', expected: '' },
+      { name: 'a sign', hex: '-1', expected: '' },
+    ]
+    const sourceList: Array<{ name: string, Buffer: typeof Buffer | undefined }> = [
+      { name: 'Buffer', Buffer },
+      { name: 'btoa', Buffer: undefined },
+    ]
+
+    it.each(sourceList.flatMap(source => invalidHexCases.map(invalidHex => ({ ...invalidHex, name: `${source.name}: ${invalidHex.name}`, Buffer: source.Buffer }))))(
+      '$name → "$expected"',
+      ({ Buffer, hex, expected }) => {
+        expect(HEX_TO_BASE64({ Buffer, hex })).toBe(expected)
+      }
+    )
+  }
+)
+
+describe(
   'HEX_TO_BASE64 and BASE64_TO_HEX with a Buffer that throws',
   () => {
     // a given Buffer that throws lets its error through: btoa and atob replace a missing Buffer only
