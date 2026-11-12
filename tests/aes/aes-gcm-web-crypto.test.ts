@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from 'bun:test'
 import { Buffer } from 'node:buffer'
 import { createCipheriv, createDecipheriv, randomBytes, webcrypto } from 'node:crypto'
 import { type AesGcmWebCrypto, CIPHER_AES_GCM_TO_BUFFER, CIPHER_AES_GCM_TO_BYTES, DECIPHER_AES_GCM_BYTES_TO_UTF8, DECIPHER_AES_GCM_TO_UTF8 } from '../../ts/aes/index.js'
+import { GET_RANDOM_BYTE_LIST } from '../../ts/number/get-random-byte-list.util.js'
 
 describe(
   'CIPHER_AES_GCM_TO_BYTES and DECIPHER_AES_GCM_BYTES_TO_UTF8',
@@ -26,6 +27,31 @@ describe(
         const keyBytes = webcrypto.getRandomValues(new Uint8Array(16))
         const cipheredBytes = await CIPHER_AES_GCM_TO_BYTES({ plainString, keyBytes })
         expect(await DECIPHER_AES_GCM_BYTES_TO_UTF8({ cipheredBytes, keyBytes })).toBe(plainString)
+      }
+    )
+
+    it(
+      'round-trips with a key typed Uint8Array, from GET_RANDOM_BYTE_LIST',
+      async () => {
+        const keyBytes: Uint8Array = GET_RANDOM_BYTE_LIST({ length: 16 })
+        const cipheredBytes = await CIPHER_AES_GCM_TO_BYTES({ plainString: 'Hello', keyBytes })
+        expect(await DECIPHER_AES_GCM_BYTES_TO_UTF8({ cipheredBytes, keyBytes })).toBe('Hello')
+      }
+    )
+
+    /* Copies bytes onto a SharedArrayBuffer, a view Web Crypto refuses to read */
+    function sharedCopyOf (bytes: Uint8Array): Uint8Array {
+      const res = new Uint8Array(new SharedArrayBuffer(bytes.length))
+      res.set(bytes)
+      return res
+    }
+
+    it(
+      'round-trips a key and ciphered bytes on a SharedArrayBuffer',
+      async () => {
+        const keyBytes = sharedCopyOf(webcrypto.getRandomValues(new Uint8Array(16)))
+        const cipheredBytes = sharedCopyOf(await CIPHER_AES_GCM_TO_BYTES({ plainString: 'Hello', keyBytes }))
+        expect(await DECIPHER_AES_GCM_BYTES_TO_UTF8({ cipheredBytes, keyBytes })).toBe('Hello')
       }
     )
 
