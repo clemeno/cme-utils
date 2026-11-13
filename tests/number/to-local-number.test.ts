@@ -1,10 +1,14 @@
-import { describe, expect, it } from 'bun:test'
+import { afterEach, describe, expect, it, mock, spyOn } from 'bun:test'
 import { TO_LOCAL_NUMBER } from '../../ts/number/to-local-number.util.js'
 import { createMockSettings } from '../mocks/luxon-mock.js'
 
 describe(
   'TO_LOCAL_NUMBER',
   () => {
+    afterEach(() => {
+      mock.restore()
+    })
+
     const formatTestCases: Array<{ name: string, input: unknown, locale: string, expected: string }> = [
       { name: 'large number with en-US locale', input: 1234567.89, locale: 'en-US', expected: '1,234,567.89' },
       { name: 'small integer', input: 123, locale: 'en-US', expected: '123' },
@@ -39,6 +43,21 @@ describe(
       ({ input, expected }) => {
         const mockSettings = createMockSettings({ initialLocale: 'en-US' })
         expect(TO_LOCAL_NUMBER({ Settings: mockSettings, x: input })).toBe(expected)
+      }
+    )
+
+    const unsetLocaleTestCases: Array<{ name: string, defaultLocale: string | null }> = [
+      { name: 'formats in the system locale when Settings has no locale (luxon starts with null)', defaultLocale: null },
+      { name: 'formats in the system locale when Settings has an empty locale', defaultLocale: '' },
+    ]
+
+    it.each(unsetLocaleTestCases)(
+      '$name',
+      ({ defaultLocale }) => {
+        // the system locale, the one luxon formats with when no locale is set
+        spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions').mockReturnValue({ locale: 'de-DE' } as Intl.ResolvedDateTimeFormatOptions)
+
+        expect(TO_LOCAL_NUMBER({ Settings: createMockSettings({ initialLocale: defaultLocale }), x: 1234567.89 })).toBe('1.234.567,89')
       }
     )
   }

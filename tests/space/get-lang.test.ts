@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it } from 'bun:test'
+import type { AppLuxonSettings } from '../../ts/app-luxon-settings.js'
 import { GET_LANG } from '../../ts/space/get-lang.util.js'
 import { createMockDocument } from '../mocks/space-mocks.js'
 import { createMockSettings } from '../mocks/luxon-mock.js'
@@ -12,7 +13,7 @@ describe(
       global.window = originalWindow
     })
 
-    const testCases: Array<{ name: string, input: { defaultZone: { name: string }, defaultLocale: string }, expected: string }> = [
+    const testCases: Array<{ name: string, input: AppLuxonSettings, expected: string }> = [
       { name: 'en from en-US', input: createMockSettings({ initialZone: 'UTC', initialLocale: 'en-US' }), expected: 'en' },
       { name: 'zh from zh-CN-Hans', input: createMockSettings({ initialZone: 'UTC', initialLocale: 'zh-CN-Hans' }), expected: 'zh' },
       { name: 'fr from fr', input: createMockSettings({ initialZone: 'UTC', initialLocale: 'fr' }), expected: 'fr' },
