@@ -1,6 +1,6 @@
 # 01a1c0755cd5745fb6b20ab977fa30c7: Name every test row
 
-Status: ready-for-agent
+Status: resolved
 Blocked by: none
 
 ## What
@@ -28,6 +28,15 @@ In passing: `tests/number/to-local-number-with-1-f-digit.test.ts` and `to-local-
 The claims above were checked against `main` at 84201d8: 27 test files still key their rows with `label` (a grep for `$label` or `label: string` finds 29; `exports.test.ts` and `from-list-to-record`, where `label` is row data, are not part of it), the 9 tables still build their titles from `$input` and `$expected`, and the two `'returns a string'` tests still exist. The maintainer decided:
 - the 9 input tables get a `name` column too: one rule with no exception;
 - a lint rule guards it, so the tables cannot come back (explicit approval of the `eslint.config.mjs` change).
+
+### 2026-11-13: resolved
+
+One `test:` commit per `tests/` folder (check, compare, convert, number, object, regex, set, string), then the lint entry with the `AGENTS.md` change. `bun test` reports 3421 tests, the 3423 of before less the 2 `'returns a string'` tests; a JUnit report taken before and after shows the 27 `label` files keep every title word for word. Differences from the brief:
+- The lint entry also reads template-literal titles (their `TemplateElement` text): `tests/query/or-false-or-true.test.ts` builds its titles that way, with `$name`, and a selector on string literals alone could not see them. A scratch test file showed it flags a string or template title without `$name` and passes both with it; the file was deleted.
+- A `'%s'` title now gets 2 errors, from the `%s` entry and the new one.
+- `AGENTS.md` (Testing Pattern) now says the `name` is used in the title (`'$name'`, or `'$name: $input -> $expected'`), as the input tables and the 27 renamed ones do, rather than as the whole title.
+
+Known gaps, outside the brief: the lint entry cannot see a title passed as a variable or built by concatenation, nor rows keyed `label` under a `'$name'` title (none exist today). Two tables built with `flatMap` infer their row type instead of declaring it: `tests/space/document-utils.test.ts` and `tests/convert/hex-and-base64.test.ts`. The 27 renamed tables keep names that copy the input (`'"0"'`, `'null'`), as the brief kept their titles' text.
 
 ## Agent Brief
 
