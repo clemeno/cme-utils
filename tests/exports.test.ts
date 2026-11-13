@@ -9,6 +9,7 @@ import * as lib from '../ts/index.js'
 
 // The public API: every export of a ts/ file is re-exported by its folder's index.ts and by ts/index.ts, and every
 // exported function has a JSDoc (AGENTS.md, JSDoc) whose example lines state what the call returns.
+// How to write the examples this file runs: .github/instructions/new-utility.instructions.md, section 3.
 
 const repoDir = join(import.meta.dir, '..')
 
