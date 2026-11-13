@@ -1,6 +1,6 @@
 # 01a1c5c2180074e78ff35b90cb54f209: Handle an unset luxon `defaultLocale` in the locale utils
 
-Status: ready-for-agent
+Status: resolved
 Blocked by: none
 
 ## What
@@ -24,3 +24,9 @@ The fix must run in a browser, Node and bun (user, 2026-11-10): `Intl.DateTimeFo
 
 - A test with `defaultLocale: null` fails on the old code and passes on the fix, for `GET_LOCALE` and `TO_LOCAL_NUMBER`.
 - One `fix:` commit; `bun run check` passes.
+
+## Comments
+
+2026-11-13, resolved in 82f8741: `GET_LOCALE` (`ts/space/get-locale.util.ts`) falls back to `new Intl.DateTimeFormat().resolvedOptions().locale`, and `AppLuxonSettings.defaultLocale` is `string | null`. `GET_LOCALE` is its only reader: `GET_LANG`, `GET_GEO` and the 3 `TO_LOCAL_NUMBER*` utils go through it, so they change in no line. The tests stub `Intl.DateTimeFormat.prototype.resolvedOptions` to give `de-DE`, so they pass whatever the machine's locale. Differences from the decision:
+- An empty locale falls back too: luxon treats `''` as unset (`locale || Settings.defaultLocale`, `node_modules/luxon/src/impl/locale.js`), and `toLocaleString('')` throws `RangeError: invalid language tag`.
+- `createMockSettings` (`tests/mocks/luxon-mock.ts`) accepts a `null` locale.
