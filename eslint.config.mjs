@@ -43,6 +43,11 @@ const restrictedSyntax = [
     selector: 'TSEnumDeclaration',
     message: 'TypeScript enum is forbidden — use export const values instead. No magic numbers or strings, just named constants.',
   },
+  {
+    // a Buffer is a Uint8Array<ArrayBufferLike>: an input typed Uint8Array<ArrayBuffer> refuses it (interfaces mirroring Web Crypto keep their narrow types)
+    selector: ':function > .params TSTypeReference[typeName.name=/^(Uint8|Int8|Uint8Clamped|Uint16|Int16|Uint32|Int32|Float32|Float64|BigUint64|BigInt64)Array$/][typeArguments]',
+    message: 'type a typed-array input without its buffer argument (Uint8Array, not Uint8Array<ArrayBuffer>), so a Buffer or any Uint8Array fits; copy it with new Uint8Array(x) where an API wants an ArrayBuffer-backed view.',
+  },
 ]
 
 // the mechanical rules of AGENTS.md (Testing Pattern) and .github/instructions/new-utility.instructions.md (section 6)
@@ -62,6 +67,11 @@ const testRestrictedSyntax = [
   {
     selector: 'VariableDeclarator[id.name=/Cases$/][init.type="ArrayExpression"]:not([id.typeAnnotation])',
     message: 'type the table rows: const testCases: Array<{ name: string, input: ..., expected: ... }> = [',
+  },
+  {
+    // bun-types types the matchers of .rejects / .resolves as void, so no-floating-promises misses them
+    selector: 'ExpressionStatement > CallExpression > MemberExpression.callee MemberExpression[property.name=/^(rejects|resolves)$/][object.type="CallExpression"][object.callee.name="expect"]',
+    message: 'await expect(...).rejects / .resolves: unawaited, the test can end before the assertion runs, and passes whatever the promise does.',
   },
 ]
 
