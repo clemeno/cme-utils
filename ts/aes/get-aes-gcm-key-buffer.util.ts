@@ -3,11 +3,11 @@ import { GET_FILE_FULL_TEXT_CONTENT } from '../file/get-file-full-text-content.u
 /**
  * Reads a base64 AES-128-GCM key file and decodes it to a Buffer.
  * The platform APIs are provided by the caller: `import { Buffer } from 'node:buffer'` and `import { createReadStream } from 'node:fs'`.
- * Runs on Node and bun only: it reads a file by its path.
+ * In a browser, pass a `Buffer` polyfill (the `buffer` package) and a `fetch` based `createReadStream` (see `GET_FILE_FULL_TEXT_CONTENT`).
  * @param _ - The parameter object
  * @param _.Buffer - The `Buffer` class, used to decode the base64 content
- * @param _.createReadStream - The `createReadStream` function of `node:fs`
- * @param _.aes128GcmKeyFile - The path of the file holding the base64 key
+ * @param _.createReadStream - The `createReadStream` function of `node:fs`, or a `fetch` based one
+ * @param _.aes128GcmKeyFile - The path or URL of the file holding the base64 key
  * @returns A Buffer of the decoded key (empty for an empty file)
  * @example
  * ```typescript

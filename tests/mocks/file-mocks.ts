@@ -55,3 +55,27 @@ export function createMockReadStream (chunks: Array<Buffer | string>): AsyncIter
     },
   }
 }
+
+/**
+ * Returns a web `ReadableStream` of the provided `chunks`, which then fails with `error` when one is given.
+ * Its async iteration is removed, as Safari has none: only its `getReader()` reads it.
+ */
+export function createMockWebReadStream (options: { chunks: Uint8Array[], error?: Error }): ReadableStream<Uint8Array> {
+  const { chunks, error } = options
+  const stream = new ReadableStream<Uint8Array>({
+    start (controller) {
+      for (const chunk of chunks) {
+        controller.enqueue(chunk)
+      }
+      if (error === undefined) {
+        controller.close()
+      }
+    },
+    // called once the chunks are read (an error in start would drop them unread): the stream then fails
+    pull (controller) {
+      controller.error(error)
+    },
+  })
+  Object.defineProperty(stream, Symbol.asyncIterator, { value: undefined })
+  return stream
+}
