@@ -1,6 +1,6 @@
 # 01a1c600ecd5728290b789dd957a5c39: Read files from web streams, so the readers run in a browser
 
-Status: ready-for-agent
+Status: resolved
 Blocked by: none
 
 ## What
@@ -33,3 +33,9 @@ The `Buffer` the key readers return stays as it is (user decision, 2026-11-10: t
 - Tests with a `new ReadableStream` source, including a multi-byte character split between 2 chunks, and with a promise of a stream; the current Node-like async iterable rows still pass.
 - A source whose reader rejects makes the util reject with that error, as a Node stream error does today.
 - `bun run check` passes; `feat:` commit.
+
+## Comments
+
+2026-11-13, resolved: `GET_FILE_FULL_TEXT_CONTENT` (`ts/file/get-file-full-text-content.util.ts`) awaits what `createReadStream` returns. It reads a web `ReadableStream` through `getReader()`, and anything else through `for await`. The 2 key readers change their JSDoc only. Tests (`tests/file/get-file-full-text-content.test.ts`) use `createMockWebReadStream` (`tests/mocks/file-mocks.ts`): a real `ReadableStream` whose async iteration is removed, as in Safari, so the tests prove the reader path is taken. Differences from the design:
+- A `null` stream reads as empty: a `fetch` response without body (a 204, a HEAD request) has a `null` body. An `undefined` one still rejects, so a `createReadStream` that forgot its `return` shows.
+- The JSDoc's `fetch` adapter sits in `//` lines: `tests/exports.test.ts` would run a live `fetch` and fail, and it skips only lines that name an outside API.
