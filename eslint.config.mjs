@@ -61,6 +61,10 @@ const testRestrictedSyntax = [
     message: 'bun prints %s literally for an object row — give each row a name and use \'$name\' as the title.',
   },
   {
+    selector: 'CallExpression[callee.callee.property.name="each"] > :matches(Literal.arguments:first-child:not([value=/[$]name/]), TemplateLiteral.arguments:first-child:not(:has(TemplateElement[value.raw=/[$]name/])))',
+    message: 'a .each title shows its row\'s name — start each row with a descriptive name: string and put $name in the title (\'$name\', or \'$name: $input -> $expected\').',
+  },
+  {
     selector: ':matches(CallExpression[callee.name=/^(it|test)$/], CallExpression[callee.callee.object.name=/^(it|test)$/]) > :function IfStatement',
     message: 'no if inside a test body — split the rows into separate tables, one per kind of assertion.',
   },

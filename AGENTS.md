@@ -49,8 +49,8 @@ Every utility runs in a browser, on Node and on bun (user decision, 2026-11-10).
 - `unknown` with type guards over `any`; an `interface` for a complex object type used in several places.
 
 ### Testing Pattern
-Template: section 6 of [.github/instructions/new-utility.instructions.md](.github/instructions/new-utility.instructions.md). These rules cover every test file; the older tables still keyed `label` or without a name column are listed in [01a1c0755cd5745fb6b20ab977fa30c7](.scratch/conventions-backlog/issues/01a1c0755cd5745fb6b20ab977fa30c7-name-every-test-row.md).
-- All test cases must have a descriptive `name`, used as the `'$name'` title: bun prints `'%s'` literally for object rows.
+Template: section 6 of [.github/instructions/new-utility.instructions.md](.github/instructions/new-utility.instructions.md). These rules cover every test file.
+- All test cases must have a descriptive `name`, used in the title (`'$name'`, or `'$name: $input -> $expected'`): bun prints `'%s'` literally for object rows.
 - Tests import directly from `ts/` source, not from `m/`.
 - Type the table rows (`const testCases: Array<{ name: string, input: ..., expected: ... }> = [`), so `bun run test:types` stays at 0 errors.
 - No `if` inside a test body: split returns and throws into separate tables.
