@@ -4,18 +4,18 @@ import { BYTE_ARRAY_LIKE_TO_BASE_256 } from '../../ts/convert/byte-array-like-to
 describe(
   'BYTE_ARRAY_LIKE_TO_BASE_256',
   () => {
-    const testCases: Array<{ label: string, input: number[] | null, expected: string }> = [
-      { label: '[]', input: [], expected: '' },
-      { label: '[0]', input: [0], expected: '0' },
-      { label: '[10]', input: [10], expected: 'a' },
-      { label: '[35]', input: [35], expected: 'z' },
-      { label: '[36]', input: [36], expected: 'A' },
-      { label: '[0, 10, 35]', input: [0, 10, 35], expected: '0az' },
-      { label: 'null', input: null, expected: '' },
+    const testCases: Array<{ name: string, input: number[] | null, expected: string }> = [
+      { name: '[]', input: [], expected: '' },
+      { name: '[0]', input: [0], expected: '0' },
+      { name: '[10]', input: [10], expected: 'a' },
+      { name: '[35]', input: [35], expected: 'z' },
+      { name: '[36]', input: [36], expected: 'A' },
+      { name: '[0, 10, 35]', input: [0, 10, 35], expected: '0az' },
+      { name: 'null', input: null, expected: '' },
     ]
 
     it.each(testCases)(
-      'BYTE_ARRAY_LIKE_TO_BASE_256($label) -> "$expected"',
+      'BYTE_ARRAY_LIKE_TO_BASE_256($name) -> "$expected"',
       ({ input, expected }) => {
         expect(BYTE_ARRAY_LIKE_TO_BASE_256(input)).toBe(expected)
       }

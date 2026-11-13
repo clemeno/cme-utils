@@ -4,15 +4,15 @@ import { BASE_256_TO_ARRAY_16 } from '../../ts/convert/base-256-to-array-16.util
 describe(
   'BASE_256_TO_ARRAY_16',
   () => {
-    const testCases: Array<{ label: string, input: string, expected: string[] }> = [
-      { label: '""', input: '', expected: [] },
-      { label: '"0"', input: '0', expected: ['0'] },
-      { label: '"a"', input: 'a', expected: ['a'] },
-      { label: '"0a"', input: '0a', expected: ['0', 'a'] },
+    const testCases: Array<{ name: string, input: string, expected: string[] }> = [
+      { name: '""', input: '', expected: [] },
+      { name: '"0"', input: '0', expected: ['0'] },
+      { name: '"a"', input: 'a', expected: ['a'] },
+      { name: '"0a"', input: '0a', expected: ['0', 'a'] },
     ]
 
     it.each(testCases)(
-      'BASE_256_TO_ARRAY_16($label)',
+      'BASE_256_TO_ARRAY_16($name)',
       ({ input, expected }) => {
         expect(BASE_256_TO_ARRAY_16(input)).toEqual(expected)
       }

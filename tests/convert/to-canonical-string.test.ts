@@ -4,26 +4,26 @@ import { TO_CANONICAL_STRING } from '../../ts/convert/to-canonical-string.util.j
 describe(
   'TO_CANONICAL_STRING',
   () => {
-    const testCases: Array<{ label: string, input: string | number | { a: number } | null | undefined | boolean, expected: string }> = [
-      { label: '"HELLO"', input: 'HELLO', expected: 'hello' },
-      { label: '"Hello World"', input: 'Hello World', expected: 'hello world' },
-      { label: '"café" (diacritics)', input: 'café', expected: 'cafe' },
-      { label: '"naïve" (diacritics)', input: 'naïve', expected: 'naive' },
-      { label: '"résumé" (diacritics)', input: 'résumé', expected: 'resume' },
-      { label: '"Müller" (diacritics)', input: 'Müller', expected: 'muller' },
-      { label: '123 (number)', input: 123, expected: '123' },
-      { label: '123.45 (number)', input: 123.45, expected: '123.45' },
-      { label: 'true (boolean)', input: true, expected: 'true' },
-      { label: 'false (boolean)', input: false, expected: 'false' },
-      { label: '{ a: 1 } (object)', input: { a: 1 }, expected: '{"a":1}' },
-      { label: 'null', input: null, expected: '' },
-      { label: 'undefined', input: undefined, expected: '' },
-      { label: 'NaN', input: NaN, expected: '' },
-      { label: '"ỆᶍǍᶆṔƚÉ" (complex Unicode)', input: 'ỆᶍǍᶆṔƚÉ', expected: 'eᶍaᶆpƚe' },
+    const testCases: Array<{ name: string, input: string | number | { a: number } | null | undefined | boolean, expected: string }> = [
+      { name: '"HELLO"', input: 'HELLO', expected: 'hello' },
+      { name: '"Hello World"', input: 'Hello World', expected: 'hello world' },
+      { name: '"café" (diacritics)', input: 'café', expected: 'cafe' },
+      { name: '"naïve" (diacritics)', input: 'naïve', expected: 'naive' },
+      { name: '"résumé" (diacritics)', input: 'résumé', expected: 'resume' },
+      { name: '"Müller" (diacritics)', input: 'Müller', expected: 'muller' },
+      { name: '123 (number)', input: 123, expected: '123' },
+      { name: '123.45 (number)', input: 123.45, expected: '123.45' },
+      { name: 'true (boolean)', input: true, expected: 'true' },
+      { name: 'false (boolean)', input: false, expected: 'false' },
+      { name: '{ a: 1 } (object)', input: { a: 1 }, expected: '{"a":1}' },
+      { name: 'null', input: null, expected: '' },
+      { name: 'undefined', input: undefined, expected: '' },
+      { name: 'NaN', input: NaN, expected: '' },
+      { name: '"ỆᶍǍᶆṔƚÉ" (complex Unicode)', input: 'ỆᶍǍᶆṔƚÉ', expected: 'eᶍaᶆpƚe' },
     ]
 
     it.each(testCases)(
-      'TO_CANONICAL_STRING($label) -> "$expected"',
+      'TO_CANONICAL_STRING($name) -> "$expected"',
       ({ input, expected }) => {
         expect(TO_CANONICAL_STRING(input)).toBe(expected)
       }

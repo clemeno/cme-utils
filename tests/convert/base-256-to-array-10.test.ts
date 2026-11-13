@@ -4,15 +4,15 @@ import { BASE_256_TO_ARRAY_10 } from '../../ts/convert/base-256-to-array-10.util
 describe(
   'BASE_256_TO_ARRAY_10',
   () => {
-    const testCases: Array<{ label: string, input: string, expected: number[] }> = [
-      { label: '"0"', input: '0', expected: [0] },
-      { label: '"a"', input: 'a', expected: [10] },
-      { label: '"0a"', input: '0a', expected: [0, 10] },
-      { label: '""', input: '', expected: [] },
+    const testCases: Array<{ name: string, input: string, expected: number[] }> = [
+      { name: '"0"', input: '0', expected: [0] },
+      { name: '"a"', input: 'a', expected: [10] },
+      { name: '"0a"', input: '0a', expected: [0, 10] },
+      { name: '""', input: '', expected: [] },
     ]
 
     it.each(testCases)(
-      'BASE_256_TO_ARRAY_10($label)',
+      'BASE_256_TO_ARRAY_10($name)',
       ({ input, expected }) => {
         expect(BASE_256_TO_ARRAY_10(input)).toEqual(expected)
       }
