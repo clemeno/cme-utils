@@ -10,37 +10,29 @@ describe(
     const frFR = createMockSettings({ initialLocale: 'fr-FR' })
     const deDE = createMockSettings({ initialLocale: 'de-DE' })
 
-    const testCases: Array<{ label: string, Settings: AppLuxonSettings, x: unknown, expected: string }> = [
-      { label: '123.456 (en-US)', Settings: enUS, x: 123.456, expected: '123.46' },
-      { label: '123 (en-US)', Settings: enUS, x: 123, expected: '123.00' },
-      { label: '0 (en-US)', Settings: enUS, x: 0, expected: '0.00' },
-      { label: '-123.789 (en-US)', Settings: enUS, x: -123.789, expected: '-123.79' },
-      { label: '"123.456" string (en-US)', Settings: enUS, x: '123.456', expected: '123.46' },
-      { label: '"123" string (en-US)', Settings: enUS, x: '123', expected: '123.00' },
-      { label: '"abc" (en-US)', Settings: enUS, x: 'abc', expected: '' },
-      { label: 'null (en-US)', Settings: enUS, x: null, expected: '' },
-      { label: 'undefined (en-US)', Settings: enUS, x: undefined, expected: '' },
-      { label: '{} (en-US)', Settings: enUS, x: {}, expected: '' },
-      { label: '[] (en-US)', Settings: enUS, x: [], expected: '' },
-      { label: '123.456 (fr-FR)', Settings: frFR, x: 123.456, expected: '123,46' },
-      { label: '123.456 (de-DE)', Settings: deDE, x: 123.456, expected: '123,46' },
-      { label: 'NaN (en-US)', Settings: enUS, x: NaN, expected: '' },
-      { label: 'Infinity (en-US)', Settings: enUS, x: Infinity, expected: '∞' },
-      { label: '-Infinity (en-US)', Settings: enUS, x: -Infinity, expected: '-∞' },
+    const testCases: Array<{ name: string, Settings: AppLuxonSettings, x: unknown, expected: string }> = [
+      { name: '123.456 (en-US)', Settings: enUS, x: 123.456, expected: '123.46' },
+      { name: '123 (en-US)', Settings: enUS, x: 123, expected: '123.00' },
+      { name: '0 (en-US)', Settings: enUS, x: 0, expected: '0.00' },
+      { name: '-123.789 (en-US)', Settings: enUS, x: -123.789, expected: '-123.79' },
+      { name: '"123.456" string (en-US)', Settings: enUS, x: '123.456', expected: '123.46' },
+      { name: '"123" string (en-US)', Settings: enUS, x: '123', expected: '123.00' },
+      { name: '"abc" (en-US)', Settings: enUS, x: 'abc', expected: '' },
+      { name: 'null (en-US)', Settings: enUS, x: null, expected: '' },
+      { name: 'undefined (en-US)', Settings: enUS, x: undefined, expected: '' },
+      { name: '{} (en-US)', Settings: enUS, x: {}, expected: '' },
+      { name: '[] (en-US)', Settings: enUS, x: [], expected: '' },
+      { name: '123.456 (fr-FR)', Settings: frFR, x: 123.456, expected: '123,46' },
+      { name: '123.456 (de-DE)', Settings: deDE, x: 123.456, expected: '123,46' },
+      { name: 'NaN (en-US)', Settings: enUS, x: NaN, expected: '' },
+      { name: 'Infinity (en-US)', Settings: enUS, x: Infinity, expected: '∞' },
+      { name: '-Infinity (en-US)', Settings: enUS, x: -Infinity, expected: '-∞' },
     ]
 
     it.each(testCases)(
-      'TO_LOCAL_NUMBER_WITH_2_F_DIGITS($label) → $expected',
+      'TO_LOCAL_NUMBER_WITH_2_F_DIGITS($name) → $expected',
       ({ Settings, x, expected }) => {
         expect(TO_LOCAL_NUMBER_WITH_2_F_DIGITS({ Settings, x })).toBe(expected)
-      }
-    )
-
-    it(
-      'returns a string',
-      () => {
-        const result = TO_LOCAL_NUMBER_WITH_2_F_DIGITS({ Settings: enUS, x: 123.456 })
-        expect(typeof result).toBe('string')
       }
     )
   }
