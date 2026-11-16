@@ -1,20 +1,28 @@
-import { describe, expect, it } from 'bun:test'
+import { afterEach, describe, expect, it } from 'bun:test'
+import { DateTime, Settings } from 'luxon'
 import { FROM_ISO_TO_LOCAL_T } from '../../ts/time/from-iso-to-local-t.util.js'
-import { MockDateTime, createMockSettings } from '../mocks/luxon-mock.js'
 
 describe(
   'FROM_ISO_TO_LOCAL_T',
   () => {
-    it(
-      'should format ISO to local time',
-      () => {
-        const MockSettings = createMockSettings()
-        const result = FROM_ISO_TO_LOCAL_T({
-          DateTime: MockDateTime,
-          Settings: MockSettings,
-          iso: '2023-01-01T00:00:00Z',
-        })
-        expect(typeof result).toBe('string')
+    const { defaultLocale, defaultZone } = Settings
+
+    // luxon Settings is global: restore it so the pinned locale and zone can't leak into other tests
+    afterEach(() => {
+      Settings.defaultLocale = defaultLocale
+      Settings.defaultZone = defaultZone
+    })
+
+    const testCases: Array<{ name: string, iso: string, expected: string }> = [
+      { name: 'formats as the local time (T) in en-US, Europe/Paris', iso: '2024-03-15T14:30:45.123Z', expected: '15:30' },
+    ]
+
+    it.each(testCases)(
+      '$name',
+      ({ iso, expected }) => {
+        Settings.defaultLocale = 'en-US'
+        Settings.defaultZone = 'Europe/Paris'
+        expect(FROM_ISO_TO_LOCAL_T({ DateTime, Settings, iso })).toBe(expected)
       }
     )
   }
