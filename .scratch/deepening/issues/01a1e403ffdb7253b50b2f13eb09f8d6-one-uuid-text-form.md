@@ -1,6 +1,6 @@
 # 01a1e403ffdb7253b50b2f13eb09f8d6: One UUID text form, and the true duplicates go
 
-Status: ready-for-agent
+Status: resolved
 Blocked by: none
 
 ## What
@@ -42,3 +42,15 @@ One rule for every UUID text form (set by the agent from the review, 2026-11-16)
 
 - The `UUID_V4_TO_HEX` / `UUID_V7_TO_HEX` / `*_TO_0XHEX` direction, unless the shared codec makes them one line.
 - The base conversions (`BIG_*`, `REBASE`, `BASE_CONVERT_BBSN`).
+
+## Comments
+
+### 2026-11-16: resolved
+
+Resolved in 5a0d01a (`fix!:`, one rule), 4e38d7c (`refactor!:`, the 5 removals) and db35489 (`fix!:`, the review's fixes). Differences from the design:
+- `FROM_HEX_TO_UUID` also ignores dashes, so a UUID already in its text form passes through lowercased, as it did before; without that, the non-hex rule turned it into the NIL UUID. `UUID_HEX_TO_V4` follows.
+- `FROM_BUFFER_TO_UUID_ALWAYS` takes each item modulo 256, as a `Uint8Array` does: `[1, 256]` gives `…000000000100`, and a `Uint16Array` keeps the low byte of each item. A value without a callable `toString`, a number or a bigint (whose `toString('hex')` throws a `RangeError`) gives the NIL UUID by a check, and a `toString` that throws now lets its error through: the old `try` / `catch` broke the cross-runtime rule of `AGENTS.md`.
+- `UUID_HEX_TO_V4` gives `'00000000-0000-4000-8000-000000000000'` for non-hex input: the NIL UUID with its version and variant set.
+- `EXTRACT_UUID_FROM_STRING` matches `REGEX_UUID_MATCH_A_SUBSTRING` directly rather than calling `IS_UUID_STRING`, whose `v is string` guard narrowed its parameter to `never`; the Spec review found the same output on 12 inputs.
+- `STRING_TO_0XHEX` changes with `STRING_TO_HEX` (`'\n'` gives `'0x0a'`), and `AGENTS.md` names `from-buffer-to-uuid-always.util.ts` as its example of a module-local table.
+- `UUID_V4` and `UUID_V7` format through the same lookup table as before; the Spec review measured them at par or faster over 1e6 calls.
