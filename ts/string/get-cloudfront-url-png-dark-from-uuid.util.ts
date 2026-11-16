@@ -1,3 +1,4 @@
+import { GET_CLOUDFRONT_URL_FILE } from './get-cloudfront-url-file.util.js'
 import { GET_DARK_PNG_NAME_FROM_UUID } from './get-dark-png-name-from-uuid.util.js'
 
 /**
@@ -13,8 +14,5 @@ import { GET_DARK_PNG_NAME_FROM_UUID } from './get-dark-png-name-from-uuid.util.
  * ```
  */
 export function GET_CLOUDFRONT_URL_PNG_DARK_FROM_UUID (_: { uuid: string, cloudfrontUri: string }): string {
-  const filename = GET_DARK_PNG_NAME_FROM_UUID(_.uuid)
-  const envEndpoint = _.cloudfrontUri
-  const endpointSlash = (envEndpoint[envEndpoint.length - 1] === '/') ? envEndpoint : `${envEndpoint}/`
-  return `${endpointSlash}${filename}`
+  return GET_CLOUDFRONT_URL_FILE({ filename: GET_DARK_PNG_NAME_FROM_UUID(_.uuid), cloudfrontUri: _.cloudfrontUri })
 }

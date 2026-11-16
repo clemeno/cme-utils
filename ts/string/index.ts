@@ -10,7 +10,7 @@ export { GET_CLOUDFRONT_URL_PNG_DARK_FROM_UUID } from './get-cloudfront-url-png-
 export { GET_CLOUDFRONT_URL_PNG_LIGHT_FROM_UUID } from './get-cloudfront-url-png-light-from-uuid.util.js'
 export { GET_DARK_FROM_LIGHT_PNG_FILE } from './get-dark-from-light-png-file.util.js'
 export { GET_DARK_PNG_NAME_FROM_UUID } from './get-dark-png-name-from-uuid.util.js'
-export { GET_FILE_LOCATION_FROM_ANY_STRING } from './get-file-location-from-any-string.util.js'
+export { GET_FILE_NAME_AND_KIND_FROM_ANY_STRING } from './get-file-name-and-kind-from-any-string.util.js'
 export { GET_FILE_PATH_FROM_SYMLINK_PATH } from './get-file-path-from-symlink-path.util.js'
 export { GET_LIGHT_FROM_DARK_PNG_FILE } from './get-light-from-dark-png-file.util.js'
 export { GET_LIGHT_PNG_NAME_FROM_UUID } from './get-light-png-name-from-uuid.util.js'

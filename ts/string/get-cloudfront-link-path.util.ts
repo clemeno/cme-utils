@@ -1,3 +1,5 @@
+import { GET_UPLOADED_FILE_PATH } from './get-uploaded-file-path.util.js'
+
 /**
  * Builds the static link of a file: the public static image folder followed by `filename`.
  * @param _ - The object parameter
@@ -11,7 +13,5 @@
  * ```
  */
 export function GET_CLOUDFRONT_LINK_PATH (_: { filename: string, publicStaticImageFolder: string }): string {
-  const envFolder = _.publicStaticImageFolder
-  const folder = (envFolder[envFolder.length - 1] === '/') ? envFolder : `${envFolder}/`
-  return `${folder}${_.filename}`
+  return GET_UPLOADED_FILE_PATH({ filename: _.filename, fileUploadFolder: _.publicStaticImageFolder })
 }

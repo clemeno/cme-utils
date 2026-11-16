@@ -1,4 +1,4 @@
-import { GET_FILE_LOCATION_FROM_ANY_STRING } from './get-file-location-from-any-string.util.js'
+import { GET_FILE_NAME_AND_KIND_FROM_ANY_STRING } from './get-file-name-and-kind-from-any-string.util.js'
 import { GET_UPLOADED_FILE_PATH } from './get-uploaded-file-path.util.js'
 
 /**
@@ -27,8 +27,8 @@ export function GET_UPLOADED_FILE_FROM_ANY_STRING<TypeofBasename extends (s: str
   fileUploadFolder: string
   publicStaticImageFolder: string
 }): string {
-  const { kind, filename } = GET_FILE_LOCATION_FROM_ANY_STRING(_)
+  const { kind, filename } = GET_FILE_NAME_AND_KIND_FROM_ANY_STRING(_)
 
   // a path already in the upload folder stays as given
-  return (kind === 'upload') ? _.s : ((kind === 'none') ? '' : GET_UPLOADED_FILE_PATH({ filename, fileUploadFolder: _.fileUploadFolder }))
+  return (kind === 'upload') ? _.s : ((kind === 'url-without-file') ? '' : GET_UPLOADED_FILE_PATH({ filename, fileUploadFolder: _.fileUploadFolder }))
 }

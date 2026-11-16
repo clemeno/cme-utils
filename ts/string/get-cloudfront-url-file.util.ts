@@ -1,3 +1,5 @@
+import { GET_UPLOADED_FILE_PATH } from './get-uploaded-file-path.util.js'
+
 /**
  * Builds the CloudFront url of a file: the CloudFront uri followed by `filename`.
  * @param _ - The object parameter
@@ -11,8 +13,6 @@
  * ```
  */
 export function GET_CLOUDFRONT_URL_FILE (_: { filename: string, cloudfrontUri: string }): string {
-  const envEndpoint = _.cloudfrontUri
-  const endpoint = (envEndpoint[envEndpoint.length - 1] === '/') ? envEndpoint : `${envEndpoint}/`
-  return `${endpoint}${_.filename}`
+  return GET_UPLOADED_FILE_PATH({ filename: _.filename, fileUploadFolder: _.cloudfrontUri })
   // return `${ENV.cloudfrontUri}/${filename}`
 }

@@ -10,7 +10,7 @@ import { IS_A_URL } from './is-a-url.util.js'
  * - 'upload': `s` holds the upload folder; the file name is its basename
  * - 'static': `s` holds the public static image folder; the file name is its basename
  * - 'url': `s` is a url; the file name is the last segment of its path
- * - 'none': `s` is a url without a file name; the file name is '' (empty string)
+ * - 'url-without-file': `s` is a url whose path ends with /; the file name is '' (empty string)
  * - 'name': anything else; `s` is the file name
  * @param _ - The object parameter
  * @param _.basename - The basename function, for example `basename` of 'node:path'
@@ -22,21 +22,21 @@ import { IS_A_URL } from './is-a-url.util.js'
  * ```typescript
  * const basename = (s: string): string => s.slice(s.lastIndexOf('/') + 1)
  * const opts = { basename, fileUploadFolder: './uploads', publicStaticImageFolder: '/static' }
- * GET_FILE_LOCATION_FROM_ANY_STRING({ ...opts, s: './uploads/123e4567-e89b-12d3-a456-426614174000_dark.png' }) // returns { kind: 'uuid', filename: '123e4567-e89b-12d3-a456-426614174000.png' }
- * GET_FILE_LOCATION_FROM_ANY_STRING({ ...opts, s: './uploads/a.png' }) // returns { kind: 'upload', filename: 'a.png' }
- * GET_FILE_LOCATION_FROM_ANY_STRING({ ...opts, s: '/static/a.png' }) // returns { kind: 'static', filename: 'a.png' }
- * GET_FILE_LOCATION_FROM_ANY_STRING({ ...opts, s: 'https://x.com/a.png' }) // returns { kind: 'url', filename: 'a.png' }
- * GET_FILE_LOCATION_FROM_ANY_STRING({ ...opts, s: 'https://x.com/' }) // returns { kind: 'none', filename: '' }
- * GET_FILE_LOCATION_FROM_ANY_STRING({ ...opts, s: 'a.png' }) // returns { kind: 'name', filename: 'a.png' }
+ * GET_FILE_NAME_AND_KIND_FROM_ANY_STRING({ ...opts, s: './uploads/123e4567-e89b-12d3-a456-426614174000_dark.png' }) // returns { kind: 'uuid', filename: '123e4567-e89b-12d3-a456-426614174000.png' }
+ * GET_FILE_NAME_AND_KIND_FROM_ANY_STRING({ ...opts, s: './uploads/a.png' }) // returns { kind: 'upload', filename: 'a.png' }
+ * GET_FILE_NAME_AND_KIND_FROM_ANY_STRING({ ...opts, s: '/static/a.png' }) // returns { kind: 'static', filename: 'a.png' }
+ * GET_FILE_NAME_AND_KIND_FROM_ANY_STRING({ ...opts, s: 'https://x.com/a.png' }) // returns { kind: 'url', filename: 'a.png' }
+ * GET_FILE_NAME_AND_KIND_FROM_ANY_STRING({ ...opts, s: 'https://x.com/' }) // returns { kind: 'url-without-file', filename: '' }
+ * GET_FILE_NAME_AND_KIND_FROM_ANY_STRING({ ...opts, s: 'a.png' }) // returns { kind: 'name', filename: 'a.png' }
  * ```
  */
-export function GET_FILE_LOCATION_FROM_ANY_STRING (_: {
+export function GET_FILE_NAME_AND_KIND_FROM_ANY_STRING (_: {
   basename: (s: string) => string
   s: string
   fileUploadFolder: string
   publicStaticImageFolder: string
-}): { kind: 'uuid' | 'upload' | 'static' | 'url' | 'none' | 'name', filename: string } {
-  const s = _.s
+}): { kind: 'uuid' | 'upload' | 'static' | 'url' | 'url-without-file' | 'name', filename: string } {
+  const { s } = _
 
   const uuid = EXTRACT_UUID_FROM_STRING(s)
 
@@ -49,7 +49,7 @@ export function GET_FILE_LOCATION_FROM_ANY_STRING (_: {
       then: () => {
         const pathList = (new URL(s)).pathname.split('/')
         const filename = pathList[pathList.length - 1]
-        return IS_A_STRING_AND_NOT_EMPTY(filename) ? { kind: 'url' as const, filename } : { kind: 'none' as const, filename: '' }
+        return IS_A_STRING_AND_NOT_EMPTY(filename) ? { kind: 'url' as const, filename } : { kind: 'url-without-file' as const, filename: '' }
       },
     },
   ]

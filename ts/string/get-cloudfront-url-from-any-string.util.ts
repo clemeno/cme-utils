@@ -1,5 +1,5 @@
 import { GET_CLOUDFRONT_URL_FILE } from './get-cloudfront-url-file.util.js'
-import { GET_FILE_LOCATION_FROM_ANY_STRING } from './get-file-location-from-any-string.util.js'
+import { GET_FILE_NAME_AND_KIND_FROM_ANY_STRING } from './get-file-name-and-kind-from-any-string.util.js'
 
 /**
  * Converts any string (uuid, upload path, static path, url or file name) into the CloudFront url of its file.
@@ -22,16 +22,14 @@ import { GET_FILE_LOCATION_FROM_ANY_STRING } from './get-file-location-from-any-
  * GET_CLOUDFRONT_URL_FROM_ANY_STRING({ ...opts, s: 'https://x.com/' }) // returns ''
  * ```
  */
-export function GET_CLOUDFRONT_URL_FROM_ANY_STRING<TypeofBasename = any> (_: {
+export function GET_CLOUDFRONT_URL_FROM_ANY_STRING<TypeofBasename extends (s: string) => string> (_: {
   basename: TypeofBasename
   s: string
   cloudfrontUri: string
   fileUploadFolder: string
   publicStaticImageFolder: string
 }): string {
-  const basename: any = _.basename
+  const { kind, filename } = GET_FILE_NAME_AND_KIND_FROM_ANY_STRING(_)
 
-  const { kind, filename } = GET_FILE_LOCATION_FROM_ANY_STRING({ ..._, basename })
-
-  return (kind === 'none') ? '' : GET_CLOUDFRONT_URL_FILE({ filename, cloudfrontUri: _.cloudfrontUri })
+  return (kind === 'url-without-file') ? '' : GET_CLOUDFRONT_URL_FILE({ filename, cloudfrontUri: _.cloudfrontUri })
 }

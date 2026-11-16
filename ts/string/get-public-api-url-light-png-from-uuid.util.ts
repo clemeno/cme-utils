@@ -1,4 +1,5 @@
 import { GET_LIGHT_PNG_NAME_FROM_UUID } from './get-light-png-name-from-uuid.util.js'
+import { GET_PUBLIC_API_URL_FILE } from './get-public-api-url-file.util.js'
 
 /**
  * Builds the public API url of the light PNG of an uuid: the public API root followed by `uuid`.png.
@@ -13,8 +14,5 @@ import { GET_LIGHT_PNG_NAME_FROM_UUID } from './get-light-png-name-from-uuid.uti
  * ```
  */
 export function GET_PUBLIC_API_URL_LIGHT_PNG_FROM_UUID (_: { uuid: string, rootUrlPublicImg: string }): string {
-  const filename = GET_LIGHT_PNG_NAME_FROM_UUID(_.uuid)
-  const envEndpoint = _.rootUrlPublicImg
-  const endpointSlash = (envEndpoint[envEndpoint.length - 1] === '/') ? envEndpoint : `${envEndpoint}/`
-  return `${endpointSlash}${filename}`
+  return GET_PUBLIC_API_URL_FILE({ filename: GET_LIGHT_PNG_NAME_FROM_UUID(_.uuid), rootUrlPublicImg: _.rootUrlPublicImg })
 }

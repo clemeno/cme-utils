@@ -1,4 +1,5 @@
 import { GET_DARK_PNG_NAME_FROM_UUID } from './get-dark-png-name-from-uuid.util.js'
+import { GET_PUBLIC_API_URL_FILE } from './get-public-api-url-file.util.js'
 
 /**
  * Builds the public API url of the dark PNG of an uuid: the public API root followed by `uuid`_dark.png.
@@ -13,8 +14,5 @@ import { GET_DARK_PNG_NAME_FROM_UUID } from './get-dark-png-name-from-uuid.util.
  * ```
  */
 export function GET_PUBLIC_API_URL_DARK_PNG_FROM_UUID (_: { uuid: string, rootUrlPublicImg: string }): string {
-  const filename = GET_DARK_PNG_NAME_FROM_UUID(_.uuid)
-  const envEndpoint = _.rootUrlPublicImg
-  const endpointSlash = (envEndpoint[envEndpoint.length - 1] === '/') ? envEndpoint : `${envEndpoint}/`
-  return `${endpointSlash}${filename}`
+  return GET_PUBLIC_API_URL_FILE({ filename: GET_DARK_PNG_NAME_FROM_UUID(_.uuid), rootUrlPublicImg: _.rootUrlPublicImg })
 }

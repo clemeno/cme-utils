@@ -1,4 +1,5 @@
 import { GET_LIGHT_PNG_NAME_FROM_UUID } from './get-light-png-name-from-uuid.util.js'
+import { GET_UPLOADED_FILE_PATH } from './get-uploaded-file-path.util.js'
 
 /**
  * Builds the upload path of the light PNG of an uuid: the upload folder followed by `uuid`.png.
@@ -13,8 +14,5 @@ import { GET_LIGHT_PNG_NAME_FROM_UUID } from './get-light-png-name-from-uuid.uti
  * ```
  */
 export function GET_UPLOADED_LIGHT_PNG_FROM_UUID (_: { uuid: string, fileUploadFolder: string }): string {
-  const filename = GET_LIGHT_PNG_NAME_FROM_UUID(_.uuid)
-  const envFolder = _.fileUploadFolder
-  const folder = (envFolder[envFolder.length - 1] === '/') ? envFolder : `${envFolder}/`
-  return `${folder}${filename}`
+  return GET_UPLOADED_FILE_PATH({ filename: GET_LIGHT_PNG_NAME_FROM_UUID(_.uuid), fileUploadFolder: _.fileUploadFolder })
 }

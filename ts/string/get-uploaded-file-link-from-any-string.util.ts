@@ -1,5 +1,5 @@
 import { GET_CLOUDFRONT_LINK_PATH } from './get-cloudfront-link-path.util.js'
-import { GET_FILE_LOCATION_FROM_ANY_STRING } from './get-file-location-from-any-string.util.js'
+import { GET_FILE_NAME_AND_KIND_FROM_ANY_STRING } from './get-file-name-and-kind-from-any-string.util.js'
 
 /**
  * Converts any string (uuid, upload path, static path, url or file name) into the static link of its file.
@@ -27,8 +27,8 @@ export function GET_UPLOADED_FILE_LINK_FROM_ANY_STRING<TypeofBasename extends (s
   fileUploadFolder: string
   publicStaticImageFolder: string
 }): string {
-  const { kind, filename } = GET_FILE_LOCATION_FROM_ANY_STRING(_)
+  const { kind, filename } = GET_FILE_NAME_AND_KIND_FROM_ANY_STRING(_)
 
   // a link already in the static folder stays as given
-  return (kind === 'static') ? _.s : ((kind === 'none') ? '' : GET_CLOUDFRONT_LINK_PATH({ filename, publicStaticImageFolder: _.publicStaticImageFolder }))
+  return (kind === 'static') ? _.s : ((kind === 'url-without-file') ? '' : GET_CLOUDFRONT_LINK_PATH({ filename, publicStaticImageFolder: _.publicStaticImageFolder }))
 }

@@ -1,3 +1,5 @@
+import { GET_UPLOADED_FILE_PATH } from './get-uploaded-file-path.util.js'
+
 /**
  * Builds the public API url of a file: the public API root followed by `filename`.
  * @param _ - The object parameter
@@ -11,7 +13,5 @@
  * ```
  */
 export function GET_PUBLIC_API_URL_FILE (_: { filename: string, rootUrlPublicImg: string }): string {
-  const envEndpoint = _.rootUrlPublicImg
-  const endpointSlash = (envEndpoint[envEndpoint.length - 1] === '/') ? envEndpoint : `${envEndpoint}/`
-  return `${endpointSlash}${_.filename}`
+  return GET_UPLOADED_FILE_PATH({ filename: _.filename, fileUploadFolder: _.rootUrlPublicImg })
 }
