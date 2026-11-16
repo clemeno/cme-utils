@@ -1,11 +1,9 @@
-import { IS_A_STRING_AND_NOT_EMPTY } from './is-a-string-and-not-empty.util.js'
-import { EXTRACT_UUID_FROM_STRING } from './extract-uuid-from-string.util.js'
+import { GET_FILE_LOCATION_FROM_ANY_STRING } from './get-file-location-from-any-string.util.js'
 import { GET_UPLOADED_FILE_PATH } from './get-uploaded-file-path.util.js'
-import { GET_UPLOADED_LIGHT_PNG_FROM_UUID } from './get-uploaded-light-png-from-uuid.util.js'
-import { IS_A_URL } from './is-a-url.util.js'
 
 /**
  * Converts any string (uuid, upload path, static path, url or file name) into the upload path of its file.
+ * Any string holding a uuid gives the light png of that uuid, even `uuid`_dark.png or `uuid`.pdf: every upload is `uuid`.png.
  * @param _ - The object parameter
  * @param _.basename - The basename function, for example `basename` of 'node:path'
  * @param _.s - The string to convert: a uuid, a path, a url or a file name
@@ -17,6 +15,7 @@ import { IS_A_URL } from './is-a-url.util.js'
  * const basename = (s: string): string => s.slice(s.lastIndexOf('/') + 1)
  * const opts = { basename, fileUploadFolder: './uploads', publicStaticImageFolder: '/static' }
  * GET_UPLOADED_FILE_FROM_ANY_STRING({ ...opts, s: '123e4567-e89b-12d3-a456-426614174000' }) // returns './uploads/123e4567-e89b-12d3-a456-426614174000.png'
+ * GET_UPLOADED_FILE_FROM_ANY_STRING({ ...opts, s: './uploads/123e4567-e89b-12d3-a456-426614174000_dark.png' }) // returns './uploads/123e4567-e89b-12d3-a456-426614174000.png'
  * GET_UPLOADED_FILE_FROM_ANY_STRING({ ...opts, s: '/static/a.png' }) // returns './uploads/a.png'
  * GET_UPLOADED_FILE_FROM_ANY_STRING({ ...opts, s: 'a.png' }) // returns './uploads/a.png'
  * GET_UPLOADED_FILE_FROM_ANY_STRING({ ...opts, s: 'https://x.com/' }) // returns ''
@@ -28,26 +27,8 @@ export function GET_UPLOADED_FILE_FROM_ANY_STRING<TypeofBasename extends (s: str
   fileUploadFolder: string
   publicStaticImageFolder: string
 }): string {
-  const s = _.s
+  const { kind, filename } = GET_FILE_LOCATION_FROM_ANY_STRING(_)
 
-  const uuid = EXTRACT_UUID_FROM_STRING(s)
-
-  const fileUploadFolder = _.fileUploadFolder
-  const publicStaticImageFolder = _.publicStaticImageFolder
-
-  const strategyList = [
-    { if: () => IS_A_STRING_AND_NOT_EMPTY(uuid), then: () => GET_UPLOADED_LIGHT_PNG_FROM_UUID({ uuid, fileUploadFolder }) },
-    { if: () => s.includes(fileUploadFolder), then: () => s },
-    { if: () => s.includes(publicStaticImageFolder), then: () => GET_UPLOADED_FILE_PATH({ filename: _.basename(s), fileUploadFolder }) },
-    {
-      if: () => IS_A_URL(s),
-      then: () => {
-        const pathList = (new URL(s)).pathname.split('/')
-        const filename = pathList[pathList.length - 1]
-        return IS_A_STRING_AND_NOT_EMPTY(filename) ? GET_UPLOADED_FILE_PATH({ filename, fileUploadFolder }) : ''
-      },
-    },
-  ]
-
-  return strategyList.find(_s => _s.if())?.then() ?? GET_UPLOADED_FILE_PATH({ filename: s, fileUploadFolder })
+  // a path already in the upload folder stays as given
+  return (kind === 'upload') ? _.s : ((kind === 'none') ? '' : GET_UPLOADED_FILE_PATH({ filename, fileUploadFolder: _.fileUploadFolder }))
 }
