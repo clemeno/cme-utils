@@ -9,7 +9,7 @@ describe(
   () => {
     const rawColumn = { sql: 'LOWER(name)' }
 
-    const testCases: Array<{ name: string, params: Omit<WhereParams, 'qb'>, expectedCalls: QbCall[] }> = [
+    const testCases: Array<{ name: string, params: Omit<WhereParams, 'qb'> & { bOr?: boolean }, expectedCalls: QbCall[] }> = [
       { name: 'plain value, no operator → where(col, "=", val)', params: { column: 'name', value: 'Alice' }, expectedCalls: [{ method: 'where', args: ['name', '=', 'Alice'] }] },
       { name: 'explicit operator > → where(col, ">", val)', params: { column: 'age', operator: '>', value: 18 }, expectedCalls: [{ method: 'where', args: ['age', '>', 18] }] },
       { name: 'null value → whereNull(col)', params: { column: 'deleted_at', value: null }, expectedCalls: [{ method: 'whereNull', args: ['deleted_at'] }] },

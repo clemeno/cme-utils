@@ -13,15 +13,15 @@ import type { WhereInParams } from '../where-in-params.js'
  * @returns nothing: adds the condition to the query builder
  */
 function addValueCondition (_: { qb: any, column: any, value: unknown, bOr: boolean, bNot: boolean }): void {
-  const whereMethod = _.bOr ? 'orWhere' : 'where'
+  const wherePrefix = _.bOr ? 'orWhere' : 'where'
   const lowercaseValue = (typeof _.value === 'string') ? _.value.toLowerCase() : _.value
 
   if (lowercaseValue === '§§not0§§') {
-    _.qb[_.bNot ? whereMethod : `${whereMethod}Not`](_.column, '=', 0)
+    _.qb[_.bNot ? wherePrefix : `${wherePrefix}Not`](_.column, '=', 0)
   } else if (lowercaseValue === '§§null§§') {
-    _.qb[_.bNot ? `${whereMethod}NotNull` : `${whereMethod}Null`](_.column)
+    _.qb[_.bNot ? `${wherePrefix}NotNull` : `${wherePrefix}Null`](_.column)
   } else {
-    _.qb[_.bNot ? `${whereMethod}Not` : whereMethod](_.column, '=', _.value)
+    _.qb[_.bNot ? `${wherePrefix}Not` : wherePrefix](_.column, '=', _.value)
   }
 }
 
@@ -46,13 +46,15 @@ function addValueCondition (_: { qb: any, column: any, value: unknown, bOr: bool
  * WHERE_IN({ qb, column: 'id', values: [] }) // adds no condition
  * ```
  */
-export function WHERE_IN (_: WhereInParams): void {
+export function WHERE_IN (_: WhereInParams & { bOr?: boolean, bNot?: boolean }): void {
   const valueList = Array.from(IS_A_MAP(_.values) ? _.values.values() : _.values)
   const bOr = IS_ON(_.bOr)
   const bNot = IS_ON(_.bNot)
 
   // the inner connector is OR for IN and AND for NOT IN: it differs from the outer one when bOr equals bNot
-  if ((valueList.length !== 1) && (bOr === bNot)) {
+  const bGroup = (valueList.length !== 1) && (bOr === bNot)
+
+  if (bGroup) {
     _.qb[bOr ? 'orWhere' : 'where']((qb: any) => {
       for (const value of valueList) {
         addValueCondition({ qb, column: _.column, value, bOr: !bNot, bNot })

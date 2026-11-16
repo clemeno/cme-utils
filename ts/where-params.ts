@@ -7,5 +7,4 @@ export interface WhereParams {
   bBeginsWith?: boolean
   bEndsWith?: boolean
   bPg?: boolean
-  bOr?: boolean
 }

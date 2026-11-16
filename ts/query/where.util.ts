@@ -30,8 +30,8 @@ import { LIKE_KEEP_PERCENT_AND_DASH } from './like-keep-percent-and-dash.util.js
  * WHERE({ qb, column: 'age', value: 18, operator: '>=' }) // adds where age >= 18
  * ```
  */
-export function WHERE (_: WhereParams): void {
-  const whereMethod = IS_ON(_.bOr) ? 'orWhere' : 'where'
+export function WHERE (_: WhereParams & { bOr?: boolean }): void {
+  const wherePrefix = IS_ON(_.bOr) ? 'orWhere' : 'where'
 
   const bBeginsWith = IS_ON(_.bBeginsWith)
   const bEndsWith = IS_ON(_.bEndsWith)
@@ -56,17 +56,17 @@ export function WHERE (_: WhereParams): void {
         pattern = `%${pattern}%`
       }
 
-      _.qb[whereMethod](_.column, bPg ? 'ilike' : 'like', pattern)
+      _.qb[wherePrefix](_.column, bPg ? 'ilike' : 'like', pattern)
     } else if ((_.operator === 'like') && IS_A_STRING_AND_NOT_EMPTY(_.column)) {
       const rawColumn = FROM_JS_TO_SNAKE_CASE(_.column).replace(/[^a-zA-Z0-9_.]/g, '')
 
-      _.qb[`${whereMethod}Raw`](bPg ? `POSITION(? IN ${rawColumn}) > 0` : `INSTR(${rawColumn}, ?) > 0`, [_.value])
+      _.qb[`${wherePrefix}Raw`](bPg ? `POSITION(? IN ${rawColumn}) > 0` : `INSTR(${rawColumn}, ?) > 0`, [_.value])
     } else {
-      _.qb[whereMethod](_.column, _.operator, _.value)
+      _.qb[wherePrefix](_.column, _.operator, _.value)
     }
   } else if (IS_NULL(_.value) || ((typeof _.value === 'string') && (_.value.toLowerCase() === '§§null§§'))) {
-    _.qb[`${whereMethod}Null`](_.column)
+    _.qb[`${wherePrefix}Null`](_.column)
   } else {
-    _.qb[whereMethod](_.column, '=', _.value)
+    _.qb[wherePrefix](_.column, '=', _.value)
   }
 }
