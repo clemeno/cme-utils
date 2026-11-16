@@ -1,6 +1,6 @@
 import type { getRandomValuesFnType } from '../get-random-values-fn-type.js'
 import { GET_RANDOM_BYTE_LIST } from '../number/get-random-byte-list.util.js'
-import { BYTE_ARRAY_TO_UUID } from './byte-array-to-uuid.util.js'
+import { FROM_BUFFER_TO_UUID_ALWAYS } from './from-buffer-to-uuid-always.util.js'
 import { TO_NUMBER } from '../convert/to-number.util.js'
 
 /**
@@ -40,5 +40,5 @@ export function UUID_V7 (_?: { getRandomValues?: getRandomValuesFnType }): strin
   // ! variant: RFC 9652
   randomByteArray[8] = (randomByteArray[8] & 0x3f) | 0x80
 
-  return BYTE_ARRAY_TO_UUID(randomByteArray)
+  return FROM_BUFFER_TO_UUID_ALWAYS(randomByteArray)
 }

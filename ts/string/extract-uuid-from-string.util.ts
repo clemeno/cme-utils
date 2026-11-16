@@ -1,6 +1,4 @@
-import { IS_AN_ARRAY_AND_NOT_EMPTY } from '../array/is-an-array-and-not-empty.util.js'
 import { REGEX_UUID_MATCH_A_SUBSTRING } from '../regex/regex-uuid-match-a-substring.util.js'
-import { IS_UUID } from './is-uuid.util.js'
 
 /**
  * Extracts a UUID from a string `s`, if any substring is a UUID.
@@ -14,17 +12,6 @@ import { IS_UUID } from './is-uuid.util.js'
  * ```
  */
 export function EXTRACT_UUID_FROM_STRING (s: string): string {
-  let res = ''
-
-  if (IS_UUID(s)) {
-    res = s
-  } else {
-    const matchList = s.match(REGEX_UUID_MATCH_A_SUBSTRING)
-
-    if (IS_AN_ARRAY_AND_NOT_EMPTY(matchList)) {
-      res = matchList[0]
-    }
-  }
-
-  return res
+  // a whole UUID string is its own first match
+  return s.match(REGEX_UUID_MATCH_A_SUBSTRING)?.[0] ?? ''
 }
