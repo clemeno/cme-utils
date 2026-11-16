@@ -1,7 +1,9 @@
 import type { AppLuxonSettings } from '../app-luxon-settings.js'
 import { IS_A_STRING_AND_NOT_EMPTY } from '../string/is-a-string-and-not-empty.util.js'
-import { SET_DOCUMENT_GEO_FROM_LOCALE } from './set-document-geo-from-locale.util.js'
-import { SET_DOCUMENT_LANG_FROM_LOCALE } from './set-document-lang-from-locale.util.js'
+import { GET_GEO } from './get-geo.util.js'
+import { GET_LANG } from './get-lang.util.js'
+import { SET_DOCUMENT_GEO } from './set-document-geo.util.js'
+import { SET_DOCUMENT_LANG } from './set-document-lang.util.js'
 import { SET_DOCUMENT_LOCALE } from './set-document-locale.util.js'
 
 /**
@@ -28,7 +30,7 @@ export function SET_LOCALE (_: {
 
   SET_DOCUMENT_LOCALE(locale)
 
-  SET_DOCUMENT_LANG_FROM_LOCALE(locale)
+  SET_DOCUMENT_LANG(GET_LANG(_.Settings))
 
-  SET_DOCUMENT_GEO_FROM_LOCALE(locale)
+  SET_DOCUMENT_GEO(GET_GEO(_.Settings))
 }

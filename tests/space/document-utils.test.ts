@@ -1,8 +1,6 @@
 import { afterEach, describe, expect, it } from 'bun:test'
 import { GET_BASE_URI } from '../../ts/http/get-base-uri.util.js'
-import { SET_DOCUMENT_GEO_FROM_LOCALE } from '../../ts/space/set-document-geo-from-locale.util.js'
 import { SET_DOCUMENT_GEO } from '../../ts/space/set-document-geo.util.js'
-import { SET_DOCUMENT_LANG_FROM_LOCALE } from '../../ts/space/set-document-lang-from-locale.util.js'
 import { SET_DOCUMENT_LANG } from '../../ts/space/set-document-lang.util.js'
 import { SET_DOCUMENT_LOCALE } from '../../ts/space/set-document-locale.util.js'
 import { SET_DOCUMENT_TZ } from '../../ts/time/set-document-tz.util.js'
@@ -16,9 +14,7 @@ function throwDocumentBroke (): never {
 const documentUtilList: Array<{ name: string, call: () => unknown }> = [
   { name: 'GET_BASE_URI', call: () => GET_BASE_URI() },
   { name: 'SET_DOCUMENT_GEO', call: () => SET_DOCUMENT_GEO('CA') },
-  { name: 'SET_DOCUMENT_GEO_FROM_LOCALE', call: () => SET_DOCUMENT_GEO_FROM_LOCALE('fr-CA') },
   { name: 'SET_DOCUMENT_LANG', call: () => SET_DOCUMENT_LANG('fr') },
-  { name: 'SET_DOCUMENT_LANG_FROM_LOCALE', call: () => SET_DOCUMENT_LANG_FROM_LOCALE('fr-CA') },
   { name: 'SET_DOCUMENT_LOCALE', call: () => SET_DOCUMENT_LOCALE('fr-CA') },
   { name: 'SET_DOCUMENT_TZ', call: () => SET_DOCUMENT_TZ('Europe/Paris') },
 ]
