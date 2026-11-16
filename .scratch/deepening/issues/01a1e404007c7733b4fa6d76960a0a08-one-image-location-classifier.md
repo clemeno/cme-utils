@@ -1,6 +1,6 @@
 # 01a1e404007c7733b4fa6d76960a0a08: One classifier behind the image location resolvers
 
-Status: ready-for-agent
+Status: resolved
 Blocked by: none
 
 ## What
@@ -25,3 +25,12 @@ Share the classification in one module the 3 resolvers call, with no change of o
 ## Out of scope
 
 - Any change of output; merging the per-root exports (4 roots × file / light / dark).
+
+## Comments
+
+### 2026-11-16: resolved
+
+Resolved in 8e11b6d (the classifier) and b2a2ed9 (the review's fixes). The Spec review ran the old and new resolvers side by side on 3,312 calls: no output changed. Differences from the design:
+- The classifier is `GET_FILE_NAME_AND_KIND_FROM_ANY_STRING`, returning `{ kind, filename }` with `kind` one of `'uuid'`, `'upload'`, `'static'`, `'url'`, `'url-without-file'`, `'name'`. The extra `'url-without-file'` kind is what lets the resolvers return `''` for a URL without a file name: `filename === ''` can't signal it, since `s = ''` gives `'/uploads/'`.
+- All 12 trailing-slash joins now go through one util: the 3 resolvers and the 11 per-root exports call `GET_UPLOADED_FILE_PATH` or the per-root join that calls it (`GET_CLOUDFRONT_LINK_PATH`, `GET_CLOUDFRONT_URL_FILE`, `GET_PUBLIC_API_URL_FILE`). Its parameter is named `fileUploadFolder`, which reads oddly under a CloudFront or public API root; a neutral name would be its own change.
+- `GET_CLOUDFRONT_URL_FROM_ANY_STRING` now constrains its `basename` generic to `(s: string) => string`, as its 2 siblings do: a TypeScript caller passing anything else no longer compiles, where it would have failed at run time.
