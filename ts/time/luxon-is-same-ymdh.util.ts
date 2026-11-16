@@ -3,6 +3,7 @@ import { LUXON_IS_SAME_YMD } from './luxon-is-same-ymd.util.js'
 /**
  * `Luxon` `DateTime` both occured during the same hour
  * * provide DateTime -> import { DateTime } from 'luxon'
+ * * compares the fields of each moment in its own zone: for the same instant, use `LUXON_IS_SAME`
  * @param _ - The moments to compare
  * @param _.ma - The first `DateTime`
  * @param _.mb - The second `DateTime`

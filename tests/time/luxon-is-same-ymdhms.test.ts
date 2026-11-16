@@ -1,32 +1,42 @@
 import { describe, expect, it } from 'bun:test'
+import { DateTime } from 'luxon'
 import { LUXON_IS_SAME_YMDHMS } from '../../ts/time/luxon-is-same-ymdhms.util.js'
-import { mockDateTime } from '../mocks/luxon-mock.js'
 
 describe(
   'LUXON_IS_SAME_YMDHMS',
   () => {
-    const testCases: Array<{ name: string, maTs: number, mbTs: number, expected: boolean }> = [
+    // each row names its zone, so the result holds whatever the default zone
+    const testCases: Array<{ name: string, ma: DateTime, mb: DateTime, expected: boolean }> = [
       {
         name: 'same year, month, day, hour, minute, second',
-        maTs: 1640995200000, // 2022-01-01T00:00:00
-        mbTs: 1640995200000, // 2022-01-01T00:00:00
+        ma: DateTime.fromISO('2022-01-01T00:00:00.000Z', { zone: 'UTC' }),
+        mb: DateTime.fromISO('2022-01-01T00:00:00.900Z', { zone: 'UTC' }),
         expected: true,
       },
       {
-        name: 'different dates',
-        maTs: 1640995200000, // 2022-01-01T00:00:00
-        mbTs: 1640995201000, // 2022-01-01T00:00:01
+        name: 'different seconds',
+        ma: DateTime.fromISO('2022-01-01T00:00:00Z', { zone: 'UTC' }),
+        mb: DateTime.fromISO('2022-01-01T00:00:01Z', { zone: 'UTC' }),
         expected: false,
+      },
+      {
+        name: 'same instant, read in Paris and in UTC',
+        ma: DateTime.fromISO('2026-01-01T12:00:00Z', { zone: 'Europe/Paris' }),
+        mb: DateTime.fromISO('2026-01-01T12:00:00Z', { zone: 'UTC' }),
+        expected: false,
+      },
+      {
+        name: 'same wall clock in Paris and in UTC',
+        ma: DateTime.fromISO('2026-01-01T12:00:00', { zone: 'Europe/Paris' }),
+        mb: DateTime.fromISO('2026-01-01T12:00:00', { zone: 'UTC' }),
+        expected: true,
       },
     ]
 
     it.each(testCases)(
       '$name',
-      ({ maTs, mbTs, expected }) => {
-        const ma = mockDateTime(maTs)
-        const mb = mockDateTime(mbTs)
-        const result = LUXON_IS_SAME_YMDHMS({ ma, mb })
-        expect(result).toBe(expected)
+      ({ ma, mb, expected }) => {
+        expect(LUXON_IS_SAME_YMDHMS({ ma, mb })).toBe(expected)
       }
     )
   }
