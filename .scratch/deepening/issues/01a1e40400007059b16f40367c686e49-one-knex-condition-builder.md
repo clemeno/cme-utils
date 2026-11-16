@@ -1,6 +1,6 @@
 # 01a1e40400007059b16f40367c686e49: One knex condition builder behind the WHERE and WHERE_IN families
 
-Status: ready-for-agent
+Status: resolved
 Blocked by: none
 
 ## What
@@ -29,3 +29,13 @@ Settled before (memory, 2026-09-23), unchanged: the base utils add no condition 
 
 - The `_OR_FALSE` / `_OR_TRUE` variants, which already delegate.
 - Any change to the generated SQL.
+
+## Comments
+
+### 2026-11-16: resolved
+
+Resolved in e641a7e (`WHERE_IN` and `WHERE` build the conditions, the 4 others delegate) and c45e7e2 (the review's fixes). The existing tables of the 10 query exports pass unchanged: the mock query builder records the same calls. Differences from the design:
+- The flags sit on the parameter types of `WHERE_IN` (`WhereInParams & { bOr?: boolean, bNot?: boolean }`) and `WHERE` (`WhereParams & { bOr?: boolean }`) only; `WhereInParams` and `WhereParams` keep their old shape. On the shared types, `WHERE_IN_OR_FALSE({ ..., bNot: true })` ran a NOT IN while its empty case still added `1 = 0`, and `WHERE_NOT_IN`, `WHERE_NOT_IN_OR_TRUE` and `OR_WHERE` accepted flags they ignore. Both reviewers found it.
+- Each IN delegate pins both flags, so a stray flag can't change its SQL.
+- A module-local helper (`addValueCondition`) maps the markers; the grouping rule is the named test `bGroup`, stated in the JSDoc of `WHERE_IN`.
+- `WHERE` builds the knex method names from a prefix (`wherePrefix`), so a search for `orWhereNull` no longer finds its call site; a misspelt name fails in the mock query builder, which lists the methods it knows. Nothing here ran against real knex.
