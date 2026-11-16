@@ -1,6 +1,6 @@
 # 01a1e40400577010932e095ca1449dfe: One zone rule for the luxon same-period checks, real tests for the local formats
 
-Status: ready-for-agent
+Status: resolved
 Blocked by: none
 
 ## What
@@ -25,3 +25,12 @@ Maintainer, 2026-11-16: the 10 format wrappers (`_D`, `_DT`, `_DTT`, `_T`, `_TT`
 ## Out of scope
 
 - Removing or merging the format wrappers or the same-period family.
+
+## Comments
+
+### 2026-11-16: resolved
+
+Resolved in f42f3c5 (`fix!:`, `LUXON_IS_SAME_YMDHMS`), 4ea66d2 and b64d117 (the format tests) and d656064 (the review's JSDoc fix). Differences from the design:
+- "Like luxon's own `hasSame`" holds for every tested row but not at a DST fold: `2025-10-26T00:30Z` and `01:30Z` both read 02:30 in Europe/Paris, so the util (like its siblings) returns `true` where `hasSame` returns `false`. The JSDoc says so, and points to `setZone` on both moments, or `LUXON_IS_SAME` (to the millisecond), to compare instants.
+- The zone rows pass `createMockSettings({ initialZone })` with the real `DateTime`, while luxon's global zone stays UTC. With luxon's own `Settings`, `fromSeconds` / `fromISO` already return the moment in that zone, so no row could reach `setZone(GET_TZ(Settings))`. Removing that step fails exactly these 4 rows. The step changes nothing when an app passes luxon's own `Settings`, its usual case.
+- Each of the 12 format test files sets and restores luxon's locale and zone inline, as `tests/time/set-tz.test.ts` does, rather than through a shared helper.
