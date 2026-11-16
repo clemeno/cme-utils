@@ -77,7 +77,7 @@ Conventional commit messages (`feat:`, `fix:`, `chore:`, ...); semantic versioni
 
 ### Issue tracker
 
-Local markdown tickets under `.scratch/<feature>/issues/`, named by UUID v7 id and committed with the code. See `docs/agents/issue-tracker.md`.
+Local markdown tickets under `.scratch/<feature>/issues/`, named by UUID v7 id and committed with the code. Read `docs/agents/issue-tracker.md` before writing, claiming or closing a ticket.
 
 ### Triage labels
 
