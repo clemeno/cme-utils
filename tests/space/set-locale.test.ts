@@ -30,7 +30,7 @@ describe(
       expected: string
       expectedSetAttributeCalls: Array<[string, string]>
     }>([
-      { name: 'should set the defaultLocale on Settings', setup: installWindow, locale: 'fr-FR', expected: 'fr-FR', expectedSetAttributeCalls: [['locale', 'fr-FR'], ['lang', 'fr'], ['geo', 'FR']] },
+      { name: 'should set the defaultLocale on Settings', setup: installWindow, locale: 'fr-CA', expected: 'fr-CA', expectedSetAttributeCalls: [['locale', 'fr-CA'], ['lang', 'fr'], ['geo', 'CA']] },
       { name: 'should use default locale if empty', setup: installWindow, locale: '', expected: 'en-gb', expectedSetAttributeCalls: [['locale', 'en-gb'], ['lang', 'en'], ['geo', 'gb']] },
       { name: 'should set document attributes', setup: installWindow, locale: 'en-US', expected: 'en-US', expectedSetAttributeCalls: [['locale', 'en-US'], ['lang', 'en'], ['geo', 'US']] },
       { name: 'should set every part after the language as document geo', setup: installWindow, locale: 'zh-CN-Hans', expected: 'zh-CN-Hans', expectedSetAttributeCalls: [['locale', 'zh-CN-Hans'], ['lang', 'zh'], ['geo', 'CN-Hans']] },

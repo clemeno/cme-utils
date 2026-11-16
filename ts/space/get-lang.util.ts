@@ -1,9 +1,8 @@
 import type { AppLuxonSettings } from '../app-luxon-settings.js'
 import { GET_LOCALE } from './get-locale.util.js'
-import { SET_DOCUMENT_LANG } from './set-document-lang.util.js'
 
 /**
- * Gets the global lang (the part of the locale before the first dash) from `Luxon` `Settings`, and syncs the document lang attribute with it.
+ * Gets the global lang (the part of the locale before the first dash) from `Luxon` `Settings`. It neither reads nor writes the document: only `SET_LOCALE` updates the document attributes.
  * @param _Settings - The luxon `Settings` class, for example `Settings` of 'luxon'
  * @returns The lang of the default locale
  * @example
@@ -15,15 +14,5 @@ import { SET_DOCUMENT_LANG } from './set-document-lang.util.js'
  * ```
  */
 export function GET_LANG (_Settings: AppLuxonSettings): string {
-  // missing outside a browser (Node, bun, a worker)
-  const documentLang = globalThis.window?.document?.documentElement?.getAttribute('lang') ?? ''
-
-  const settingsLocale = GET_LOCALE(_Settings)
-  const settingsLang = settingsLocale.split('-').slice(0, 1).join('-')
-
-  if (documentLang !== settingsLang) {
-    SET_DOCUMENT_LANG(settingsLang)
-  }
-
-  return settingsLang
+  return GET_LOCALE(_Settings).split('-').slice(0, 1).join('-')
 }

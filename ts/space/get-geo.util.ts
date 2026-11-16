@@ -1,9 +1,8 @@
 import type { AppLuxonSettings } from '../app-luxon-settings.js'
 import { GET_LOCALE } from './get-locale.util.js'
-import { SET_DOCUMENT_GEO } from './set-document-geo.util.js'
 
 /**
- * Gets the global geo (the part of the locale after the language) from `Luxon` `Settings`, and syncs the document geo attribute with it.
+ * Gets the global geo (the part of the locale after the language) from `Luxon` `Settings`. It neither reads nor writes the document: only `SET_LOCALE` updates the document attributes.
  * @param _Settings - The luxon `Settings` class, for example `Settings` of 'luxon'
  * @returns The geo of the default locale, or '' (empty string) when the locale has no geo
  * @example
@@ -17,15 +16,5 @@ import { SET_DOCUMENT_GEO } from './set-document-geo.util.js'
  * ```
  */
 export function GET_GEO (_Settings: AppLuxonSettings): string {
-  // missing outside a browser (Node, bun, a worker)
-  const documentGeo = globalThis.window?.document?.documentElement?.getAttribute('geo') ?? ''
-
-  const settingsLocale = GET_LOCALE(_Settings)
-  const settingsGeo = settingsLocale.split('-').slice(1).join('-')
-
-  if (documentGeo !== settingsGeo) {
-    SET_DOCUMENT_GEO(settingsGeo)
-  }
-
-  return settingsGeo
+  return GET_LOCALE(_Settings).split('-').slice(1).join('-')
 }

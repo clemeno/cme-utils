@@ -1,11 +1,10 @@
 import type { AppLuxonSettings } from '../app-luxon-settings.js'
-import { SET_DOCUMENT_TZ } from './set-document-tz.util.js'
 
 /**
- * get the global timezone from `Luxon` `Settings`
+ * get the global timezone from `Luxon` `Settings`. It neither reads nor writes the document: only `SET_TZ` updates the document `tz` attribute.
  * * provide `Settings` -> import { Settings } from 'luxon'
  * @param _Settings - The luxon `Settings` class
- * @returns The name of the default zone (also written on the document `tz` attribute when there is a document)
+ * @returns The name of the default zone
  * @example
  * ```typescript
  * Settings.defaultZone = 'Europe/Paris'
@@ -15,15 +14,5 @@ import { SET_DOCUMENT_TZ } from './set-document-tz.util.js'
  * ```
  */
 export function GET_TZ (_Settings: AppLuxonSettings): string {
-  // _Settings.defaultZone.name
-  // missing outside a browser (Node, bun, a worker)
-  const documentTz = globalThis.window?.document?.documentElement?.getAttribute('tz') ?? ''
-
-  const settingsTz = _Settings.defaultZone.name
-
-  if (documentTz !== settingsTz) {
-    SET_DOCUMENT_TZ(settingsTz)
-  }
-
-  return settingsTz
+  return _Settings.defaultZone.name
 }
