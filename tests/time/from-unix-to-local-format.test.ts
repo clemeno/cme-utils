@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from 'bun:test'
 import { DateTime, Settings } from 'luxon'
 import { FROM_UNIX_TO_LOCAL_FORMAT } from '../../ts/time/from-unix-to-local-format.util.js'
+import { createMockSettings } from '../mocks/luxon-mock.js'
 
 describe(
   'FROM_UNIX_TO_LOCAL_FORMAT',
@@ -26,6 +27,21 @@ describe(
         Settings.defaultLocale = 'en-US'
         Settings.defaultZone = zone
         expect(FROM_UNIX_TO_LOCAL_FORMAT({ DateTime, Settings, unix, format })).toBe(expected)
+      }
+    )
+
+    // luxon's global zone stays UTC while the given Settings names another: only the zone step moves the moment
+    const zoneStepCases: Array<{ name: string, settingsZone: string, unix: number, expected: string }> = [
+      { name: 'moves to the Asia/Tokyo zone of the given Settings', settingsZone: 'Asia/Tokyo', unix: 0, expected: '1970-01-01 09:00' },
+      { name: 'moves to the America/New_York zone of the given Settings', settingsZone: 'America/New_York', unix: 0, expected: '1969-12-31 19:00' },
+    ]
+
+    it.each(zoneStepCases)(
+      '$name',
+      ({ settingsZone, unix, expected }) => {
+        Settings.defaultLocale = 'en-US'
+        Settings.defaultZone = 'UTC'
+        expect(FROM_UNIX_TO_LOCAL_FORMAT({ DateTime, Settings: createMockSettings({ initialZone: settingsZone }), unix, format: 'yyyy-MM-dd HH:mm' })).toBe(expected)
       }
     )
   }
