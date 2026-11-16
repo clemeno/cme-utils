@@ -4,8 +4,8 @@ import { createMockSettings } from '../mocks/luxon-mock.js'
 import { createMockDocument } from '../mocks/space-mocks.js'
 
 /** Exposes the given mock document through a global window. */
-function installWindow (inDocument: ReturnType<typeof createMockDocument>): void {
-  global.window = { document: inDocument } as any
+function installWindow (_: ReturnType<typeof createMockDocument>): void {
+  global.window = { document: _ } as any
 }
 
 /** Removes the global window so no document is reachable. */
@@ -34,6 +34,7 @@ describe(
       { name: 'should use default locale if empty', setup: installWindow, locale: '', expected: 'en-gb', expectedSetAttributeCalls: [['locale', 'en-gb'], ['lang', 'en'], ['geo', 'gb']] },
       { name: 'should set document attributes', setup: installWindow, locale: 'en-US', expected: 'en-US', expectedSetAttributeCalls: [['locale', 'en-US'], ['lang', 'en'], ['geo', 'US']] },
       { name: 'should set every part after the language as document geo', setup: installWindow, locale: 'zh-CN-Hans', expected: 'zh-CN-Hans', expectedSetAttributeCalls: [['locale', 'zh-CN-Hans'], ['lang', 'zh'], ['geo', 'CN-Hans']] },
+      { name: 'should write an empty geo for a locale without one', setup: installWindow, locale: 'en', expected: 'en', expectedSetAttributeCalls: [['locale', 'en'], ['lang', 'en'], ['geo', '']] },
       { name: 'should handle missing document', setup: removeWindow, locale: 'en-US', expected: 'en-US', expectedSetAttributeCalls: [] },
     ])(
       '$name',

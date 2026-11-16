@@ -2,7 +2,7 @@ import type { AppLuxonSettings } from '../app-luxon-settings.js'
 import { GET_LOCALE } from './get-locale.util.js'
 
 /**
- * Gets the global lang (the part of the locale before the first dash) from `Luxon` `Settings`. It neither reads nor writes the document: only `SET_LOCALE` updates the document attributes.
+ * Gets the global lang (the part of the locale before the first dash) from `Luxon` `Settings`. It neither reads nor writes the document: only `SET_LOCALE` (or a `SET_DOCUMENT_*` util) updates the document attributes.
  * @param _Settings - The luxon `Settings` class, for example `Settings` of 'luxon'
  * @returns The lang of the default locale
  * @example

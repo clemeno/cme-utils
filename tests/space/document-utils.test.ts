@@ -3,7 +3,10 @@ import { GET_BASE_URI } from '../../ts/http/get-base-uri.util.js'
 import { SET_DOCUMENT_GEO } from '../../ts/space/set-document-geo.util.js'
 import { SET_DOCUMENT_LANG } from '../../ts/space/set-document-lang.util.js'
 import { SET_DOCUMENT_LOCALE } from '../../ts/space/set-document-locale.util.js'
+import { SET_LOCALE } from '../../ts/space/set-locale.util.js'
 import { SET_DOCUMENT_TZ } from '../../ts/time/set-document-tz.util.js'
+import { SET_TZ } from '../../ts/time/set-tz.util.js'
+import { createMockSettings } from '../mocks/luxon-mock.js'
 
 /** Throws the error of the broken document. */
 function throwDocumentBroke (): never {
@@ -17,6 +20,8 @@ const documentUtilList: Array<{ name: string, call: () => unknown }> = [
   { name: 'SET_DOCUMENT_LANG', call: () => SET_DOCUMENT_LANG('fr') },
   { name: 'SET_DOCUMENT_LOCALE', call: () => SET_DOCUMENT_LOCALE('fr-CA') },
   { name: 'SET_DOCUMENT_TZ', call: () => SET_DOCUMENT_TZ('Europe/Paris') },
+  { name: 'SET_LOCALE', call: () => SET_LOCALE({ Settings: createMockSettings(), locale: 'fr-CA' }) },
+  { name: 'SET_TZ', call: () => SET_TZ({ Settings: createMockSettings(), tz: 'Europe/Paris' }) },
 ]
 
 const missingList: Array<{ name: string, fakeWindow: unknown }> = [

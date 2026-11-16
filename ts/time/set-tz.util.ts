@@ -3,7 +3,7 @@ import { IS_A_STRING_AND_NOT_EMPTY } from '../string/is-a-string-and-not-empty.u
 import { SET_DOCUMENT_TZ } from './set-document-tz.util.js'
 
 /**
- * set the global timezone to `Luxon` `Settings`
+ * Sets the global timezone to `Luxon` `Settings`, and writes it to the document `tz` attribute in a browser
  * * provide Settings -> import { Settings } from 'luxon'
  * @param _ - The parameters
  * @param _.Settings - The luxon `Settings` class, its `defaultZone` is set
