@@ -1,3 +1,4 @@
+import { FROM_HEX_TO_UUID } from '../uuid/from-hex-to-uuid.util.js'
 import { STRING_TO_HEX } from './string-to-hex.util.js'
 
 /**
@@ -11,6 +12,5 @@ import { STRING_TO_HEX } from './string-to-hex.util.js'
  * ```
  */
 export function STRING_TO_UUID (str: string): string {
-  const hex = STRING_TO_HEX(str).toLowerCase().padStart(32, '0').slice(0, 32)
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`
+  return FROM_HEX_TO_UUID(STRING_TO_HEX(str))
 }

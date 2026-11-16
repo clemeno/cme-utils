@@ -12,6 +12,8 @@ describe(
       { name: 'reads a Uint8Array', input: new Uint8Array(byteList), expected: '123e4567-e89b-12d3-a456-426614174000' },
       { name: 'reads an array of numbers', input: byteList, expected: '123e4567-e89b-12d3-a456-426614174000' },
       { name: 'left-pads a short Uint8Array with zeros', input: new Uint8Array([255]), expected: '00000000-0000-0000-0000-0000000000ff' },
+      { name: 'keeps the first 16 of 17 bytes', input: new Uint8Array([...byteList, 0x99]), expected: '123e4567-e89b-12d3-a456-426614174000' },
+      { name: 'returns the NIL UUID for an empty array', input: [], expected: '00000000-0000-0000-0000-000000000000' },
       { name: 'returns the NIL UUID for null', input: null, expected: '00000000-0000-0000-0000-000000000000' },
       { name: 'returns the NIL UUID for an object without toString', input: Object.create(null), expected: '00000000-0000-0000-0000-000000000000' },
     ]

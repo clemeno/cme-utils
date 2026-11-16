@@ -2,7 +2,7 @@ import { STRING_TO_HEX } from './string-to-hex.util.js'
 
 /**
  * Convert a string to 0xhex without using Buffer
- * @param str - The string to convert, one hex code per UTF-16 character
+ * @param str - The string to convert, one hex code of at least 2 digits per UTF-16 character
  * @returns `0x` followed by the hexadecimal codes of the characters
  * @example
  * ```typescript

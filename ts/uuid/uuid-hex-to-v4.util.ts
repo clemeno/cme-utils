@@ -1,6 +1,8 @@
+import { FROM_HEX_TO_UUID } from './from-hex-to-uuid.util.js'
+
 /**
  * From hex string to UUID v4
- * @param hex - The hex string, with or without a '0x' prefix, shorter content is left-padded with zeros
+ * @param hex - The hex string, formatted as `FROM_HEX_TO_UUID` does: with or without a '0x' prefix, left-padded with zeros, cut to 32 digits
  * @returns The UUID string with the version nibble set to 4 and the variant nibble set to 8
  * @example
  * ```typescript
@@ -9,10 +11,7 @@
  * ```
  */
 export function UUID_HEX_TO_V4 (hex: string): string {
-  const cleanHex = hex.replace(/^0x/, '').toLowerCase().padStart(32, '0')
-  // Set version to 4 (13th char = '4')
-  const versionedHex = `${cleanHex.substring(0, 12)}4${cleanHex.substring(13)}`
-  // Set variant to RFC 4122 (17th char = '8' to 'b')
-  const variantHex = `${versionedHex.substring(0, 16)}8${versionedHex.substring(17)}`
-  return variantHex.replace(/^([0-9a-f]{8})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{4})([0-9a-f]{12})/, '$1-$2-$3-$4-$5')
+  const uuid = FROM_HEX_TO_UUID(hex)
+  // version 4 is the 13th digit, the RFC 4122 variant ('8' to 'b') the 17th
+  return `${uuid.slice(0, 14)}4${uuid.slice(15, 19)}8${uuid.slice(20)}`
 }

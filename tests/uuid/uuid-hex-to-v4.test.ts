@@ -4,12 +4,16 @@ import { UUID_HEX_TO_V4 } from '../../ts/uuid/uuid-hex-to-v4.util.js'
 describe(
   'UUID_HEX_TO_V4',
   () => {
-    it(
-      'should convert hex to UUID v4',
-      () => {
-        const hex = '123e4567e89b12d3a456426614174000'
-        const result = UUID_HEX_TO_V4(hex)
-        expect(result).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
+    const testCases: Array<{ name: string, input: string, expected: string }> = [
+      { name: 'sets the version and variant nibbles of 32 hex digits', input: '0123456789abcdef0123456789abcdef', expected: '01234567-89ab-4def-8123-456789abcdef' },
+      { name: 'strips 0x and left-pads short content', input: '0xFF', expected: '00000000-0000-4000-8000-0000000000ff' },
+      { name: 'keeps the first 32 of 33 digits', input: '0123456789abcdef0123456789abcdef9', expected: '01234567-89ab-4def-8123-456789abcdef' },
+    ]
+
+    it.each(testCases)(
+      '$name',
+      ({ input, expected }) => {
+        expect(UUID_HEX_TO_V4(input)).toBe(expected)
       }
     )
   }

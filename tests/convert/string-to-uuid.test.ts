@@ -16,6 +16,11 @@ describe(
         expected: '00000000-0000-0000-0000-000000616263',
       },
       {
+        name: 'char codes under 0x10 keep their leading zero',
+        input: '\n\tA',
+        expected: '00000000-0000-0000-0000-0000000a0941',
+      },
+      {
         name: 'hello',
         input: 'hello',
         expected: '00000000-0000-0000-0000-0068656c6c6f',
