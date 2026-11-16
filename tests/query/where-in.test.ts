@@ -43,5 +43,32 @@ describe(
         expect(calls.slice(1)).toEqual(expectedInner)
       }
     )
+
+    const group = expect.any(Function)
+    const mixed = ['§§not0§§', '§§null§§', 1]
+
+    const flagCases: Array<{ name: string, bOr: boolean, bNot: boolean, values: unknown[], expectedCalls: QbCall[] }> = [
+      { name: 'no flag, like WHERE_IN: single §§null§§ → whereNull', bOr: false, bNot: false, values: ['§§null§§'], expectedCalls: [{ method: 'whereNull', args: ['col'] }] },
+      { name: 'no flag, like WHERE_IN: mixed → where group of orWhereNot(0), orWhereNull, orWhere', bOr: false, bNot: false, values: mixed, expectedCalls: [{ method: 'where', args: [group] }, { method: 'orWhereNot', args: ['col', '=', 0] }, { method: 'orWhereNull', args: ['col'] }, { method: 'orWhere', args: ['col', '=', 1] }] },
+      { name: 'no flag, like WHERE_IN: empty → empty where group', bOr: false, bNot: false, values: [], expectedCalls: [{ method: 'where', args: [group] }] },
+      { name: 'bOr, like OR_WHERE_IN: single §§null§§ → orWhereNull', bOr: true, bNot: false, values: ['§§null§§'], expectedCalls: [{ method: 'orWhereNull', args: ['col'] }] },
+      { name: 'bOr, like OR_WHERE_IN: mixed → orWhereNot(0), orWhereNull, orWhere, no group', bOr: true, bNot: false, values: mixed, expectedCalls: [{ method: 'orWhereNot', args: ['col', '=', 0] }, { method: 'orWhereNull', args: ['col'] }, { method: 'orWhere', args: ['col', '=', 1] }] },
+      { name: 'bOr, like OR_WHERE_IN: empty → no calls', bOr: true, bNot: false, values: [], expectedCalls: [] },
+      { name: 'bNot, like WHERE_NOT_IN: single §§null§§ → whereNotNull', bOr: false, bNot: true, values: ['§§null§§'], expectedCalls: [{ method: 'whereNotNull', args: ['col'] }] },
+      { name: 'bNot, like WHERE_NOT_IN: mixed → where(0), whereNotNull, whereNot, no group', bOr: false, bNot: true, values: mixed, expectedCalls: [{ method: 'where', args: ['col', '=', 0] }, { method: 'whereNotNull', args: ['col'] }, { method: 'whereNot', args: ['col', '=', 1] }] },
+      { name: 'bNot, like WHERE_NOT_IN: empty → no calls', bOr: false, bNot: true, values: [], expectedCalls: [] },
+      { name: 'bOr and bNot, like OR_WHERE_NOT_IN: single §§null§§ → orWhereNotNull', bOr: true, bNot: true, values: ['§§null§§'], expectedCalls: [{ method: 'orWhereNotNull', args: ['col'] }] },
+      { name: 'bOr and bNot, like OR_WHERE_NOT_IN: mixed → orWhere group of where(0), whereNotNull, whereNot', bOr: true, bNot: true, values: mixed, expectedCalls: [{ method: 'orWhere', args: [group] }, { method: 'where', args: ['col', '=', 0] }, { method: 'whereNotNull', args: ['col'] }, { method: 'whereNot', args: ['col', '=', 1] }] },
+      { name: 'bOr and bNot, like OR_WHERE_NOT_IN: empty → empty orWhere group', bOr: true, bNot: true, values: [], expectedCalls: [{ method: 'orWhere', args: [group] }] },
+    ]
+
+    it.each(flagCases)(
+      '$name',
+      ({ bOr, bNot, values, expectedCalls }) => {
+        const { qb, calls } = makeMockQb()
+        WHERE_IN({ qb, column: 'col', values, bOr, bNot })
+        expect(calls).toEqual(expectedCalls)
+      }
+    )
   }
 )

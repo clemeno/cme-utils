@@ -1,5 +1,5 @@
-import { IS_A_MAP } from '../map/is-a-map.util.js'
 import type { WhereInParams } from '../where-in-params.js'
+import { WHERE_IN } from './where-in.util.js'
 
 /**
  * Adds a "column differs from every value" condition with AND; an empty list adds no condition
@@ -16,31 +16,5 @@ import type { WhereInParams } from '../where-in-params.js'
  * ```
  */
 export function WHERE_NOT_IN (_: WhereInParams): void {
-  const valueList = Array.from(IS_A_MAP(_.values) ? _.values.values() : _.values)
-
-  if (valueList.length === 1) {
-    const v = valueList[0]
-
-    const lowercaseV = (typeof v === 'string') ? v.toLowerCase() : v
-
-    if (lowercaseV === '§§not0§§') {
-      _.qb.where(_.column, '=', 0)
-    } else if (lowercaseV === '§§null§§') {
-      _.qb.whereNotNull(_.column)
-    } else {
-      _.qb.whereNot(_.column, '=', v)
-    }
-  } else {
-    for (const v of valueList) {
-      const lowercaseV = (typeof v === 'string') ? v.toLowerCase() : v
-
-      if (lowercaseV === '§§not0§§') {
-        _.qb.where(_.column, '=', 0)
-      } else if (lowercaseV === '§§null§§') {
-        _.qb.whereNotNull(_.column)
-      } else {
-        _.qb.whereNot(_.column, '=', v)
-      }
-    }
-  }
+  WHERE_IN({ ..._, bOr: false, bNot: true })
 }

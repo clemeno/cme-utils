@@ -7,7 +7,7 @@ import type { WhereParams } from '../where-params.js'
 import { LIKE_KEEP_PERCENT_AND_DASH } from './like-keep-percent-and-dash.util.js'
 
 /**
- * Adds one condition to the query builder, with AND: equality (`null` becomes `is null`), a comparison operator, a like pattern (begins with, ends with, contains) or a case-insensitive contains
+ * Adds one condition to the query builder, with AND (with `bOr`: OR): equality (`null` becomes `is null`), a comparison operator, a like pattern (begins with, ends with, contains) or a case-insensitive contains
  * @param _ - The query builder and the condition
  * @param _.qb - The knex query builder to add the condition to
  * @param _.column - The column to compare
@@ -17,10 +17,12 @@ import { LIKE_KEEP_PERCENT_AND_DASH } from './like-keep-percent-and-dash.util.js
  * @param _.bBeginsWith - Match columns that begin with the value (like `value%`)
  * @param _.bEndsWith - Match columns that end with the value (like `%value`)
  * @param _.bPg - Use PostgreSQL syntax (`ilike`, `POSITION`) instead of MySQL (`like`, `INSTR`)
+ * @param _.bOr - Join the condition with OR instead of AND
  * @returns nothing: adds the condition to the query builder
  * @example
  * ```typescript
  * WHERE({ qb, column: 'id', value: 5 }) // adds where id = 5
+ * WHERE({ qb, column: 'id', value: 5, bOr: true }) // adds or where id = 5
  * WHERE({ qb, column: 'id', value: null }) // adds where id is null
  * WHERE({ qb, column: 'name', value: 'ab', bBeginsWith: true }) // adds where name like 'ab%'
  * WHERE({ qb, column: 'name', value: 'ab', bEndsWith: true }) // adds where name like '%ab'
@@ -29,6 +31,8 @@ import { LIKE_KEEP_PERCENT_AND_DASH } from './like-keep-percent-and-dash.util.js
  * ```
  */
 export function WHERE (_: WhereParams): void {
+  const whereMethod = IS_ON(_.bOr) ? 'orWhere' : 'where'
+
   const bBeginsWith = IS_ON(_.bBeginsWith)
   const bEndsWith = IS_ON(_.bEndsWith)
 
@@ -52,17 +56,17 @@ export function WHERE (_: WhereParams): void {
         pattern = `%${pattern}%`
       }
 
-      _.qb.where(_.column, bPg ? 'ilike' : 'like', pattern)
+      _.qb[whereMethod](_.column, bPg ? 'ilike' : 'like', pattern)
     } else if ((_.operator === 'like') && IS_A_STRING_AND_NOT_EMPTY(_.column)) {
       const rawColumn = FROM_JS_TO_SNAKE_CASE(_.column).replace(/[^a-zA-Z0-9_.]/g, '')
 
-      _.qb.whereRaw(bPg ? `POSITION(? IN ${rawColumn}) > 0` : `INSTR(${rawColumn}, ?) > 0`, [_.value])
+      _.qb[`${whereMethod}Raw`](bPg ? `POSITION(? IN ${rawColumn}) > 0` : `INSTR(${rawColumn}, ?) > 0`, [_.value])
     } else {
-      _.qb.where(_.column, _.operator, _.value)
+      _.qb[whereMethod](_.column, _.operator, _.value)
     }
   } else if (IS_NULL(_.value) || ((typeof _.value === 'string') && (_.value.toLowerCase() === '§§null§§'))) {
-    _.qb.whereNull(_.column)
+    _.qb[`${whereMethod}Null`](_.column)
   } else {
-    _.qb.where(_.column, '=', _.value)
+    _.qb[whereMethod](_.column, '=', _.value)
   }
 }

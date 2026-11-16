@@ -27,6 +27,12 @@ describe(
       { name: 'like with bPg → whereRaw POSITION on snake_case column, value bound', params: { column: 'u.firstName', operator: 'like', value: 'ali', bPg: true }, expectedCalls: [{ method: 'whereRaw', args: ['POSITION(? IN u.first_name) > 0', ['ali']] }] },
       { name: 'like strips SQL out of the raw column name', params: { column: 'name) > 0 OR 1=1 --', operator: 'like', value: 'x' }, expectedCalls: [{ method: 'whereRaw', args: ['INSTR(name0_o_r11, ?) > 0', ['x']] }] },
       { name: 'like with non-string column → where(col, "like", val)', params: { column: rawColumn, operator: 'like', value: 'ali' }, expectedCalls: [{ method: 'where', args: [rawColumn, 'like', 'ali'] }] },
+      { name: 'bOr false → where(col, "=", val)', params: { column: 'name', value: 'Alice', bOr: false }, expectedCalls: [{ method: 'where', args: ['name', '=', 'Alice'] }] },
+      { name: 'bOr, like OR_WHERE: plain value → orWhere(col, "=", val)', params: { column: 'city', value: 'Paris', bOr: true }, expectedCalls: [{ method: 'orWhere', args: ['city', '=', 'Paris'] }] },
+      { name: 'bOr, like OR_WHERE: explicit operator < → orWhere(col, "<", val)', params: { column: 'age', operator: '<', value: 30, bOr: true }, expectedCalls: [{ method: 'orWhere', args: ['age', '<', 30] }] },
+      { name: 'bOr, like OR_WHERE: null value → orWhereNull(col)', params: { column: 'deleted_at', value: null, bOr: true }, expectedCalls: [{ method: 'orWhereNull', args: ['deleted_at'] }] },
+      { name: 'bOr, like OR_WHERE: bBeginsWith → orWhere like', params: { column: 'name', value: 'bob', bBeginsWith: true, bOr: true }, expectedCalls: [{ method: 'orWhere', args: ['name', 'like', 'bob%'] }] },
+      { name: 'bOr, like OR_WHERE: like, non-pg → orWhereRaw INSTR', params: { column: 'u.firstName', operator: 'like', value: 'bob', bOr: true }, expectedCalls: [{ method: 'orWhereRaw', args: ['INSTR(u.first_name, ?) > 0', ['bob']] }] },
     ]
 
     it.each(testCases)(
