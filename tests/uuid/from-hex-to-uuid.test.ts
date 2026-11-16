@@ -12,6 +12,7 @@ describe(
       { name: 'left-pads short content with zeros', input: '0xFF', expected: '00000000-0000-0000-0000-0000000000ff' },
       { name: 'returns the NIL UUID for an empty string', input: '', expected: '00000000-0000-0000-0000-000000000000' },
       { name: 'keeps the first 32 of 33 digits', input: '0123456789abcdef0123456789abcdef9', expected: '01234567-89ab-cdef-0123-456789abcdef' },
+      { name: 'ignores dashes, so a UUID passes through lowercased', input: '123E4567-E89B-12D3-A456-426614174000', expected: '123e4567-e89b-12d3-a456-426614174000' },
       { name: 'returns the NIL UUID for a non-hex character', input: '0123456789abcdef0123456789abcdeg', expected: '00000000-0000-0000-0000-000000000000' },
     ]
 

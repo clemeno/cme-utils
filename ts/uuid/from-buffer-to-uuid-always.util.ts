@@ -1,17 +1,17 @@
 import { TO_STRING } from '../convert/to-string.util.js'
 import { FROM_HEX_TO_UUID } from './from-hex-to-uuid.util.js'
 
-// the 2 hex digits of each byte, built once: UUID_V4 and UUID_V7 format through this table
-const n2hh: string[] = []
+// the 2 hex digits of each byte, built once
+const byteHexList: string[] = []
 
 for (let n = 0; n < 256; n += 1) {
-  const hh = (n + 0x100).toString(16).slice(1)
-  n2hh.push(hh)
+  const byteHex = (n + 0x100).toString(16).slice(1)
+  byteHexList.push(byteHex)
 }
 
 /**
- * Converts a Buffer to a UUID string, defaults to the string '00000000-0000-0000-0000-000000000000' (= the NIL UUID)
- * @param b - The bytes: a Buffer, a typed array, an array of numbers, or anything with `toString('hex')`; shorter content is left-padded with zeros, longer content keeps its first 16 bytes
+ * Converts bytes (a Buffer, a typed array or an array of numbers, each taken modulo 256 as a `Uint8Array` does) to a UUID string, defaults to the string '00000000-0000-0000-0000-000000000000' (= the NIL UUID)
+ * @param b - The bytes, or anything else with `toString('hex')`; shorter content is left-padded with zeros, longer content keeps its first 16 bytes
  * @returns The UUID string, the NIL UUID when `b` has no bytes or no hex form
  * @example
  * ```typescript
@@ -26,11 +26,12 @@ for (let n = 0; n < 256; n += 1) {
 export function FROM_BUFFER_TO_UUID_ALWAYS (b: any): string {
   let bytesHex = ''
 
-  // only a Buffer understands toString('hex'): a browser hands typed arrays, so bytes are read one by one
-  const bByteList = Array.isArray(b) || ArrayBuffer.isView(b)
-
-  // & 0xff wraps a number past 255 as a Uint8Array does, rather than missing the table
-  try { bytesHex = bByteList ? Array.from(b as ArrayLike<number>, n => n2hh[n & 0xff]).join('') : TO_STRING(b?.toString('hex')) } catch { }
+  if (Array.isArray(b) || ArrayBuffer.isView(b)) {
+    bytesHex = Array.from(b as ArrayLike<number>, n => byteHexList[n & 0xff]).join('')
+  } else if (typeof b?.toString === 'function' && typeof b !== 'number' && typeof b !== 'bigint') {
+    // a number and a bigint take 'hex' as a radix, and throw a RangeError
+    bytesHex = TO_STRING(b.toString('hex'))
+  }
 
   return FROM_HEX_TO_UUID(bytesHex)
 }

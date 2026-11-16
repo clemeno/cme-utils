@@ -16,12 +16,25 @@ describe(
       { name: 'returns the NIL UUID for an empty array', input: [], expected: '00000000-0000-0000-0000-000000000000' },
       { name: 'returns the NIL UUID for null', input: null, expected: '00000000-0000-0000-0000-000000000000' },
       { name: 'returns the NIL UUID for an object without toString', input: Object.create(null), expected: '00000000-0000-0000-0000-000000000000' },
+      { name: 'wraps 256 to 0, as a Uint8Array does', input: [1, 256], expected: '00000000-0000-0000-0000-000000000100' },
+      { name: 'wraps -1 to 255, as a Uint8Array does', input: [-1], expected: '00000000-0000-0000-0000-0000000000ff' },
+      { name: 'reads the toString(\'hex\') of an object', input: { toString: () => 'ff' }, expected: '00000000-0000-0000-0000-0000000000ff' },
+      { name: 'returns the NIL UUID for an object whose text is not hex', input: {}, expected: '00000000-0000-0000-0000-000000000000' },
+      { name: 'returns the NIL UUID for a number', input: 255, expected: '00000000-0000-0000-0000-000000000000' },
+      { name: 'returns the NIL UUID for a bigint', input: 255n, expected: '00000000-0000-0000-0000-000000000000' },
     ]
 
     it.each(testCases)(
       '$name',
       ({ input, expected }) => {
         expect(FROM_BUFFER_TO_UUID_ALWAYS(input)).toBe(expected)
+      }
+    )
+
+    it(
+      'lets the error of a throwing toString through',
+      () => {
+        expect(() => FROM_BUFFER_TO_UUID_ALWAYS({ toString: () => { throw new Error('no hex') } })).toThrow('no hex')
       }
     )
   }
