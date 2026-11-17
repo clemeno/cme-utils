@@ -11,5 +11,11 @@ jobs:
         steps:
             - uses: actions/checkout@v5
             - uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: 1.4.4
+            # bun run check runs tsc and eslint on node, and test:node loads the build in node
+            - uses: actions/setup-node@v7
+              with:
+                  node-version: 26.13.1
             - run: bun install --frozen-lockfile
             - run: bun run check
