@@ -1,4 +1,3 @@
-// import tsEslintPlugin from '@typescript-eslint/eslint-plugin'
 import tsEslintParser from '@typescript-eslint/parser'
 import neostandard, { resolveIgnoresFromGitignore } from 'neostandard'
 import { MAX_RETURN_STATEMENTS_PER_FUNCTION_PLUGIN } from './m/max-return-statements-per-function.plugin.js'
@@ -95,8 +94,9 @@ const runtimeRules = {
 }
 
 const optionList = [
+  // global ignores from the .gitignore (m/, coverage/...): neostandard 0.14 applies its own `ignores` option to its layers only
+  { ignores: resolveIgnoresFromGitignore() },
   ...neostandard({
-    ignores: resolveIgnoresFromGitignore(),
     ts: true,
   }),
   {
@@ -135,9 +135,6 @@ const optionList = [
   {
     files: ['**/*.ts', '**/*.tsx'],
     ignores: ['tests/**/*', 'examples/**/*'],
-    // plugins: {
-    //   '@typescript-eslint': tsEslintPlugin,
-    // },
     languageOptions: {
       parser: tsEslintParser,
       parserOptions: {

@@ -24,12 +24,12 @@ export function NORMALIZE_PAGINATION (_: {
   perPage: numeric
   filteredCount: numeric
 }): {
-    normalizedPage: string
-    normalizedPerPage: string
-    normalizedPages: string
-    normalizedOffset: string
-    normalizedLimit: string
-  } {
+  normalizedPage: string
+  normalizedPerPage: string
+  normalizedPages: string
+  normalizedOffset: string
+  normalizedLimit: string
+} {
   const { page, perPage, filteredCount } = _
   const normalizedPerPage = NORMALIZE_PER_PAGE(perPage)
   const normalizedPages = NORMALIZE_PAGES({ normalizedPerPage, filteredCount })
